@@ -90,7 +90,7 @@ The core of VibeUI is the vibe engine, which generates and applies design themes
 
 - `vibe-engine.tsx` - Context provider for vibe state
 - `vibe-controls.tsx` - UI controls for manipulating vibes
-- `vibe-demo-elements.tsx` - Showcase components for each vibe
+- `vibe-demo-elements.tsx` - Showcase components for each vibes
 
 ### Component Showcase
 
