@@ -167,7 +167,7 @@ const VibeContent = () => {
 
       {/* Header */}
       <motion.header 
-        className="relative z-10 py-4 px-4 sm:px-6 lg:px-8"
+        className="relative z-10 py-4 px-4 sm:px-6 lg:px-8 sticky top-0 backdrop-blur-sm bg-background/50"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 * (1/currentVibe.animation.speed), ease: getEasing() }}
@@ -216,7 +216,7 @@ const VibeContent = () => {
       </motion.header>
 
       {/* Main content */}
-      <main className="container mx-auto py-8 px-4 sm:px-6 lg:px-8 relative z-10">
+      <main className="container mx-auto py-8 px-4 sm:px-6 lg:px-8 relative z-10 flex-grow">
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -259,7 +259,7 @@ const VibeContent = () => {
             </motion.div>
             
             <motion.p 
-              className="text-lg text-muted-foreground mt-3 max-w-2xl"
+              className="text-lg text-muted-foreground mt-3 max-w-2xl readable-text"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2, duration: 0.5, ease: getEasing() }}

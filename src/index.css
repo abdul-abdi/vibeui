@@ -1,3 +1,4 @@
+
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@400;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=DM+Serif+Display&family=Quicksand:wght@400;500;600;700&family=Roboto+Mono:wght@400;500;600;700&family=Abril+Fatface&display=swap');
 
 @tailwind base;
@@ -104,20 +105,64 @@
 
   html {
     scroll-behavior: smooth;
+    height: 100%;
   }
 
   body {
     @apply bg-background text-foreground;
     font-family: var(--font-primary);
     overflow-x: hidden; /* Prevent horizontal scrolling */
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  #root {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    width: 100%;
   }
 
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-secondary);
+    line-height: 1.2;
+  }
+
+  h1 {
+    font-weight: 700;
+  }
+
+  h2 {
+    font-weight: 600;
+  }
+
+  p {
+    line-height: 1.6;
   }
 
   code, pre {
     font-family: var(--font-mono);
+  }
+
+  /* Improved scrollbar for all themes */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: hsl(var(--muted) / 0.4);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: hsl(var(--primary) / 0.5);
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--primary) / 0.7);
   }
 }
 
@@ -127,11 +172,12 @@
   animation-timing-function: var(--animation-easing);
 }
 
-/* Layout styles */
+/* Layout styles - improved */
 .layout-standard {
   max-width: var(--content-max-width);
   margin: 0 auto;
   padding: var(--layout-spacing);
+  width: 100%;
 }
 
 .layout-asymmetric {
@@ -141,6 +187,7 @@
   padding: var(--layout-spacing);
   max-width: var(--content-max-width);
   margin: 0 auto;
+  width: 100%;
 }
 
 .layout-centered {
@@ -148,6 +195,7 @@
   margin: 0 auto;
   padding: var(--layout-spacing);
   text-align: center;
+  width: 100%;
 }
 
 .layout-sidebar {
@@ -157,9 +205,10 @@
   max-width: var(--content-max-width);
   margin: 0 auto;
   padding: var(--layout-spacing);
+  width: 100%;
 }
 
-/* Advanced hover effect styles */
+/* Improved hover effect styles */
 .hover-elevate {
   transition: transform 0.3s var(--animation-easing), box-shadow 0.3s var(--animation-easing);
 }
@@ -190,14 +239,49 @@
   opacity: 1;
 }
 
-/* Responsive adjustments */
+/* Enhanced responsive adjustments */
+@media (max-width: 1024px) {
+  :root {
+    --layout-spacing: 1.5rem;
+    --card-spacing: 1.25rem;
+  }
+}
+
 @media (max-width: 768px) {
   .layout-asymmetric,
   .layout-sidebar {
     grid-template-columns: 1fr;
   }
+  
+  :root {
+    --layout-spacing: 1rem;
+    --card-spacing: 1rem;
+  }
+  
+  h1 {
+    font-size: 1.875rem; /* 30px */
+  }
+  
+  h2 {
+    font-size: 1.5rem; /* 24px */
+  }
 }
 
+@media (max-width: 480px) {
+  :root {
+    --layout-spacing: 0.75rem;
+  }
+  
+  h1 {
+    font-size: 1.5rem; /* 24px */
+  }
+  
+  h2 {
+    font-size: 1.25rem; /* 20px */
+  }
+}
+
+/* Improved cards for all themes */
 .vibe-card {
   border-radius: var(--radius-md);
   padding: var(--card-spacing);
@@ -205,6 +289,9 @@
   color: hsl(var(--card-foreground));
   box-shadow: var(--shadow-md);
   transition: transform 0.3s var(--animation-easing), box-shadow 0.3s var(--animation-easing);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .vibe-card:hover {
@@ -242,19 +329,19 @@
   animation-duration: calc(2s / var(--animation-speed));
 }
 
-/* Scroll indicator */
+/* Enhanced scroll indicator */
 .scroll-indicator {
   position: fixed;
   top: 0;
   left: 0;
-  height: 3px;
+  height: 4px;
   background-color: hsl(var(--primary));
   z-index: 50;
   width: 0%;
   transition: width 0.2s var(--animation-easing);
 }
 
-/* Glass effect */
+/* Improved glass effect */
 .glassmorphic {
   background: hsl(var(--background) / 0.7);
   backdrop-filter: blur(10px);
@@ -262,7 +349,7 @@
   border: 1px solid hsl(var(--border) / 0.2);
 }
 
-/* Soft glow */
+/* Enhanced soft glow */
 .glow {
   position: relative;
 }
@@ -282,27 +369,30 @@
   opacity: 1;
 }
 
-/* 3D transform hover */
+/* Enhanced 3D transform hover */
 .hover-3d {
   transition: transform 0.3s var(--animation-easing);
+  transform-style: preserve-3d;
 }
 
 .hover-3d:hover {
   transform: perspective(800px) rotateY(-5deg) rotateX(5deg);
 }
 
-/* Custom components */
-
+/* Improved custom components */
 .vibe-control-panel {
-  @apply flex items-center gap-2 p-2 bg-white rounded-full shadow-md;
+  @apply flex items-center gap-2 p-2 bg-background rounded-full shadow-md border border-border/50;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 
 .vibe-control-button {
-  @apply p-2 rounded-full transition-colors hover:bg-gray-100 flex items-center justify-center;
+  @apply p-2 rounded-full transition-colors hover:bg-accent flex items-center justify-center;
 }
 
 .vibe-info-card {
-  @apply bg-white/90 backdrop-blur-sm rounded-xl p-6 shadow-sm border border-gray-100;
+  @apply bg-background/90 backdrop-blur-sm rounded-xl p-6 shadow-md border border-border/50;
+  height: 100%;
 }
 
 .vibe-attribute {
@@ -310,7 +400,7 @@
 }
 
 .vibe-attribute-label {
-  @apply text-xs font-medium text-gray-500 uppercase tracking-wider mt-2;
+  @apply text-xs font-medium text-muted-foreground uppercase tracking-wider mt-2;
 }
 
 .vibe-attribute-value {
@@ -321,13 +411,14 @@
   @apply h-8 rounded-full px-3 flex items-center text-xs font-medium transition-transform hover:scale-105;
 }
 
+/* Refined theme-specific styles */
 /* Soft Organic theme specific styles */
 .soft-organic-container {
-  @apply bg-gradient-to-br from-green-50 to-teal-50 min-h-screen;
+  @apply bg-gradient-to-br from-emerald-50 to-teal-50 min-h-screen;
 }
 
 .soft-organic-card {
-  @apply bg-white rounded-2xl border-none shadow-sm;
+  @apply bg-white/90 rounded-2xl border-none shadow-md;
 }
 
 .soft-organic-button {
@@ -352,4 +443,184 @@
 
 .soft-organic-link-button {
   @apply text-emerald-500 hover:text-emerald-600 underline-offset-2 hover:underline soft-organic-button px-0 py-0;
+}
+
+/* Dark Techno theme improved styles */
+.dark-tech-container {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  min-height: 100vh;
+}
+
+.dark-tech-card {
+  background-color: rgba(30, 30, 35, 0.7);
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4), 0 0 10px rgba(139, 92, 246, 0.2);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 0.5rem;
+  height: 100%;
+}
+
+.neon-glow-button {
+  @apply px-5 py-2.5 rounded-md font-medium text-sm transition-all bg-primary/20 text-primary;
+  border: 1px solid rgba(var(--primary-rgb), 0.7);
+  box-shadow: 0 0 10px rgba(var(--primary-rgb), 0.5);
+  text-shadow: 0 0 5px rgba(var(--primary-rgb), 0.5);
+}
+
+.neon-glow-button:hover {
+  @apply bg-primary/30;
+  box-shadow: 0 0 15px rgba(var(--primary-rgb), 0.7);
+}
+
+/* Neo Brutalism theme enhanced styles */
+.brutalist-container {
+  background-color: #f9f6f2;
+  min-height: 100vh;
+}
+
+.brutalist-card {
+  background-color: #ffffff;
+  border: 2px solid #000000;
+  box-shadow: 4px 4px 0 #000000;
+  border-radius: 0;
+  padding: 1.5rem;
+  height: 100%;
+}
+
+.brutal-button {
+  background-color: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+  border: 2px solid #000000;
+  box-shadow: 3px 3px 0 #000000;
+  border-radius: 0;
+  padding: 0.5rem 1rem;
+  font-weight: 600;
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+
+.brutal-button:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0 #000000;
+}
+
+.brutal-button:active {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 #000000;
+}
+
+/* Electric/Playful theme enhanced styles */
+.electric-container, .playful-container {
+  background: linear-gradient(135deg, #0e172a 0%, #210535 100%);
+  min-height: 100vh;
+  position: relative;
+  overflow: hidden;
+}
+
+.electric-container::before, .playful-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 50% 0%, rgba(255, 87, 215, 0.15) 0%, transparent 70%);
+  z-index: 0;
+}
+
+.neon-card {
+  background-color: rgba(10, 10, 20, 0.8);
+  border: 1px solid rgba(var(--primary-rgb), 0.5);
+  box-shadow: 0 0 20px rgba(var(--primary-rgb), 0.3);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  height: 100%;
+}
+
+/* Enhanced typography for different themes */
+.soft-organic-theme h1, .soft-organic-theme h2, .soft-organic-theme h3 {
+  color: hsl(160, 84%, 20%);
+  letter-spacing: -0.02em;
+}
+
+.dark-techno-theme h1, .dark-techno-theme h2, .dark-techno-theme h3 {
+  text-shadow: 0 0 8px rgba(var(--primary-rgb), 0.5);
+  letter-spacing: 0.01em;
+}
+
+.electric-pop-theme h1, .electric-pop-theme h2, .electric-pop-theme h3 {
+  background: linear-gradient(45deg, hsl(var(--primary)), hsl(var(--accent)));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: color-cycle 10s infinite;
+  letter-spacing: 0.02em;
+}
+
+/* Improved component containers */
+.component-container {
+  padding: 1.5rem;
+  border-radius: var(--radius-md);
+  background-color: hsl(var(--background) / 0.5);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  border: 1px solid hsl(var(--border) / 0.7);
+  height: 100%;
+}
+
+/* Improved full-height sections */
+.full-height-section {
+  min-height: calc(100vh - 80px); /* Adjust based on header height */
+  display: flex;
+  flex-direction: column;
+}
+
+/* Fix for gallery display */
+.carousel-item {
+  height: 100%;
+}
+
+/* Make sure cards within carousel items maintain height */
+.carousel-item > div {
+  height: 100%;
+}
+
+/* Card content should expand to fill available space */
+.card-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Improved focus styles for accessibility */
+:focus-visible {
+  outline: 2px solid hsl(var(--primary));
+  outline-offset: 2px;
+}
+
+/* Better keyboard navigation indicators */
+.keyboard-focus:focus-visible {
+  box-shadow: 0 0 0 3px hsl(var(--primary) / 0.6);
+  outline: none;
+}
+
+/* Enhanced text readability */
+.readable-text {
+  max-width: 70ch;
+  line-height: 1.8;
+}
+
+/* Improved gallery spacing and layout */
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+  width: 100%;
+}
+
+@media (max-width: 640px) {
+  .gallery-grid {
+    grid-template-columns: 1fr;
+  }
 }
