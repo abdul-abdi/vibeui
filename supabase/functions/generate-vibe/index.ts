@@ -1,8 +1,12 @@
 
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2.38.4";
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+// NOTE: This is a temporary implementation of the generate-vibe Edge Function
+// It generates random vibes without requiring external API calls
 
-// Define VibeSettings type locally instead of importing from frontend code
+// Import necessary modules
+import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { v4 as uuid } from "https://esm.sh/uuid@9.0.0";
+
+// Define types for the edge function
 type VibeLayout = 'standard' | 'asymmetric' | 'centered' | 'sidebar';
 
 type ColorTheme = {
@@ -25,34 +29,42 @@ type ColorTheme = {
   ring: string;
 };
 
+type FontPairing = {
+  primary: string;
+  secondary: string;
+  accent: string;
+  mono: string;
+};
+
+type RadiusScale = {
+  sm: string;
+  md: string;
+  lg: string;
+};
+
+type SpacingScale = {
+  layoutSpacing: string;
+  cardSpacing: string;
+  elementSpacing: string;
+};
+
+type AnimationSettings = {
+  speed: number;
+  easing: string;
+  entrance: string;
+  hover: string;
+};
+
 type VibeSettings = {
   id: string;
   name: string;
   description: string;
   layout: VibeLayout;
   colors: ColorTheme;
-  fonts: {
-    primary: string;
-    secondary: string;
-    accent: string;
-    mono: string;
-  };
-  radius: {
-    sm: string;
-    md: string;
-    lg: string;
-  };
-  spacing: {
-    layoutSpacing: string;
-    cardSpacing: string;
-    elementSpacing: string;
-  };
-  animation: {
-    speed: number;
-    easing: string;
-    entrance: string;
-    hover: string;
-  };
+  fonts: FontPairing;
+  radius: RadiusScale;
+  spacing: SpacingScale;
+  animation: AnimationSettings;
   shadows: {
     sm: string;
     md: string;
@@ -60,178 +72,227 @@ type VibeSettings = {
   };
 };
 
-const GOOGLE_AI_API_KEY = Deno.env.get("GOOGLE_AI_API_KEY");
-
+// CORS headers
 const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
+// Random helpers
+const randomItem = <T>(items: T[]): T => {
+  return items[Math.floor(Math.random() * items.length)];
+};
+
+const randomRange = (min: number, max: number): number => {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+};
+
+// Function to generate a vibe based on theme and mood
+const generateVibe = (theme?: string, mood?: string): VibeSettings => {
+  // Generate theme-based name
+  const themeWords = [
+    "Neon", "Ocean", "Forest", "Desert", "Space", "Cyber", "Retro", "Futuristic",
+    "Vintage", "Modern", "Minimal", "Vibrant", "Pastel", "Dark", "Light", "Muted",
+    "Electric", "Organic", "Crystal", "Metallic", "Dreamy", "Sharp", "Soft", "Bold"
+  ];
+  
+  // Generate mood-based name
+  const moodWords = [
+    "Calm", "Energetic", "Playful", "Serious", "Elegant", "Quirky", "Professional",
+    "Creative", "Relaxed", "Dynamic", "Peaceful", "Exciting", "Cheerful", "Mysterious",
+    "Warm", "Cool", "Fresh", "Intense", "Subtle", "Powerful", "Gentle", "Bold"
+  ];
+  
+  // Use provided theme/mood or generate random ones
+  const themeWord = theme ? 
+    theme.charAt(0).toUpperCase() + theme.slice(1) : 
+    randomItem(themeWords);
+    
+  const moodWord = mood ? 
+    mood.charAt(0).toUpperCase() + mood.slice(1) : 
+    randomItem(moodWords);
+  
+  // Generate name and description
+  const name = `${themeWord} ${moodWord}`;
+  const description = `A ${moodWord.toLowerCase()} UI theme with ${themeWord.toLowerCase()} aesthetics.`;
+  
+  // Generate layout
+  const layout = randomItem<VibeLayout>(['standard', 'asymmetric', 'centered', 'sidebar']);
+  
+  // Generate colors
+  const hues = {
+    primary: randomRange(0, 360),
+    secondary: randomRange(0, 360),
+    accent: randomRange(0, 360)
+  };
+  
+  const isDark = Math.random() > 0.5;
+  
+  const colors: ColorTheme = {
+    background: isDark ? '240 10% 3.9%' : '0 0% 100%',
+    foreground: isDark ? '0 0% 98%' : '240 10% 3.9%',
+    card: isDark ? '240 10% 5.9%' : '0 0% 100%',
+    cardForeground: isDark ? '0 0% 98%' : '240 10% 3.9%',
+    primary: `${hues.primary} ${randomRange(70, 90)}% ${randomRange(40, 60)}%`,
+    primaryForeground: isDark ? '0 0% 98%' : '0 0% 100%',
+    secondary: `${hues.secondary} ${randomRange(20, 40)}% ${randomRange(80, 95)}%`,
+    secondaryForeground: isDark ? '0 0% 98%' : '240 5.9% 10%',
+    muted: isDark ? '240 3.7% 15.9%' : '240 4.8% 95.9%',
+    mutedForeground: isDark ? '240 5% 64.9%' : '240 3.8% 46.1%',
+    accent: `${hues.accent} ${randomRange(80, 100)}% ${randomRange(80, 95)}%`,
+    accentForeground: isDark ? '0 0% 98%' : '240 5.9% 10%',
+    destructive: isDark ? '0 62.8% 30.6%' : '0 84.2% 60.2%',
+    destructiveForeground: isDark ? '0 0% 98%' : '0 0% 98%',
+    border: isDark ? '240 3.7% 15.9%' : '240 5.9% 90%',
+    input: isDark ? '240 3.7% 15.9%' : '240 5.9% 90%',
+    ring: isDark ? `${hues.primary} 70% 50.4%` : `${hues.primary} 40% 50%`
+  };
+  
+  // Generate fonts
+  const fontOptions = [
+    "'Inter', sans-serif",
+    "'Space Grotesk', sans-serif",
+    "'Playfair Display', serif",
+    "'Quicksand', sans-serif",
+    "'DM Serif Display', serif"
+  ];
+  
+  const monoFonts = [
+    "'Space Mono', monospace",
+    "'Roboto Mono', monospace"
+  ];
+  
+  const fonts: FontPairing = {
+    primary: randomItem(fontOptions),
+    secondary: randomItem(fontOptions),
+    accent: randomItem(fontOptions),
+    mono: randomItem(monoFonts)
+  };
+  
+  // Generate radius
+  const radiusStyle = Math.random() > 0.7 ? 'sharp' : Math.random() > 0.5 ? 'rounded' : 'soft';
+  
+  const radius: RadiusScale = radiusStyle === 'sharp' ? {
+    sm: '0',
+    md: '0',
+    lg: '0'
+  } : radiusStyle === 'rounded' ? {
+    sm: '0.25rem',
+    md: '0.5rem',
+    lg: '1rem'
+  } : {
+    sm: '0.75rem',
+    md: '1.5rem',
+    lg: '2rem'
+  };
+  
+  // Generate spacing
+  const spacing: SpacingScale = {
+    layoutSpacing: `${randomRange(15, 30) / 10}rem`,
+    cardSpacing: `${randomRange(10, 25) / 10}rem`,
+    elementSpacing: `${randomRange(8, 15) / 10}rem`
+  };
+  
+  // Generate animations
+  const entranceAnimations = ['fade-in', 'slide-in-up', 'slide-in-right', 'bounce-subtle'];
+  const hoverAnimations = ['pulse-soft', 'float', 'wave', 'bounce-subtle'];
+  const easings = [
+    'cubic-bezier(0.4, 0, 0.2, 1)',
+    'cubic-bezier(0.65, 0, 0.35, 1)',
+    'cubic-bezier(0.34, 1.56, 0.64, 1)',
+    'cubic-bezier(0.68, -0.6, 0.32, 1.6)'
+  ];
+  
+  const animation: AnimationSettings = {
+    speed: randomRange(8, 12) / 10,
+    easing: randomItem(easings),
+    entrance: randomItem(entranceAnimations),
+    hover: randomItem(hoverAnimations)
+  };
+  
+  // Generate shadows
+  let shadows;
+  if (Math.random() > 0.8) {
+    // Brutal shadows
+    shadows = {
+      sm: '2px 2px 0 0 rgb(0 0 0 / 1)',
+      md: '4px 4px 0 0 rgb(0 0 0 / 1)',
+      lg: '8px 8px 0 0 rgb(0 0 0 / 1)'
+    };
+  } else if (Math.random() > 0.5) {
+    // Soft shadows
+    shadows = {
+      sm: '0 2px 10px 0 rgb(0 0 0 / 0.05)',
+      md: '0 8px 30px 0 rgb(0 0 0 / 0.08)',
+      lg: '0 25px 50px 0 rgb(0 0 0 / 0.1)'
+    };
+  } else {
+    // Standard shadows
+    shadows = {
+      sm: '0 1px 2px 0 rgb(0 0 0 / 0.05)',
+      md: '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)',
+      lg: '0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)'
+    };
+  }
+  
+  // Generate and return the complete vibe
+  return {
+    id: uuid(),
+    name,
+    description,
+    layout,
+    colors,
+    fonts,
+    radius,
+    spacing,
+    animation,
+    shadows
+  };
+};
+
+// Handle requests
 serve(async (req) => {
   // Handle CORS preflight requests
-  if (req.method === 'OPTIONS') {
-    return new Response(null, { headers: corsHeaders });
+  if (req.method === "OPTIONS") {
+    return new Response(null, { headers: corsHeaders, status: 204 });
   }
 
   try {
-    // Parse request for any additional parameters
-    const requestData = await req.json().catch(() => ({}));
-    const { theme = '', mood = '' } = requestData;
+    // Parse request body
+    let { theme, mood } = await req.json();
+    
+    // Generate vibe
+    const vibe = generateVibe(theme, mood);
 
-    console.log("Generating vibe with theme:", theme, "and mood:", mood);
-
-    if (!GOOGLE_AI_API_KEY) {
-      throw new Error("GOOGLE_AI_API_KEY is not configured. Please check your Supabase secrets.");
-    }
-
-    // Call Gemini API to generate a new vibe
-    const response = await fetch("https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-goog-api-key": GOOGLE_AI_API_KEY,
-      },
-      body: JSON.stringify({
-        contents: [
-          {
-            parts: [
-              {
-                text: `Generate a unique UI vibe theme for a web application. 
-                ${theme ? `The theme should incorporate: ${theme}.` : ''}
-                ${mood ? `The mood should be: ${mood}.` : ''}
-                
-                Return a JSON object with the following structure:
-                {
-                  "id": "unique-id-here",
-                  "name": "Creative Theme Name",
-                  "description": "Short description of the theme and its feeling",
-                  "layout": "One of: standard, asymmetric, centered, sidebar",
-                  "colors": {
-                    "background": "HSL value",
-                    "foreground": "HSL value",
-                    "card": "HSL value",
-                    "cardForeground": "HSL value",
-                    "primary": "HSL value",
-                    "primaryForeground": "HSL value",
-                    "secondary": "HSL value",
-                    "secondaryForeground": "HSL value",
-                    "muted": "HSL value",
-                    "mutedForeground": "HSL value",
-                    "accent": "HSL value",
-                    "accentForeground": "HSL value",
-                    "destructive": "HSL value",
-                    "destructiveForeground": "HSL value",
-                    "border": "HSL value",
-                    "input": "HSL value",
-                    "ring": "HSL value"
-                  },
-                  "fonts": {
-                    "primary": "Font family name with fallbacks",
-                    "secondary": "Font family name with fallbacks",
-                    "accent": "Font family name with fallbacks",
-                    "mono": "Monospace font family with fallbacks"
-                  },
-                  "radius": {
-                    "sm": "small radius value (e.g. 0.125rem)",
-                    "md": "medium radius value (e.g. 0.375rem)",
-                    "lg": "large radius value (e.g. 0.75rem)"
-                  },
-                  "spacing": {
-                    "layoutSpacing": "layout spacing value (e.g. 2rem)",
-                    "cardSpacing": "card internal spacing value (e.g. 1.5rem)",
-                    "elementSpacing": "element spacing value (e.g. 1rem)"
-                  },
-                  "animation": {
-                    "speed": "animation speed multiplier as a number (e.g. 1.2)",
-                    "easing": "CSS easing function (e.g. cubic-bezier(0.4, 0, 0.2, 1))",
-                    "entrance": "entrance animation name (one of: fade-in, slide-in-up, slide-in-right, slide-in-down, slide-in-left, bounce-subtle)",
-                    "hover": "hover animation name (one of: pulse-soft, float, bounce-subtle, wave, spin-slow)"
-                  },
-                  "shadows": {
-                    "sm": "small shadow value",
-                    "md": "medium shadow value",
-                    "lg": "large shadow value"
-                  }
-                }
-
-                Make all properties valid CSS values. For colors, use HSL format like "240 10% 3.9%".
-                Be creative and cohesive with the theme.`
-              }
-            ]
-          }
-        ],
-        generationConfig: {
-          temperature: 0.9,
-          topK: 40,
-          topP: 0.95,
-          maxOutputTokens: 2048,
-        }
+    // Return response
+    return new Response(
+      JSON.stringify({
+        vibe,
+        message: "Generated vibe successfully",
       }),
-    });
-
-    const jsonResponse = await response.json();
-    
-    // Extract the generated vibe from the Gemini response
-    const generatedText = jsonResponse.candidates?.[0]?.content?.parts?.[0]?.text;
-    
-    if (!generatedText) {
-      throw new Error("Failed to generate vibe from Gemini API");
-    }
-    
-    // Extract the JSON object from the response text
-    const jsonMatch = generatedText.match(/```json\n([\s\S]*?)\n```/) || 
-                       generatedText.match(/```([\s\S]*?)```/) ||
-                       [null, generatedText];
-                       
-    let vibeData;
-    try {
-      const jsonText = jsonMatch[1] || generatedText;
-      vibeData = JSON.parse(jsonText);
-    } catch (e) {
-      console.error("Error parsing JSON from Gemini response:", e);
-      console.log("Raw response:", generatedText);
-      throw new Error("Failed to parse generated vibe data");
-    }
-
-    // Generate a unique ID if not provided
-    if (!vibeData.id || vibeData.id === "unique-id-here") {
-      vibeData.id = crypto.randomUUID();
-    }
-
-    // Save the vibe to Supabase
-    const { data: savedVibe, error } = await fetch(`https://jhvuteawbvlkssznovxq.supabase.co/rest/v1/generated_vibes`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "apikey": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpodnV0ZWF3YnZsa3Nzem5vdnhxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ2MTcyMjIsImV4cCI6MjA2MDE5MzIyMn0.at5JxnT-MbwEz4_x0me7vVUUqQw4c0dgBP0szqaIavQ",
-        "Prefer": "return=representation"
-      },
-      body: JSON.stringify({
-        name: vibeData.name,
-        description: vibeData.description,
-        layout: vibeData.layout,
-        colors: vibeData.colors,
-        fonts: vibeData.fonts,
-        radius_settings: vibeData.radius,
-        spacing_settings: vibeData.spacing,
-        animation_settings: vibeData.animation,
-        shadow_settings: vibeData.shadows
-      })
-    }).then(res => res.json());
-
-    if (error) {
-      throw new Error(`Error saving vibe: ${error.message}`);
-    }
-
-    // Return the formatted vibe object
-    return new Response(JSON.stringify({ vibe: vibeData }), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" }
-    });
+      {
+        headers: {
+          ...corsHeaders,
+          "Content-Type": "application/json"
+        },
+        status: 200,
+      }
+    );
   } catch (error) {
+    // Handle errors
     console.error("Error generating vibe:", error);
-    return new Response(JSON.stringify({ error: error.message }), {
-      status: 500,
-      headers: { ...corsHeaders, "Content-Type": "application/json" }
-    });
+    
+    return new Response(
+      JSON.stringify({
+        error: "Failed to generate vibe"
+      }),
+      {
+        headers: {
+          ...corsHeaders,
+          "Content-Type": "application/json"
+        },
+        status: 500,
+      }
+    );
   }
 });

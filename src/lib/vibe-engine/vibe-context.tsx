@@ -108,6 +108,13 @@ export const VibeProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const generateAiVibe = async (theme?: string, mood?: string): Promise<boolean> => {
     setIsGenerating(true);
     try {
+      toast({
+        title: "Generating new vibe...",
+        description: theme || mood ? 
+          `Creating a custom ${theme || ''} ${theme && mood ? ' & ' : ''}${mood || ''} vibe` : 
+          "Creating a random vibe"
+      });
+      
       const newVibe = await generateNewVibe(theme, mood);
       if (newVibe) {
         setAiVibes(prev => [newVibe, ...prev]);
@@ -123,11 +130,22 @@ export const VibeProvider: React.FC<{ children: React.ReactNode }> = ({ children
         });
         
         setHistoryIndex(prev => prev + 1);
+        
+        toast({
+          title: "New vibe generated!",
+          description: `${newVibe.name} is ready to use`
+        });
+        
         return true;
       }
       return false;
     } catch (error) {
       console.error("Error generating AI vibe:", error);
+      toast({
+        title: "Vibe generation failed",
+        description: "Edge function is currently unavailable. Try using preset vibes instead.",
+        variant: "destructive"
+      });
       return false;
     } finally {
       setIsGenerating(false);
@@ -136,10 +154,21 @@ export const VibeProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // Toggle the lock state
   const toggleLock = () => {
-    setVibeState(prev => ({
-      ...prev,
-      isLocked: !prev.isLocked,
-    }));
+    setVibeState(prev => {
+      const newIsLocked = !prev.isLocked;
+      
+      toast({
+        title: newIsLocked ? "Vibe locked" : "Vibe unlocked",
+        description: newIsLocked ? 
+          "Current vibe will not change when clicking 'New Vibe'" : 
+          "You can now change to new vibes"
+      });
+      
+      return {
+        ...prev,
+        isLocked: newIsLocked,
+      };
+    });
   };
 
   // Navigate to the previous vibe in history

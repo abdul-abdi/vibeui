@@ -59,14 +59,19 @@ export function AiVibeGenerator() {
         onClick={handleQuickGenerate} 
         disabled={isGenerating}
         variant="outline"
-        className="animated-element flex items-center gap-2"
+        className="animated-element flex items-center gap-2 relative"
       >
         {isGenerating ? (
-          <Loader2 className="h-4 w-4 animate-spin" />
+          <>
+            <Loader2 className="h-4 w-4 animate-spin" />
+            <span>Generating...</span>
+          </>
         ) : (
-          <Sparkles className="h-4 w-4" />
+          <>
+            <Sparkles className="h-4 w-4" />
+            <span>Generate AI Vibe</span>
+          </>
         )}
-        Generate AI Vibe
       </Button>
 
       <Dialog open={open} onOpenChange={setOpen}>
@@ -76,6 +81,7 @@ export function AiVibeGenerator() {
             size="icon" 
             disabled={isGenerating}
             className="w-8 h-8"
+            title="Custom AI Vibe"
           >
             <Palette className="h-4 w-4" />
           </Button>

@@ -2,6 +2,7 @@
 import { supabase } from "@/integrations/supabase/client";
 import { VibeSettings } from "./types";
 import { toast } from "@/hooks/use-toast";
+import { getRandomVibePreset } from "./vibe-presets";
 
 // Convert database format to VibeSettings format
 export const mapDbVibeToVibeSettings = (dbVibe: any): VibeSettings => {
@@ -29,7 +30,7 @@ export const fetchAiVibes = async (): Promise<VibeSettings[]> => {
 
     if (error) throw error;
 
-    return data.map(mapDbVibeToVibeSettings);
+    return data ? data.map(mapDbVibeToVibeSettings) : [];
   } catch (error) {
     console.error("Error fetching AI vibes:", error);
     return [];
@@ -39,34 +40,49 @@ export const fetchAiVibes = async (): Promise<VibeSettings[]> => {
 // Generate a new vibe using the Edge Function
 export const generateNewVibe = async (theme?: string, mood?: string): Promise<VibeSettings | null> => {
   try {
-    toast({
-      title: "Generating new vibe...",
-      description: "This might take a moment",
-    });
-
     const response = await supabase.functions.invoke("generate-vibe", {
       body: { theme, mood },
+      timeout: 15000, // Increase timeout for the edge function
     });
 
-    if (response.error) throw new Error(response.error.message);
-    
-    if (!response.data?.vibe) {
-      throw new Error("No vibe data returned from the API");
+    if (response.error) {
+      console.error("Edge function error:", response.error);
+      throw new Error(response.error.message || "Edge function error");
     }
     
-    toast({
-      title: "New vibe generated!",
-      description: `${response.data.vibe.name} is ready to use`,
-    });
+    if (!response.data?.vibe) {
+      console.error("No vibe data returned:", response.data);
+      throw new Error("No vibe data returned from the API");
+    }
 
     return response.data.vibe as VibeSettings;
   } catch (error: any) {
     console.error("Error generating vibe:", error);
+    
+    // If the Edge Function fails, let's create a fallback vibe
+    if (Math.random() > 0.5) {
+      // In some cases, just propagate the error to show the error message
+      throw error;
+    }
+    
+    // In other cases, create a fallback local vibe with the theme/mood
+    const randomVibe = getRandomVibePreset();
+    const localVibe: VibeSettings = {
+      ...randomVibe,
+      id: `local-${Date.now()}`,
+      name: theme ? `${theme.charAt(0).toUpperCase() + theme.slice(1)} Vibe` : 
+             mood ? `${mood.charAt(0).toUpperCase() + mood.slice(1)} Vibe` : 
+             'Fallback Vibe',
+      description: `A locally generated vibe${theme ? ' with ' + theme + ' theme' : ''}${
+        theme && mood ? ' and ' : (mood ? ' with ' : '')
+      }${mood ? mood + ' mood' : ''}.`,
+    };
+    
     toast({
-      title: "Vibe generation failed",
-      description: error.message || "Couldn't create a new vibe. Please try again.",
-      variant: "destructive"
+      title: "Using locally generated vibe",
+      description: "The edge function is unavailable, so we created a local vibe instead",
     });
-    return null;
+    
+    return localVibe;
   }
 };
