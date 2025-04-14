@@ -1,0 +1,143 @@
+
+import React from 'react';
+import { useVibe } from '@/lib/vibe-engine';
+import { 
+  Palette, 
+  Sparkles, 
+  Shuffle, 
+  Monitor, 
+  Smartphone, 
+  Tablet, 
+  Brush, 
+  Component, 
+  Layers, 
+  Code, 
+  Zap
+} from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Card, CardContent } from './ui/card';
+import { Button } from './ui/button';
+
+export function FeatureShowcase() {
+  const { vibeState } = useVibe();
+  const { currentVibe } = vibeState;
+  
+  // Helper for consistent easing
+  const getEasing = () => {
+    const easing = currentVibe.animation.easing;
+    if (Array.isArray(easing)) {
+      return easing;
+    }
+    return [0.4, 0, 0.2, 1];
+  };
+  
+  const featureItems = [
+    {
+      icon: <Palette className="h-6 w-6" />,
+      title: "Dynamic Color Systems",
+      description: "Explore harmonious color palettes that adapt to your brand identity with smart contrast handling."
+    },
+    {
+      icon: <Component className="h-6 w-6" />,
+      title: "Component Library",
+      description: "Access a rich collection of customizable UI components that maintain cohesion across your designs."
+    },
+    {
+      icon: <Layers className="h-6 w-6" />,
+      title: "Responsive Layouts",
+      description: "Every design automatically adapts to all screen sizes with pixel-perfect precision."
+    },
+    {
+      icon: <Brush className="h-6 w-6" />,
+      title: "Typography Systems",
+      description: "Explore font pairings and typographic scales that enhance readability and visual hierarchy."
+    },
+    {
+      icon: <Zap className="h-6 w-6" />,
+      title: "Animation Patterns",
+      description: "Discover smooth, purposeful animations that enhance user experience without overwhelming."
+    },
+    {
+      icon: <Code className="h-6 w-6" />,
+      title: "Implementation Ready",
+      description: "From inspiration to implementation - export design tokens and code snippets for your tech stack."
+    }
+  ];
+  
+  return (
+    <section className="py-16">
+      <div className="container mx-auto px-4">
+        <motion.div 
+          className="text-center mb-16"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.6, ease: getEasing() }}
+        >
+          <motion.div 
+            className="inline-flex items-center justify-center mb-4 px-4 py-1.5 rounded-full bg-primary/10 text-primary"
+            initial={{ opacity: 0, scale: 0.8 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2, duration: 0.5 }}
+          >
+            <Sparkles className="mr-2 h-4 w-4" />
+            <span className="text-sm font-medium">Designer's Toolkit</span>
+          </motion.div>
+          
+          <h2 className="text-3xl md:text-4xl font-bold mb-6">Empowering Design Workflows</h2>
+          <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+            VibeUI provides an extensive collection of tools and inspiration sources to elevate
+            your design process from concept to implementation.
+          </p>
+        </motion.div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {featureItems.map((item, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ delay: index * 0.1, duration: 0.5, ease: getEasing() }}
+            >
+              <Card className="h-full transition-all hover:shadow-md group relative overflow-hidden">
+                <CardContent className="p-6 flex flex-col h-full">
+                  <motion.div
+                    className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity"
+                    initial={false}
+                    whileHover={{ opacity: 1 }}
+                  />
+                  <div className="mb-4 p-3 rounded-lg bg-primary/10 w-fit">
+                    {item.icon}
+                  </div>
+                  <h3 className="text-xl font-semibold mb-2">{item.title}</h3>
+                  <p className="text-muted-foreground flex-grow">{item.description}</p>
+                </CardContent>
+              </Card>
+            </motion.div>
+          ))}
+        </div>
+
+        <motion.div 
+          className="mt-16 text-center"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.2, duration: 0.5, ease: getEasing() }}
+        >
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <Button size="lg" className="gap-2">
+              <Shuffle className="h-4 w-4" />
+              Generate New Vibe
+            </Button>
+            <Button variant="outline" size="lg" className="gap-2">
+              <Code className="h-4 w-4" />
+              Export Design Tokens
+            </Button>
+          </div>
+        </motion.div>
+      </div>
+    </section>
+  );
+}
