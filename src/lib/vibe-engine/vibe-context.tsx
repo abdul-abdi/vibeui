@@ -4,6 +4,7 @@ import { VibeSettings, VibeState } from './types';
 import { getRandomVibePreset, getVibePresetById } from './vibe-presets';
 import { applyVibe } from './vibe-utils';
 import { fetchAiVibes, generateNewVibe } from './ai-vibes';
+import { toast } from '@/hooks/use-toast';
 
 // Context for managing the current vibe
 const VibeContext = createContext<{
@@ -12,7 +13,7 @@ const VibeContext = createContext<{
   toggleLock: () => void;
   previousVibe: () => void;
   nextVibe: () => void;
-  generateAiVibe: (theme?: string, mood?: string) => Promise<void>;
+  generateAiVibe: (theme?: string, mood?: string) => Promise<boolean>;
   aiVibes: VibeSettings[];
   isGenerating: boolean;
 }>({
@@ -25,7 +26,7 @@ const VibeContext = createContext<{
   toggleLock: () => {},
   previousVibe: () => {},
   nextVibe: () => {},
-  generateAiVibe: async () => {},
+  generateAiVibe: async () => false,
   aiVibes: [],
   isGenerating: false,
 });
@@ -49,8 +50,17 @@ export const VibeProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // Load AI vibes on component mount
   useEffect(() => {
     const loadAiVibes = async () => {
-      const vibes = await fetchAiVibes();
-      setAiVibes(vibes);
+      try {
+        const vibes = await fetchAiVibes();
+        setAiVibes(vibes);
+      } catch (error) {
+        console.error("Error loading AI vibes:", error);
+        toast({
+          title: "Couldn't load saved vibes",
+          description: "There was an error loading your saved vibes",
+          variant: "destructive"
+        });
+      }
     };
     
     loadAiVibes();
@@ -101,7 +111,7 @@ export const VibeProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   // Generate a new AI vibe
-  const generateAiVibe = async (theme?: string, mood?: string) => {
+  const generateAiVibe = async (theme?: string, mood?: string): Promise<boolean> => {
     setIsGenerating(true);
     try {
       const newVibe = await generateNewVibe(theme, mood);
@@ -119,7 +129,12 @@ export const VibeProvider: React.FC<{ children: React.ReactNode }> = ({ children
         });
         
         setHistoryIndex(prev => prev + 1);
+        return true;
       }
+      return false;
+    } catch (error) {
+      console.error("Error generating AI vibe:", error);
+      return false;
     } finally {
       setIsGenerating(false);
     }

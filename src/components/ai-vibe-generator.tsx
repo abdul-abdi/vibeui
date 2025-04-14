@@ -14,6 +14,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { toast } from '@/hooks/use-toast';
 
 export function AiVibeGenerator() {
   const { generateAiVibe, isGenerating } = useVibe();
@@ -23,12 +24,33 @@ export function AiVibeGenerator() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await generateAiVibe(theme, mood);
-    setOpen(false);
+    
+    if (!theme && !mood) {
+      toast({
+        title: "Input needed",
+        description: "Please enter a theme or mood to generate a custom vibe",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    const success = await generateAiVibe(theme, mood);
+    if (success) {
+      setOpen(false);
+      setTheme('');
+      setMood('');
+    }
   };
 
   const handleQuickGenerate = async () => {
     await generateAiVibe();
+  };
+
+  const themeExamples = ["cyberpunk", "nature", "minimal", "retro", "futuristic"];
+  const moodExamples = ["energetic", "calm", "professional", "playful", "elegant"];
+
+  const getRandomExample = (examples: string[]) => {
+    return examples[Math.floor(Math.random() * examples.length)];
   };
 
   return (
@@ -73,7 +95,7 @@ export function AiVibeGenerator() {
                 </Label>
                 <Input
                   id="theme"
-                  placeholder="e.g. cyberpunk, nature, minimal"
+                  placeholder={`e.g. ${getRandomExample(themeExamples)}`}
                   className="col-span-3"
                   value={theme}
                   onChange={(e) => setTheme(e.target.value)}
@@ -85,7 +107,7 @@ export function AiVibeGenerator() {
                 </Label>
                 <Input
                   id="mood"
-                  placeholder="e.g. energetic, calm, professional"
+                  placeholder={`e.g. ${getRandomExample(moodExamples)}`}
                   className="col-span-3"
                   value={mood}
                   onChange={(e) => setMood(e.target.value)}

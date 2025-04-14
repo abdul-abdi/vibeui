@@ -80,6 +80,10 @@ serve(async (req) => {
 
     console.log("Generating vibe with theme:", theme, "and mood:", mood);
 
+    if (!GOOGLE_AI_API_KEY) {
+      throw new Error("GOOGLE_AI_API_KEY is not configured. Please check your Supabase secrets.");
+    }
+
     // Call Gemini API to generate a new vibe
     const response = await fetch("https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent", {
       method: "POST",
@@ -168,7 +172,11 @@ serve(async (req) => {
     const jsonResponse = await response.json();
     
     // Extract the generated vibe from the Gemini response
-    const generatedText = jsonResponse.candidates[0]?.content?.parts[0]?.text;
+    const generatedText = jsonResponse.candidates?.[0]?.content?.parts?.[0]?.text;
+    
+    if (!generatedText) {
+      throw new Error("Failed to generate vibe from Gemini API");
+    }
     
     // Extract the JSON object from the response text
     const jsonMatch = generatedText.match(/```json\n([\s\S]*?)\n```/) || 

@@ -1,7 +1,7 @@
 
 import { supabase } from "@/integrations/supabase/client";
 import { VibeSettings } from "./types";
-import { toast } from "@/components/ui/use-toast";
+import { toast } from "@/hooks/use-toast";
 
 // Convert database format to VibeSettings format
 export const mapDbVibeToVibeSettings = (dbVibe: any): VibeSettings => {
@@ -50,17 +50,21 @@ export const generateNewVibe = async (theme?: string, mood?: string): Promise<Vi
 
     if (response.error) throw new Error(response.error.message);
     
+    if (!response.data?.vibe) {
+      throw new Error("No vibe data returned from the API");
+    }
+    
     toast({
       title: "New vibe generated!",
       description: `${response.data.vibe.name} is ready to use`,
     });
 
-    return response.data.vibe;
-  } catch (error) {
+    return response.data.vibe as VibeSettings;
+  } catch (error: any) {
     console.error("Error generating vibe:", error);
     toast({
       title: "Vibe generation failed",
-      description: "Couldn't create a new vibe. Please try again.",
+      description: error.message || "Couldn't create a new vibe. Please try again.",
       variant: "destructive"
     });
     return null;
