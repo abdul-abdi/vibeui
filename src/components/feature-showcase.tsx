@@ -19,7 +19,7 @@ import { Card, CardContent } from './ui/card';
 import { Button } from './ui/button';
 
 export function FeatureShowcase() {
-  const { vibeState } = useVibe();
+  const { vibeState, changeVibe } = useVibe();
   const { currentVibe } = vibeState;
   
   // Helper for consistent easing
@@ -34,33 +34,33 @@ export function FeatureShowcase() {
   const featureItems = [
     {
       icon: <Palette className="h-6 w-6" />,
-      title: "Dynamic Color Systems",
-      description: "Explore harmonious color palettes that adapt to your brand identity with smart contrast handling."
+      title: "Dynamic Color Themes",
+      description: "Explore different color palettes and themes that can inspire your design projects."
     },
     {
       icon: <Component className="h-6 w-6" />,
-      title: "Component Library",
-      description: "Access a rich collection of customizable UI components that maintain cohesion across your designs."
+      title: "UI Components",
+      description: "Browse through various UI components and see how they adapt to different design styles."
     },
     {
       icon: <Layers className="h-6 w-6" />,
       title: "Responsive Layouts",
-      description: "Every design automatically adapts to all screen sizes with pixel-perfect precision."
+      description: "View how designs adapt to different screen sizes to ensure a consistent experience."
     },
     {
       icon: <Brush className="h-6 w-6" />,
-      title: "Typography Systems",
-      description: "Explore font pairings and typographic scales that enhance readability and visual hierarchy."
+      title: "Typography Examples",
+      description: "See different font pairings and typographic styles that can enhance your designs."
     },
     {
       icon: <Zap className="h-6 w-6" />,
-      title: "Animation Patterns",
-      description: "Discover smooth, purposeful animations that enhance user experience without overwhelming."
+      title: "Animation Inspiration",
+      description: "Get inspiration for subtle animations and transitions that can improve user experience."
     },
     {
       icon: <Code className="h-6 w-6" />,
-      title: "Implementation Ready",
-      description: "From inspiration to implementation - export design tokens and code snippets for your tech stack."
+      title: "Visual Reference",
+      description: "Use VibeUI as a visual reference and inspiration source for your own design projects."
     }
   ];
   
@@ -82,13 +82,13 @@ export function FeatureShowcase() {
             transition={{ delay: 0.2, duration: 0.5 }}
           >
             <Sparkles className="mr-2 h-4 w-4" />
-            <span className="text-sm font-medium">Designer's Toolkit</span>
+            <span className="text-sm font-medium">Design Inspiration</span>
           </motion.div>
           
-          <h2 className="text-3xl md:text-4xl font-bold mb-6">Empowering Design Workflows</h2>
+          <h2 className="text-3xl md:text-4xl font-bold mb-6">Explore Design Possibilities</h2>
           <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-            VibeUI provides an extensive collection of tools and inspiration sources to elevate
-            your design process from concept to implementation.
+            VibeUI provides a collection of design inspirations to help spark creativity
+            and explore different visual directions for your projects.
           </p>
         </motion.div>
         
@@ -127,13 +127,13 @@ export function FeatureShowcase() {
           transition={{ delay: 0.2, duration: 0.5, ease: getEasing() }}
         >
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Button size="lg" className="gap-2">
+            <Button size="lg" onClick={() => changeVibe()} className="gap-2">
               <Shuffle className="h-4 w-4" />
               Generate New Vibe
             </Button>
             <Button variant="outline" size="lg" className="gap-2">
               <Code className="h-4 w-4" />
-              Export Design Tokens
+              View Example
             </Button>
           </div>
         </motion.div>

@@ -42,15 +42,15 @@ export function DesignInspiration() {
   const benefits = [
     {
       icon: <Lightbulb className="h-5 w-5" />,
-      text: "Break creative blocks with instant design inspiration"
+      text: "Find fresh design inspiration when you're feeling stuck"
     },
     {
       icon: <TrendingUp className="h-5 w-5" />,
-      text: "Stay updated with the latest UI/UX design trends"
+      text: "Explore different UI style directions for your projects"
     },
     {
       icon: <ThumbsUp className="h-5 w-5" />,
-      text: "Create cohesive design systems that users love"
+      text: "See how colors, typography, and components work together"
     }
   ];
 
@@ -66,13 +66,13 @@ export function DesignInspiration() {
             className="space-y-6"
           >
             <h2 className="text-3xl md:text-5xl font-bold leading-tight">
-              Endless Inspiration for
-              <span className="block text-primary">Modern Designers</span>
+              Inspiration for
+              <span className="block text-primary">Your Design Process</span>
             </h2>
             
             <p className="text-lg text-muted-foreground">
-              VibeUI helps you explore the vast landscape of design possibilities, empowering you to
-              create interfaces that stand out in a crowded digital world.
+              VibeUI helps you explore different visual directions and UI styles to
+              inspire your next design project.
             </p>
             
             <ul className="space-y-4">
@@ -98,8 +98,8 @@ export function DesignInspiration() {
             </ul>
             
             <div className="pt-4">
-              <Button className="group">
-                Explore Design Resources
+              <Button className="group" onClick={() => changeVibe()}>
+                Try Different Styles
                 <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
               </Button>
             </div>

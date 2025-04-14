@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef, useState } from 'react';
 import { VibeProvider, useVibe } from '@/lib/vibe-engine';
 import { VibeControls } from '@/components/vibe-controls';
@@ -247,11 +246,11 @@ const VibeContent = () => {
               </motion.div>
               
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
-                Transform Your <span className="text-primary">Design Process</span> with Dynamic UI
+                Explore UI <span className="text-primary">Design Inspiration</span> with Dynamic Themes
               </h1>
               
               <p className="text-xl text-muted-foreground mb-8 max-w-lg mx-auto lg:mx-0">
-                Discover endless UI inspiration, explore design systems, and create exceptional user experiences with VibeUI.
+                Discover different UI styles, explore design systems, and find inspiration for your next project with VibeUI.
               </p>
               
               <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
@@ -266,23 +265,6 @@ const VibeContent = () => {
                   <Layers className="h-4 w-4" />
                   Explore Features
                 </Button>
-              </div>
-              
-              <div className="mt-8 flex items-center justify-center lg:justify-start">
-                <div className="flex -space-x-2">
-                  <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-xs">
-                    JD
-                  </div>
-                  <div className="w-8 h-8 rounded-full bg-primary/30 flex items-center justify-center text-xs">
-                    AM
-                  </div>
-                  <div className="w-8 h-8 rounded-full bg-primary/40 flex items-center justify-center text-xs">
-                    RK
-                  </div>
-                </div>
-                <p className="ml-3 text-sm text-muted-foreground">
-                  <span className="font-medium text-foreground">2,500+</span> designers already using VibeUI
-                </p>
               </div>
             </motion.div>
             
@@ -484,7 +466,7 @@ const VibeContent = () => {
         <div className="container mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
           <div>
             <p className="text-sm text-muted-foreground">
-              Vibe UI - The ultimate UI/UX design inspiration platform
+              Vibe UI - A design inspiration platform for UI/UX creators
             </p>
             <div className="flex items-center gap-4 mt-2">
               <a href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">About</a>

@@ -51,16 +51,16 @@ export function DesignCTA() {
         >
           <div className="inline-flex items-center justify-center px-4 py-1.5 rounded-full bg-primary/10 text-primary mb-6">
             <Megaphone className="mr-2 h-4 w-4" />
-            <span className="text-sm font-medium">Start Designing Better</span>
+            <span className="text-sm font-medium">Design Inspiration</span>
           </div>
           
           <h2 className="text-4xl md:text-5xl font-bold leading-tight">
-            Transform Your Design Process with <span className="text-primary">VibeUI</span>
+            Explore Design Possibilities with <span className="text-primary">VibeUI</span>
           </h2>
           
           <p className="text-xl text-muted-foreground">
-            Join thousands of designers who use VibeUI to create exceptional user interfaces
-            and deliver outstanding experiences that users love.
+            Discover different UI styles and design systems to inspire your next project
+            and enhance your creative process.
           </p>
           
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
@@ -76,22 +76,8 @@ export function DesignCTA() {
           </div>
           
           <div className="pt-10 flex items-center justify-center">
-            <div className="flex -space-x-2">
-              <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-xs">
-                JD
-              </div>
-              <div className="w-8 h-8 rounded-full bg-primary/30 flex items-center justify-center text-xs">
-                AM
-              </div>
-              <div className="w-8 h-8 rounded-full bg-primary/40 flex items-center justify-center text-xs">
-                RK
-              </div>
-              <div className="w-8 h-8 rounded-full bg-primary/50 flex items-center justify-center text-xs">
-                MJ
-              </div>
-            </div>
-            <p className="ml-3 text-sm text-muted-foreground">
-              <span className="font-medium text-foreground">2,500+</span> designers already using VibeUI
+            <p className="text-sm text-muted-foreground">
+              A design inspiration tool for UI/UX creators
             </p>
             
             <div className="ml-auto flex items-center">

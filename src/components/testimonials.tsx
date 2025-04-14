@@ -22,21 +22,21 @@ export function Testimonials() {
 
   const testimonials = [
     {
-      content: "VibeUI has completely transformed our design process. The ability to quickly explore different visual directions saves us hours in the conceptual phase.",
+      content: "VibeUI has been incredibly helpful for our design exploration process. It's a great tool for getting quick visual concepts.",
       author: "Alex Morgan",
-      role: "Lead Designer at CreativeFlow",
+      role: "UX Designer",
       avatar: "AM",
       company: "CreativeFlow"
     },
     {
-      content: "As a UI/UX educator, I recommend VibeUI to all my students. It's an incredible tool for understanding how different design systems work together.",
+      content: "As a UI/UX educator, I find VibeUI useful for demonstrating different design systems to my students. It's a practical learning tool.",
       author: "Sarah Chen",
       role: "Design Educator",
       avatar: "SC",
       company: "DesignAcademy"
     },
     {
-      content: "Our clients are always impressed when we show them different interface options using VibeUI. It's become an essential part of our client presentation process.",
+      content: "The ability to quickly switch between different interface styles helps us show various options to clients during the conceptual phase.",
       author: "Marcus Johnson",
       role: "UI/UX Consultant",
       avatar: "MJ",
@@ -54,9 +54,9 @@ export function Testimonials() {
           viewport={{ once: true }}
           transition={{ duration: 0.6, ease: getEasing() }}
         >
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">Trusted by Designers Worldwide</h2>
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">What Designers Are Saying</h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            See how VibeUI is helping designers and teams create exceptional user experiences.
+            See how VibeUI is helping designers explore visual concepts and find inspiration.
           </p>
         </motion.div>
         
