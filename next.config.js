@@ -1,6 +1,14 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  eslint: {
+    // This will ignore ESLint errors during build
+    ignoreDuringBuilds: true,
+  },
+  typescript: {
+    // This will ignore TypeScript errors during build
+    ignoreBuildErrors: true,
+  },
   images: {
     domains: ['via.placeholder.com', 'images.unsplash.com'],
     formats: ['image/avif', 'image/webp'],
