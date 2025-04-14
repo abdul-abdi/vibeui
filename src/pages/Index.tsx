@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef, useState } from 'react';
 import { VibeProvider, useVibe } from '@/lib/vibe-engine';
 import { VibeControls } from '@/components/vibe-controls';
@@ -9,12 +8,12 @@ import { FeatureShowcase } from '@/components/feature-showcase';
 import { Testimonials } from '@/components/testimonials';
 import { DesignInspiration } from '@/components/design-inspiration';
 import { DesignCTA } from '@/components/design-cta';
+import { DesignCapabilities } from '@/components/design-capabilities';
 import { Toaster } from '@/components/ui/toaster';
 import { motion, useMotionTemplate, useMotionValue, useTransform } from 'framer-motion';
-import { ArrowDown, Sparkles, ChevronLeft, Palette, Layers, Zap, Monitor } from 'lucide-react';
+import { ArrowDown, Sparkles, ChevronLeft, Palette, Layers, Zap, Monitor, MousePointer } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-// Function to check if we're in a specific vibe theme
 const checkVibeType = (vibeName: string, keywords: string[]): boolean => {
   const lowerName = vibeName.toLowerCase();
   return keywords.some(keyword => lowerName.includes(keyword));
@@ -25,7 +24,6 @@ const VibeContent = () => {
   const { currentVibe } = vibeState;
   const isInitialLoad = useRef(true);
 
-  // Load a vibe on initial render if not locked
   useEffect(() => {
     if (!vibeState.isLocked) {
       if (isInitialLoad.current) {
@@ -37,7 +35,6 @@ const VibeContent = () => {
     }
   }, [changeVibe, vibeState.isLocked]);
 
-  // Helper function for consistent easing across animations
   const getEasing = () => {
     const easing = currentVibe.animation.easing;
     if (Array.isArray(easing)) {
@@ -46,7 +43,6 @@ const VibeContent = () => {
     return [0.4, 0, 0.2, 1];
   };
 
-  // Interactive background effect
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
   
@@ -63,7 +59,6 @@ const VibeContent = () => {
     transparent 40%
   )`;
 
-  // For header parallax effect
   const [scrollY, setScrollY] = useState(0);
   
   useEffect(() => {
@@ -87,14 +82,12 @@ const VibeContent = () => {
     [0, 30]
   );
 
-  // Determine vibe for specific styling
   const isSoftOrganic = checkVibeType(currentVibe.name, ["organic", "soft", "natural"]);
   const isDarkTech = checkVibeType(currentVibe.name, ["techno", "cyber", "digital", "tech"]);
   const isBrutalist = checkVibeType(currentVibe.name, ["brutal", "neo", "bold"]);
   const isPlayful = checkVibeType(currentVibe.name, ["playful", "vibrant", "fun", "creative"]);
   const isElectric = checkVibeType(currentVibe.name, ["electric", "pop", "neon", "bright"]);
-  
-  // Dynamic container classes based on vibe
+
   const containerClass = isSoftOrganic ? 'soft-organic-container' : 
                          isDarkTech ? 'dark-tech-container' :
                          isBrutalist ? 'brutalist-container' :
@@ -106,7 +99,6 @@ const VibeContent = () => {
       className={`min-h-screen bg-background transition-colors duration-500 relative overflow-guard ${containerClass}`}
       onMouseMove={handleMouseMove}
     >
-      {/* Background effects */}
       <motion.div 
         className="fixed inset-0 pointer-events-none z-0 hardware-accelerated" 
         style={{ background: backgroundGradient }}
@@ -129,56 +121,46 @@ const VibeContent = () => {
         style={{ y: backgroundParallax }}
       />
       
-      {/* Special background effects for specific themes */}
-      {isSoftOrganic && (
-        <motion.div 
-          className="fixed bottom-0 left-0 right-0 h-64 pointer-events-none z-0 opacity-20 hardware-accelerated"
-          style={{
-            background: 'linear-gradient(to top, rgba(16, 185, 129, 0.1) 0%, transparent 100%)',
-          }}
-        />
-      )}
+      <motion.div 
+        className="fixed bottom-0 left-0 right-0 h-64 pointer-events-none z-0 opacity-20 hardware-accelerated"
+        style={{
+          background: 'linear-gradient(to top, rgba(16, 185, 129, 0.1) 0%, transparent 100%)',
+        }}
+      />
       
-      {isDarkTech && (
-        <motion.div 
-          className="fixed inset-0 pointer-events-none z-0 hardware-accelerated"
-          style={{
-            background: 'radial-gradient(circle at 50% 50%, rgba(139, 92, 246, 0.15), transparent 70%)',
-          }}
-          animate={{
-            opacity: [0.5, 0.7, 0.5]
-          }}
-          transition={{
-            duration: 8,
-            repeat: Infinity,
-            ease: "easeInOut"
-          }}
-        />
-      )}
+      <motion.div 
+        className="fixed inset-0 pointer-events-none z-0 hardware-accelerated"
+        style={{
+          background: 'radial-gradient(circle at 50% 50%, rgba(139, 92, 246, 0.15), transparent 70%)',
+        }}
+        animate={{
+          opacity: [0.5, 0.7, 0.5]
+        }}
+        transition={{
+          duration: 8,
+          repeat: Infinity,
+          ease: "easeInOut"
+        }}
+      />
       
-      {isElectric && (
-        <>
-          <motion.div 
-            className="fixed inset-0 pointer-events-none z-0 opacity-30 hardware-accelerated"
+      <motion.div 
+        className="fixed inset-0 pointer-events-none z-0 opacity-30 hardware-accelerated"
+        style={{
+          background: 'linear-gradient(45deg, rgba(var(--primary-rgb), 0.1) 0%, rgba(var(--accent-rgb), 0.1) 100%)',
+        }}
+      />
+      
+      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden hardware-accelerated">
+        <div className="absolute inset-0 opacity-10" 
             style={{
-              background: 'linear-gradient(45deg, rgba(var(--primary-rgb), 0.1) 0%, rgba(var(--accent-rgb), 0.1) 100%)',
+              backgroundImage: 'linear-gradient(var(--primary) 1px, transparent 1px), linear-gradient(90deg, var(--primary) 1px, transparent 1px)',
+              backgroundSize: '40px 40px'
             }}
-          />
-          {/* Animated grid lines */}
-          <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden hardware-accelerated">
-            <div className="absolute inset-0 opacity-10" 
-                style={{
-                  backgroundImage: 'linear-gradient(var(--primary) 1px, transparent 1px), linear-gradient(90deg, var(--primary) 1px, transparent 1px)',
-                  backgroundSize: '40px 40px'
-                }}
-            />
-          </div>
-        </>
-      )}
-
-      {/* Header */}
+        />
+      </div>
+      
       <motion.header 
-        className="relative z-10 py-4 px-4 sm:px-6 lg:px-8 sticky top-0 backdrop-blur-sm bg-background/50"
+        className="relative z-10 py-4 px-4 sm:px-6 lg:px-8 sticky top-0 backdrop-blur-sm bg-background/70 border-b border-border/20"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 * (1/currentVibe.animation.speed), ease: getEasing() }}
@@ -193,7 +175,14 @@ const VibeContent = () => {
             >
               <div className={`flex flex-col items-start ${isSoftOrganic ? 'px-3 py-2 rounded-xl backdrop-blur-sm bg-white/20' : ''}`}>
                 <h1 className="text-3xl font-bold flex items-center gap-2">
-                  Vibe <span className="text-primary">UI</span>
+                  <motion.span
+                    initial={{ rotate: -5 }}
+                    animate={{ rotate: 0 }}
+                    transition={{ duration: 0.5, ease: "easeOut" }}
+                    className="inline-block"
+                  >
+                    Vibe<span className="text-primary">UI</span>
+                  </motion.span>
                   <motion.span 
                     className="inline-block text-primary relative ml-1"
                     initial={{ opacity: 0, scale: 0.8 }}
@@ -214,8 +203,15 @@ const VibeContent = () => {
                     </motion.div>
                   </motion.span>
                 </h1>
-                <p className="text-sm text-muted-foreground mt-1">
-                  The ultimate UI design inspiration platform for modern designers
+                <p className="text-sm text-muted-foreground mt-1 flex items-center">
+                  <span>The designer's inspiration platform</span>
+                  <motion.span 
+                    className="inline-flex ml-2 bg-primary/10 text-primary text-xs px-1.5 py-0.5 rounded"
+                    animate={{ scale: [1, 1.05, 1] }}
+                    transition={{ duration: 2, repeat: Infinity }}
+                  >
+                    New
+                  </motion.span>
                 </p>
               </div>
             </motion.div>
@@ -226,8 +222,7 @@ const VibeContent = () => {
         </div>
       </motion.header>
 
-      {/* Hero section */}
-      <section className="relative py-16 md:py-24 overflow-hidden">
+      <section className="relative py-16 md:py-24 lg:py-32 overflow-hidden">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <motion.div
@@ -251,11 +246,12 @@ const VibeContent = () => {
               </h1>
               
               <p className="text-xl text-muted-foreground mb-8 max-w-lg mx-auto lg:mx-0">
-                Discover endless UI inspiration, explore design systems, and create exceptional user experiences with VibeUI.
+                Generate endless UI inspiration, explore complete design systems, and create exceptional user experiences in seconds.
               </p>
               
               <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                <Button size="lg" onClick={() => changeVibe()} className="gap-2">
+                <Button size="lg" onClick={() => changeVibe()} className="gap-2 relative overflow-hidden group">
+                  <span className="absolute inset-0 bg-gradient-to-r from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
                   <Zap className="h-4 w-4" />
                   Generate New Vibe
                 </Button>
@@ -268,22 +264,30 @@ const VibeContent = () => {
                 </Button>
               </div>
               
-              <div className="mt-8 flex items-center justify-center lg:justify-start">
+              <motion.div 
+                className="mt-8 flex items-center justify-center lg:justify-start"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.8, duration: 0.6 }}
+              >
                 <div className="flex -space-x-2">
-                  <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-xs">
+                  <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-xs border-2 border-background">
                     JD
                   </div>
-                  <div className="w-8 h-8 rounded-full bg-primary/30 flex items-center justify-center text-xs">
+                  <div className="w-8 h-8 rounded-full bg-primary/30 flex items-center justify-center text-xs border-2 border-background">
                     AM
                   </div>
-                  <div className="w-8 h-8 rounded-full bg-primary/40 flex items-center justify-center text-xs">
+                  <div className="w-8 h-8 rounded-full bg-primary/40 flex items-center justify-center text-xs border-2 border-background">
                     RK
+                  </div>
+                  <div className="w-8 h-8 rounded-full bg-primary/50 flex items-center justify-center text-xs border-2 border-background">
+                    +
                   </div>
                 </div>
                 <p className="ml-3 text-sm text-muted-foreground">
                   <span className="font-medium text-foreground">2,500+</span> designers already using VibeUI
                 </p>
-              </div>
+              </motion.div>
             </motion.div>
             
             <motion.div
@@ -329,6 +333,23 @@ const VibeContent = () => {
                     <div className="h-8 bg-primary/20 rounded-md w-24"></div>
                   </div>
                 </div>
+                
+                <motion.div 
+                  className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 pointer-events-none"
+                  animate={{ 
+                    opacity: [0, 1, 0], 
+                    scale: [0.8, 1.1, 0.8] 
+                  }}
+                  transition={{ 
+                    duration: 2, 
+                    repeat: Infinity, 
+                    repeatDelay: 3 
+                  }}
+                >
+                  <div className="bg-primary/20 backdrop-blur-sm rounded-full p-3 border border-primary/30">
+                    <Sparkles className="h-8 w-8 text-primary" />
+                  </div>
+                </motion.div>
               </div>
               
               <motion.div
@@ -348,6 +369,20 @@ const VibeContent = () => {
                 }}
                 transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
               />
+              
+              <motion.div 
+                className="absolute top-1/2 right-0 transform translate-x-1/2 -translate-y-1/4 pointer-events-none"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 1, duration: 0.8 }}
+              >
+                <div className="bg-card/80 backdrop-blur-sm rounded-xl p-3 shadow-lg border border-border">
+                  <div className="flex items-center gap-2">
+                    <MousePointer className="h-4 w-4 text-primary" />
+                    <p className="text-sm">Interactive Preview</p>
+                  </div>
+                </div>
+              </motion.div>
             </motion.div>
           </div>
           
@@ -365,8 +400,7 @@ const VibeContent = () => {
         </div>
       </section>
 
-      {/* Main content */}
-      <main className="container mx-auto py-8 px-4 sm:px-6 lg:px-8 relative z-10 flex-grow">
+      <main className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 flex-grow">
         <div id="vibe-info-section" className="pt-16">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
@@ -374,7 +408,6 @@ const VibeContent = () => {
             transition={{ duration: 0.6, ease: getEasing() }}
             className="grid grid-cols-1 lg:grid-cols-2 gap-8"
           >
-            {/* Left column - Vibe Info */}
             <section className="space-y-6">
               <motion.div
                 className="flex items-center space-x-2"
@@ -430,7 +463,6 @@ const VibeContent = () => {
               </motion.div>
             </section>
             
-            {/* Right column - Demo elements */}
             <motion.section 
               className="space-y-6"
               initial={{ opacity: 0, y: 20 }}
@@ -442,17 +474,18 @@ const VibeContent = () => {
           </motion.div>
         </div>
         
-        {/* Feature showcase section */}
-        <div id="feature-section" className="mt-24">
+        <div className="mt-24">
+          <DesignCapabilities />
+        </div>
+        
+        <div id="feature-section" className="mt-16">
           <FeatureShowcase />
         </div>
         
-        {/* Design inspiration section */}
         <div className="mt-16">
           <DesignInspiration />
         </div>
         
-        {/* Gallery section */}
         <motion.div 
           id="gallery-section"
           className="mt-16"
@@ -464,44 +497,76 @@ const VibeContent = () => {
           <VibeGallery />
         </motion.div>
         
-        {/* Testimonials section */}
-        <div className="mt-24">
+        <div className="mt-16">
           <Testimonials />
         </div>
         
-        {/* CTA section */}
         <div className="mt-16">
           <DesignCTA />
         </div>
       </main>
 
       <motion.footer 
-        className="relative z-10 mt-auto py-6 px-4 sm:px-6 lg:px-8 border-t backdrop-blur-sm bg-background/30"
+        className="relative z-10 mt-auto py-8 px-4 sm:px-6 lg:px-8 border-t backdrop-blur-sm bg-background/30"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1, duration: 0.5, ease: getEasing() }}
       >
-        <div className="container mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
-          <div>
-            <p className="text-sm text-muted-foreground">
-              Vibe UI - The ultimate UI/UX design inspiration platform
-            </p>
-            <div className="flex items-center gap-4 mt-2">
-              <a href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">About</a>
-              <a href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">Features</a>
-              <a href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">Gallery</a>
-              <a href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">Contact</a>
+        <div className="container mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+            <div>
+              <h3 className="text-lg font-semibold mb-4">VibeUI</h3>
+              <p className="text-sm text-muted-foreground">
+                The ultimate platform for UI/UX design inspiration, helping designers create exceptional user experiences.
+              </p>
+            </div>
+            
+            <div>
+              <h3 className="text-sm font-semibold uppercase tracking-wider mb-4">Features</h3>
+              <ul className="space-y-2">
+                <li><a href="#feature-section" className="text-sm text-muted-foreground hover:text-primary transition-colors">Design Systems</a></li>
+                <li><a href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">Component Library</a></li>
+                <li><a href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">Color Palettes</a></li>
+                <li><a href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">Typography</a></li>
+              </ul>
+            </div>
+            
+            <div>
+              <h3 className="text-sm font-semibold uppercase tracking-wider mb-4">Resources</h3>
+              <ul className="space-y-2">
+                <li><a href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">Documentation</a></li>
+                <li><a href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">Tutorials</a></li>
+                <li><a href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">Blog</a></li>
+                <li><a href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">Support</a></li>
+              </ul>
+            </div>
+            
+            <div>
+              <h3 className="text-sm font-semibold uppercase tracking-wider mb-4">Connect</h3>
+              <ul className="space-y-2">
+                <li><a href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">Twitter</a></li>
+                <li><a href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">Discord</a></li>
+                <li><a href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">GitHub</a></li>
+                <li><a href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">Contact</a></li>
+              </ul>
             </div>
           </div>
-          <div className="flex items-center gap-2">
-            <motion.div 
-              className="h-2 w-2 rounded-full bg-primary"
-              animate={{ scale: [1, 1.5, 1], opacity: [0.7, 1, 0.7] }} 
-              transition={{ repeat: Infinity, duration: 2 }}
-            />
-            <span className="text-sm text-muted-foreground">
-              {new Date().toLocaleDateString()} · {currentVibe.name}
-            </span>
+          
+          <div className="border-t pt-8 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <p className="text-sm text-muted-foreground">
+              &copy; {new Date().getFullYear()} VibeUI. All rights reserved.
+            </p>
+            
+            <div className="flex items-center gap-2">
+              <motion.div 
+                className="h-2 w-2 rounded-full bg-primary"
+                animate={{ scale: [1, 1.5, 1], opacity: [0.7, 1, 0.7] }} 
+                transition={{ repeat: Infinity, duration: 2 }}
+              />
+              <span className="text-sm text-muted-foreground">
+                Current vibe: <span className="text-primary">{currentVibe.name}</span>
+              </span>
+            </div>
           </div>
         </div>
       </motion.footer>
