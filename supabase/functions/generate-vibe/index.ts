@@ -1,6 +1,6 @@
 
 import "xhr_polyfill";
-import { serve } from "std/server";
+import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { VibeSettings } from "../../../src/lib/vibe-engine/types.ts";
 
 const GOOGLE_AI_API_KEY = Deno.env.get("GOOGLE_AI_API_KEY");
