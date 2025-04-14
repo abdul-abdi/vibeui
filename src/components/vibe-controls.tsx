@@ -1,8 +1,7 @@
-
 import React from 'react';
 import { useVibe } from '@/lib/vibe-engine';
 import { Button } from '@/components/ui/button';
-import { Lock, Unlock, Refresh, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Lock, Unlock, RefreshCw, ChevronLeft, ChevronRight } from 'lucide-react';
 
 export function VibeControls() {
   const { vibeState, changeVibe, toggleLock, previousVibe, nextVibe } = useVibe();
@@ -26,7 +25,7 @@ export function VibeControls() {
         className="animated-element"
       >
         New Vibe
-        <Refresh className="ml-2 h-4 w-4" />
+        <RefreshCw className="ml-2 h-4 w-4" />
       </Button>
       
       <Button 
