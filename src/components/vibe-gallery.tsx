@@ -1,4 +1,3 @@
-
 import React, { useRef, useEffect } from 'react';
 import { useVibe } from '@/lib/vibe-engine';
 import {
@@ -32,6 +31,17 @@ export function VibeGallery() {
   if (aiVibes.length === 0) {
     return null;
   }
+  
+  // Helper function to safely get easing for Framer Motion
+  const getEasing = () => {
+    const easing = vibeState.currentVibe.animation.easing;
+    // If easing is already an array, use it directly
+    if (Array.isArray(easing)) {
+      return easing;
+    }
+    // Otherwise, use a default easing
+    return [0.4, 0, 0.2, 1]; // default ease-in-out
+  };
 
   const cardVariants = {
     hidden: { opacity: 0, y: 20 },
@@ -40,7 +50,8 @@ export function VibeGallery() {
       y: 0,
       transition: {
         delay: i * 0.1,
-        duration: 0.5
+        duration: 0.5,
+        ease: getEasing()
       }
     })
   };
@@ -51,13 +62,13 @@ export function VibeGallery() {
       className="space-y-6"
       initial={{ opacity: 0 }}
       animate={isInView ? { opacity: 1 } : { opacity: 0 }}
-      transition={{ duration: 0.6 }}
+      transition={{ duration: 0.6, ease: getEasing() }}
     >
       <motion.div 
         className="flex justify-between items-center"
         initial={{ opacity: 0, y: -20 }}
         animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: -20 }}
-        transition={{ duration: 0.4 }}
+        transition={{ duration: 0.4, ease: getEasing() }}
       >
         <div className="flex items-center gap-2">
           <h2 className="text-2xl font-bold">AI Generated Vibes</h2>
@@ -77,7 +88,7 @@ export function VibeGallery() {
       <motion.div
         initial={{ opacity: 0, y: 40 }}
         animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }}
-        transition={{ duration: 0.5, delay: 0.2 }}
+        transition={{ duration: 0.5, delay: 0.2, ease: getEasing() }}
       >
         <Carousel className="w-full pb-10">
           <CarouselContent>
@@ -113,7 +124,7 @@ export function VibeGallery() {
                         initial={{ opacity: 0 }}
                         whileInView={{ opacity: 1 }}
                         viewport={{ once: true }}
-                        transition={{ delay: 0.2 }}
+                        transition={{ delay: 0.2, ease: getEasing() }}
                       >
                         <motion.div 
                           className="w-6 h-6 rounded-full border cursor-pointer relative group/color" 

@@ -42,7 +42,7 @@ export type SpacingScale = {
 
 export type AnimationSettings = {
   speed: number;
-  easing: string;
+  easing: number[]; // Updated to number[] for Framer Motion compatibility
   entrance: string;
   hover: string;
 };
@@ -69,3 +69,4 @@ export type VibeState = {
   isLocked: boolean;
   vibeHistory: string[];
 };
+

@@ -50,7 +50,7 @@ type SpacingScale = {
 
 type AnimationSettings = {
   speed: number;
-  easing: string;
+  easing: number[];  // Updated to array format for Framer Motion
   entrance: string;
   hover: string;
 };
@@ -196,11 +196,13 @@ const generateVibe = (theme?: string, mood?: string): VibeSettings => {
   // Generate animations
   const entranceAnimations = ['fade-in', 'slide-in-up', 'slide-in-right', 'bounce-subtle'];
   const hoverAnimations = ['pulse-soft', 'float', 'wave', 'bounce-subtle'];
+  
+  // Updated easing options to use number arrays instead of cubic-bezier strings
   const easings = [
-    'cubic-bezier(0.4, 0, 0.2, 1)',
-    'cubic-bezier(0.65, 0, 0.35, 1)',
-    'cubic-bezier(0.34, 1.56, 0.64, 1)',
-    'cubic-bezier(0.68, -0.6, 0.32, 1.6)'
+    [0.4, 0, 0.2, 1],    // was cubic-bezier(0.4, 0, 0.2, 1)
+    [0.65, 0, 0.35, 1],   // was cubic-bezier(0.65, 0, 0.35, 1)
+    [0.34, 1.56, 0.64, 1], // was cubic-bezier(0.34, 1.56, 0.64, 1)
+    [0.68, -0.6, 0.32, 1.6] // was cubic-bezier(0.68, -0.6, 0.32, 1.6)
   ];
   
   const animation: AnimationSettings = {
@@ -296,3 +298,4 @@ serve(async (req) => {
     );
   }
 });
+

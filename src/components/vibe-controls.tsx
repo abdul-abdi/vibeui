@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useVibe } from '@/lib/vibe-engine';
 import { Button } from '@/components/ui/button';
@@ -11,13 +10,24 @@ export function VibeControls() {
   const { vibeState, changeVibe, toggleLock, previousVibe, nextVibe, isGenerating } = useVibe();
   const canGoBack = vibeState.vibeHistory && vibeState.vibeHistory.length > 1;
   const canGoForward = false; // We need to implement this logic to check if there are more vibes in history
+  
+  // Helper function to safely get easing for Framer Motion
+  const getEasing = () => {
+    const easing = vibeState.currentVibe.animation.easing;
+    // If easing is already an array, use it directly
+    if (Array.isArray(easing)) {
+      return easing;
+    }
+    // Otherwise, use a default easing
+    return [0.4, 0, 0.2, 1]; // default ease-in-out
+  };
 
   return (
     <motion.div 
       className="flex items-center gap-2 p-2 bg-card/80 backdrop-blur-sm rounded-md shadow-md"
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4, delay: 0.3 }}
+      transition={{ duration: 0.4, delay: 0.3, ease: getEasing() }}
     >
       <TooltipProvider>
         <Tooltip>

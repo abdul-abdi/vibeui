@@ -46,7 +46,7 @@ export const vibePresets: VibeSettings[] = [
     },
     animation: {
       speed: 1,
-      easing: 'cubic-bezier(0.4, 0, 0.2, 1)',
+      easing: [0.4, 0, 0.2, 1],  // Updated from 'cubic-bezier(0.4, 0, 0.2, 1)'
       entrance: 'fade-in',
       hover: 'pulse-soft'
     },
@@ -100,7 +100,7 @@ export const vibePresets: VibeSettings[] = [
     },
     animation: {
       speed: 1.2,
-      easing: 'cubic-bezier(0.68, -0.6, 0.32, 1.6)',
+      easing: [0.68, -0.6, 0.32, 1.6],  // Updated from 'cubic-bezier(0.68, -0.6, 0.32, 1.6)'
       entrance: 'bounce-subtle',
       hover: 'float'
     },
@@ -154,7 +154,7 @@ export const vibePresets: VibeSettings[] = [
     },
     animation: {
       speed: 0.8,
-      easing: 'cubic-bezier(0.25, 0.1, 0.25, 1)',
+      easing: [0.25, 0.1, 0.25, 1],  // Updated from 'cubic-bezier(0.25, 0.1, 0.25, 1)'
       entrance: 'fade-in',
       hover: 'pulse-soft'
     },
@@ -208,7 +208,7 @@ export const vibePresets: VibeSettings[] = [
     },
     animation: {
       speed: 1.3,
-      easing: 'cubic-bezier(0.19, 1, 0.22, 1)',
+      easing: [0.19, 1, 0.22, 1],  // Updated from 'cubic-bezier(0.19, 1, 0.22, 1)'
       entrance: 'slide-in-up',
       hover: 'bounce-subtle'
     },
@@ -262,7 +262,7 @@ export const vibePresets: VibeSettings[] = [
     },
     animation: {
       speed: 1.1,
-      easing: 'cubic-bezier(0.16, 1, 0.3, 1)',
+      easing: [0.16, 1, 0.3, 1],  // Updated from 'cubic-bezier(0.16, 1, 0.3, 1)'
       entrance: 'slide-in-right',
       hover: 'pulse-soft'
     },
@@ -316,7 +316,7 @@ export const vibePresets: VibeSettings[] = [
     },
     animation: {
       speed: 0.9,
-      easing: 'cubic-bezier(0.34, 1.56, 0.64, 1)',
+      easing: [0.34, 1.56, 0.64, 1],  // Updated from 'cubic-bezier(0.34, 1.56, 0.64, 1)'
       entrance: 'fade-in',
       hover: 'float'
     },
@@ -370,7 +370,7 @@ export const vibePresets: VibeSettings[] = [
     },
     animation: {
       speed: 1.5,
-      easing: 'cubic-bezier(0.65, 0, 0.35, 1)',
+      easing: [0.65, 0, 0.35, 1],  // Updated from 'cubic-bezier(0.65, 0, 0.35, 1)'
       entrance: 'slide-in-up',
       hover: 'wave'
     },
@@ -392,3 +392,4 @@ export function getRandomVibePreset(): VibeSettings {
 export function getVibePresetById(id: string): VibeSettings | undefined {
   return vibePresets.find(vibe => vibe.id === id);
 }
+

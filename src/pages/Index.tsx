@@ -1,4 +1,3 @@
-
 import React, { useEffect } from 'react';
 import { VibeProvider, useVibe } from '@/lib/vibe-engine';
 import { VibeControls } from '@/components/vibe-controls';
@@ -19,6 +18,17 @@ const VibeContent = () => {
       changeVibe();
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  
+  // Helper function to safely get easing for Framer Motion
+  const getEasing = () => {
+    const easing = currentVibe.animation.easing;
+    // If easing is already an array, use it directly
+    if (Array.isArray(easing)) {
+      return easing;
+    }
+    // Otherwise, use a default easing
+    return [0.4, 0, 0.2, 1]; // default ease-in-out
+  };
 
   // Dynamic layout variants based on the current vibe
   const layoutVariants: Record<string, {
@@ -29,28 +39,55 @@ const VibeContent = () => {
       containerClass: "grid gap-8 grid-cols-1 lg:grid-cols-2",
       variants: {
         enter: { opacity: 0, y: 20 },
-        animate: { opacity: 1, y: 0, transition: { duration: 0.5 * (1/currentVibe.animation.speed) } },
+        animate: { 
+          opacity: 1, 
+          y: 0, 
+          transition: { 
+            duration: 0.5 * (1/currentVibe.animation.speed), 
+            ease: getEasing()
+          } 
+        }
       }
     },
     sidebar: {
       containerClass: "grid gap-8 grid-cols-1 lg:grid-cols-[280px_1fr]",
       variants: {
         enter: { opacity: 0, x: -50 },
-        animate: { opacity: 1, x: 0, transition: { duration: 0.6 * (1/currentVibe.animation.speed) } },
+        animate: { 
+          opacity: 1, 
+          x: 0, 
+          transition: { 
+            duration: 0.6 * (1/currentVibe.animation.speed),
+            ease: getEasing()
+          } 
+        }
       }
     },
     asymmetric: {
       containerClass: "grid gap-8 grid-cols-1 lg:grid-cols-[2fr_1fr]",
       variants: {
         enter: { opacity: 0, scale: 0.95 },
-        animate: { opacity: 1, scale: 1, transition: { duration: 0.5 * (1/currentVibe.animation.speed) } },
+        animate: { 
+          opacity: 1, 
+          scale: 1, 
+          transition: { 
+            duration: 0.5 * (1/currentVibe.animation.speed),
+            ease: getEasing() 
+          } 
+        }
       }
     },
     centered: {
       containerClass: "flex flex-col items-center",
       variants: {
         enter: { opacity: 0 },
-        animate: { opacity: 1, transition: { duration: 0.4 * (1/currentVibe.animation.speed) } },
+        animate: { 
+          opacity: 1, 
+          transition: { 
+            duration: 0.4 * (1/currentVibe.animation.speed),
+            ease: getEasing() 
+          } 
+        }
       }
     },
   };
@@ -73,14 +110,14 @@ const VibeContent = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ 
           duration: 0.4 * (1/currentVibe.animation.speed), 
-          ease: currentVibe.animation.easing 
+          ease: getEasing() 
         }}
       >
         <div className="container mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
           <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.2, duration: 0.5 }}
+            transition={{ delay: 0.2, duration: 0.5, ease: getEasing() }}
           >
             <h1 className="text-3xl font-bold">
               Vibe UI
@@ -104,7 +141,8 @@ const VibeContent = () => {
             opacity: 1, 
             transition: { 
               duration: 0.5, 
-              staggerChildren: 0.1 * (1/currentVibe.animation.speed)
+              staggerChildren: 0.1 * (1/currentVibe.animation.speed),
+              ease: getEasing()
             } 
           }
         }}
@@ -128,7 +166,8 @@ const VibeContent = () => {
                   opacity: 1, 
                   y: 0, 
                   transition: { 
-                    duration: 0.4 * (1/currentVibe.animation.speed) 
+                    duration: 0.4 * (1/currentVibe.animation.speed),
+                    ease: getEasing()
                   } 
                 }
               }}
@@ -145,7 +184,8 @@ const VibeContent = () => {
                   y: 0, 
                   transition: { 
                     duration: 0.4 * (1/currentVibe.animation.speed),
-                    delay: 0.1
+                    delay: 0.1,
+                    ease: getEasing()
                   } 
                 }
               }}
@@ -164,7 +204,8 @@ const VibeContent = () => {
                   y: 0, 
                   transition: { 
                     duration: 0.4 * (1/currentVibe.animation.speed),
-                    delay: 0.2
+                    delay: 0.2,
+                    ease: getEasing()
                   } 
                 }
               }}
@@ -186,7 +227,7 @@ const VibeContent = () => {
             className="flex justify-center mt-12 mb-16"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.8, duration: 0.5 }}
+            transition={{ delay: 0.8, duration: 0.5, ease: getEasing() }}
           >
             <button 
               onClick={handleScrollDown} 
@@ -210,7 +251,7 @@ const VibeContent = () => {
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 0.6, ease: getEasing() }}
         >
           <VibeGallery />
         </motion.div>
@@ -220,7 +261,7 @@ const VibeContent = () => {
         className="mt-auto py-6 px-4 sm:px-6 lg:px-8 border-t"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 1, duration: 0.5 }}
+        transition={{ delay: 1, duration: 0.5, ease: getEasing() }}
       >
         <div className="container mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
           <p className="text-sm text-muted-foreground">
