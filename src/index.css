@@ -171,6 +171,18 @@
   }
 }
 
+@keyframes animate-loading-progress {
+  0% {
+    width: 10%;
+  }
+  50% {
+    width: 60%;
+  }
+  100% {
+    width: 90%;
+  }
+}
+
 /* Only enable hardware acceleration for elements that need it */
 .hardware-accelerated {
   transform: translate3d(0, 0, 0);
