@@ -1,14 +1,13 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
 	darkMode: ["class"],
 	content: [
-		"./pages/**/*.{ts,tsx}",
-		"./components/**/*.{ts,tsx}",
-		"./app/**/*.{ts,tsx}",
-		"./src/**/*.{ts,tsx}",
+		"./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
+		"./src/components/**/*.{js,ts,jsx,tsx,mdx}",
+		"./src/lib/**/*.{js,ts,jsx,tsx,mdx}",
 	],
+	safelist: [],
 	prefix: "",
 	theme: {
 		container: {
@@ -235,7 +234,11 @@ export default {
 				"blink": {
 					'0%, 100%': { borderRightColor: 'transparent' },
 					'50%': { borderRightColor: 'currentColor' }
-				}
+				},
+				"rotate-hue": {
+					"0%": { filter: "hue-rotate(0deg)" },
+					"100%": { filter: "hue-rotate(360deg)" },
+				},
 			},
 			animation: {
 				"accordion-down": "accordion-down 0.2s ease-out",
@@ -263,7 +266,8 @@ export default {
 				"blur-in": "blur-in 0.5s ease-out forwards",
 				"blur-out": "blur-out 0.5s ease-out forwards",
 				"typewriter": "typewriter 3s steps(40) forwards",
-				"blink": "blink 1s step-end infinite"
+				"blink": "blink 1s step-end infinite",
+				"rotate-hue": "rotate-hue 8s linear infinite",
 			},
 			typography: {
 				DEFAULT: {
@@ -295,5 +299,14 @@ export default {
 			}
 		},
 	},
-	plugins: [require("tailwindcss-animate")],
+	plugins: [
+		require("tailwindcss-animate"),
+		require('@tailwindcss/typography'),
+	],
+	// Performance optimization - reduce file size
+	future: {
+		hoverOnlyWhenSupported: true,
+		disableColorOpacityUtilitiesByDefault: true,
+		respectDefaultRingColorOpacity: true,
+	},
 } satisfies Config;

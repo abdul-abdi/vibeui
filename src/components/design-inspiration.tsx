@@ -1,7 +1,6 @@
-
-import React from 'react';
+import React, { useState } from 'react';
 import { useVibe } from '@/lib/vibe-engine';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { ArrowRight, Lightbulb, ThumbsUp, TrendingUp } from 'lucide-react';
 import { Button } from './ui/button';
 
@@ -58,7 +57,7 @@ export function DesignInspiration() {
     <section className={`py-24 ${getInspoBgClass()}`}>
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-          <motion.div
+          <m.div
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
@@ -77,7 +76,7 @@ export function DesignInspiration() {
             
             <ul className="space-y-4">
               {benefits.map((benefit, index) => (
-                <motion.li 
+                <m.li 
                   key={index}
                   initial={{ opacity: 0, y: 10 }}
                   whileInView={{ opacity: 1, y: 0 }}
@@ -93,7 +92,7 @@ export function DesignInspiration() {
                     {benefit.icon}
                   </div>
                   <span className={`${isDarkTech ? 'text-slate-100' : ''}`}>{benefit.text}</span>
-                </motion.li>
+                </m.li>
               ))}
             </ul>
             
@@ -103,9 +102,9 @@ export function DesignInspiration() {
                 <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
               </Button>
             </div>
-          </motion.div>
+          </m.div>
           
-          <motion.div
+          <m.div
             initial={{ opacity: 0, x: 20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
@@ -114,7 +113,7 @@ export function DesignInspiration() {
           >
             <div className="aspect-square max-w-lg mx-auto relative">
               <div className="absolute inset-0 grid grid-cols-2 grid-rows-2 gap-4">
-                <motion.div 
+                <m.div 
                   className="bg-card rounded-lg shadow-lg overflow-hidden"
                   whileHover={{ y: -5, transition: { duration: 0.2 } }}
                 >
@@ -123,9 +122,9 @@ export function DesignInspiration() {
                     <div className="w-3/4 h-3 bg-muted rounded mb-2"></div>
                     <div className="w-1/2 h-3 bg-muted rounded"></div>
                   </div>
-                </motion.div>
+                </m.div>
                 
-                <motion.div 
+                <m.div 
                   className="bg-card rounded-lg shadow-lg overflow-hidden"
                   whileHover={{ y: -5, transition: { duration: 0.2 } }}
                 >
@@ -134,9 +133,9 @@ export function DesignInspiration() {
                     <div className="w-3/4 h-3 bg-muted rounded mb-2 mx-auto"></div>
                     <div className="w-1/2 h-3 bg-muted rounded mx-auto"></div>
                   </div>
-                </motion.div>
+                </m.div>
                 
-                <motion.div 
+                <m.div 
                   className="bg-card rounded-lg shadow-lg overflow-hidden"
                   whileHover={{ y: -5, transition: { duration: 0.2 } }}
                 >
@@ -147,9 +146,9 @@ export function DesignInspiration() {
                       <div className="w-2/3 h-3 bg-muted rounded"></div>
                     </div>
                   </div>
-                </motion.div>
+                </m.div>
                 
-                <motion.div 
+                <m.div 
                   className="bg-card rounded-lg shadow-lg overflow-hidden"
                   whileHover={{ y: -5, transition: { duration: 0.2 } }}
                 >
@@ -161,12 +160,12 @@ export function DesignInspiration() {
                     </div>
                     <div className="w-full h-24 bg-muted rounded-lg"></div>
                   </div>
-                </motion.div>
+                </m.div>
               </div>
             </div>
             
             {/* Animated circles in background */}
-            <motion.div 
+            <m.div 
               className="absolute -z-10 w-64 h-64 rounded-full bg-primary/10"
               style={{ top: '10%', left: '10%' }}
               animate={{ 
@@ -176,7 +175,7 @@ export function DesignInspiration() {
               transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
             />
             
-            <motion.div 
+            <m.div 
               className="absolute -z-10 w-40 h-40 rounded-full bg-secondary/20"
               style={{ bottom: '10%', right: '15%' }}
               animate={{ 
@@ -185,7 +184,7 @@ export function DesignInspiration() {
               }}
               transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 1 }}
             />
-          </motion.div>
+          </m.div>
         </div>
       </div>
     </section>

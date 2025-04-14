@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { VibeSettings, VibeState } from './types';
 import { getRandomVibePreset, getVibePresetById, vibePresets } from './vibe-presets';
@@ -16,6 +15,7 @@ const VibeContext = createContext<{
   generateAiVibe: (theme?: string, mood?: string) => Promise<boolean>;
   aiVibes: VibeSettings[];
   isGenerating: boolean;
+  historyIndex: number;
 }>({
   vibeState: {
     currentVibe: getRandomVibePreset(),
@@ -29,6 +29,7 @@ const VibeContext = createContext<{
   generateAiVibe: async () => false,
   aiVibes: [],
   isGenerating: false,
+  historyIndex: 0,
 });
 
 export const useVibe = () => useContext(VibeContext);
@@ -173,9 +174,14 @@ export const VibeProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // Navigate to the previous vibe in history
   const previousVibe = () => {
+    console.log("Previous vibe called, current history index:", historyIndex); 
+    console.log("History:", vibeState.vibeHistory);
+    
     if (historyIndex > 0) {
       const prevIndex = historyIndex - 1;
       const prevVibeId = vibeState.vibeHistory[prevIndex];
+      
+      console.log("Moving to index:", prevIndex, "for vibe ID:", prevVibeId);
       
       // Try to find in AI vibes first
       let prevVibe = aiVibes.find(v => v.id === prevVibeId);
@@ -186,20 +192,36 @@ export const VibeProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
       
       if (prevVibe) {
+        console.log("Found vibe:", prevVibe.name);
         setVibeState(prev => ({
           ...prev,
           currentVibe: prevVibe!,
         }));
         setHistoryIndex(prevIndex);
+        
+        // Show a toast notification
+        toast({
+          title: "Previous Vibe",
+          description: `Loaded ${prevVibe.name}`
+        });
+      } else {
+        console.error("Could not find vibe with ID:", prevVibeId);
       }
+    } else {
+      console.log("Can't go back further, already at the beginning of history");
     }
   };
 
   // Navigate to the next vibe in history
   const nextVibe = () => {
+    console.log("Next vibe called, current history index:", historyIndex); 
+    console.log("History:", vibeState.vibeHistory);
+    
     if (historyIndex < vibeState.vibeHistory.length - 1) {
       const nextIndex = historyIndex + 1;
       const nextVibeId = vibeState.vibeHistory[nextIndex];
+      
+      console.log("Moving to index:", nextIndex, "for vibe ID:", nextVibeId);
       
       // Try to find in AI vibes first
       let nextVibe = aiVibes.find(v => v.id === nextVibeId);
@@ -210,12 +232,23 @@ export const VibeProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
       
       if (nextVibe) {
+        console.log("Found vibe:", nextVibe.name);
         setVibeState(prev => ({
           ...prev,
           currentVibe: nextVibe!,
         }));
         setHistoryIndex(nextIndex);
+        
+        // Show a toast notification
+        toast({
+          title: "Next Vibe",
+          description: `Loaded ${nextVibe.name}`
+        });
+      } else {
+        console.error("Could not find vibe with ID:", nextVibeId);
       }
+    } else {
+      console.log("Can't go forward further, already at the end of history");
     }
   };
 
@@ -229,7 +262,8 @@ export const VibeProvider: React.FC<{ children: React.ReactNode }> = ({ children
         nextVibe,
         generateAiVibe,
         aiVibes,
-        isGenerating
+        isGenerating,
+        historyIndex
       }}
     >
       {children}

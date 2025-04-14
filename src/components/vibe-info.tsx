@@ -1,9 +1,8 @@
-
 import React from 'react';
 import { useVibe } from '@/lib/vibe-engine';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { 
   Circle, 
   Layout, 
@@ -76,13 +75,13 @@ export function VibeInfo() {
   
   return (
     <div className={`vibe-info-card ${cardClass}`}>
-      <motion.div
+      <m.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5, ease: getEasing() }}
       >
         <div className="flex items-center gap-2">
-          <motion.div 
+          <m.div 
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ delay: 0.3, type: "spring" }}
@@ -97,7 +96,7 @@ export function VibeInfo() {
             ) : (
               <Circle className="h-5 w-5 text-primary" />
             )}
-          </motion.div>
+          </m.div>
           <div>
             <h2 className="text-2xl font-bold text-gray-800">
               {currentVibe.name}
@@ -175,7 +174,7 @@ export function VibeInfo() {
         <div className="mt-6">
           <h3 className="text-sm font-medium text-gray-700 mb-3">Color Palette</h3>
           <div className="grid grid-cols-4 gap-2">
-            <motion.div
+            <m.div
               custom={0}
               initial="hidden"
               animate="visible"
@@ -184,9 +183,9 @@ export function VibeInfo() {
             >
               <div className="w-full aspect-square rounded-md bg-primary mb-1" />
               <span className="text-xs text-muted-foreground">Primary</span>
-            </motion.div>
+            </m.div>
             
-            <motion.div
+            <m.div
               custom={1}
               initial="hidden"
               animate="visible"
@@ -195,9 +194,9 @@ export function VibeInfo() {
             >
               <div className="w-full aspect-square rounded-md bg-secondary mb-1" />
               <span className="text-xs text-muted-foreground">Secondary</span>
-            </motion.div>
+            </m.div>
             
-            <motion.div
+            <m.div
               custom={2}
               initial="hidden"
               animate="visible"
@@ -206,9 +205,9 @@ export function VibeInfo() {
             >
               <div className="w-full aspect-square rounded-md bg-accent mb-1" />
               <span className="text-xs text-muted-foreground">Accent</span>
-            </motion.div>
+            </m.div>
             
-            <motion.div
+            <m.div
               custom={3}
               initial="hidden"
               animate="visible"
@@ -217,7 +216,7 @@ export function VibeInfo() {
             >
               <div className="w-full aspect-square rounded-md bg-muted mb-1" />
               <span className="text-xs text-muted-foreground">Muted</span>
-            </motion.div>
+            </m.div>
           </div>
         </div>
         
@@ -263,7 +262,7 @@ export function VibeInfo() {
             </Tooltip>
           </div>
         </TooltipProvider>
-      </motion.div>
+      </m.div>
     </div>
   );
 }
