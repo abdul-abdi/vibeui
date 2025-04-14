@@ -203,7 +203,7 @@ const VibeContent = () => {
                     </motion.div>
                   </motion.span>
                 </h1>
-                <p className="text-muted-foreground text-sm mt-1">
+                <p className="text-sm text-muted-foreground mt-1">
                   A dynamic UI experience that changes on every reload
                 </p>
               </div>
