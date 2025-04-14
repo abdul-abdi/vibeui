@@ -1,19 +1,17 @@
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { VibeProvider, useVibe } from '@/lib/vibe-engine';
 import { VibeControls } from '@/components/vibe-controls';
 import { VibeInfo } from '@/components/vibe-info';
 import { VibeDemoElements } from '@/components/vibe-demo-elements';
 import { VibeGallery } from '@/components/vibe-gallery';
 import { Toaster } from '@/components/ui/toaster';
-import { motion, Variants, useMotionTemplate, useMotionValue, useTransform, AnimatePresence } from 'framer-motion';
-import { ArrowDown, Sparkles, ChevronLeft, Circle } from 'lucide-react';
+import { motion, useMotionTemplate, useMotionValue, useTransform } from 'framer-motion';
+import { ArrowDown, Sparkles, ChevronLeft } from 'lucide-react';
 
 const VibeContent = () => {
   const { vibeState, changeVibe } = useVibe();
   const { currentVibe } = vibeState;
-  const prevVibeRef = useRef(currentVibe);
-  
   const isInitialLoad = useRef(true);
 
   useEffect(() => {
@@ -26,10 +24,6 @@ const VibeContent = () => {
       }
     }
   }, []);
-
-  useEffect(() => {
-    prevVibeRef.current = currentVibe;
-  }, [currentVibe]);
 
   const getEasing = () => {
     const easing = currentVibe.animation.easing;
@@ -55,167 +49,8 @@ const VibeContent = () => {
     transparent 40%
   )`;
 
-  const layoutVariants: Record<string, {
-    containerClass: string;
-    variants: Variants;
-  }> = {
-    standard: { 
-      containerClass: "grid gap-8 grid-cols-1 lg:grid-cols-2",
-      variants: {
-        hidden: { opacity: 0, y: 20 },
-        visible: { 
-          opacity: 1, 
-          y: 0, 
-          transition: { 
-            duration: 0.5 * (1/currentVibe.animation.speed), 
-            ease: getEasing()
-          } 
-        },
-        exit: {
-          opacity: 0,
-          y: -20,
-          transition: {
-            duration: 0.3 * (1/currentVibe.animation.speed),
-            ease: getEasing()
-          }
-        }
-      }
-    },
-    sidebar: {
-      containerClass: "grid gap-8 grid-cols-1 lg:grid-cols-[280px_1fr]",
-      variants: {
-        hidden: { opacity: 0, x: -50 },
-        visible: { 
-          opacity: 1, 
-          x: 0, 
-          transition: { 
-            duration: 0.6 * (1/currentVibe.animation.speed),
-            ease: getEasing()
-          } 
-        },
-        exit: {
-          opacity: 0,
-          x: 50,
-          transition: {
-            duration: 0.3 * (1/currentVibe.animation.speed),
-            ease: getEasing()
-          }
-        }
-      }
-    },
-    asymmetric: {
-      containerClass: "grid gap-8 grid-cols-1 lg:grid-cols-[2fr_1fr]",
-      variants: {
-        hidden: { opacity: 0, scale: 0.95 },
-        visible: { 
-          opacity: 1, 
-          scale: 1, 
-          transition: { 
-            duration: 0.5 * (1/currentVibe.animation.speed),
-            ease: getEasing() 
-          } 
-        },
-        exit: {
-          opacity: 0,
-          scale: 1.05,
-          transition: {
-            duration: 0.3 * (1/currentVibe.animation.speed),
-            ease: getEasing()
-          }
-        }
-      }
-    },
-    centered: {
-      containerClass: "flex flex-col items-center",
-      variants: {
-        hidden: { opacity: 0 },
-        visible: { 
-          opacity: 1, 
-          transition: { 
-            duration: 0.4 * (1/currentVibe.animation.speed),
-            ease: getEasing() 
-          } 
-        },
-        exit: {
-          opacity: 0,
-          transition: {
-            duration: 0.3 * (1/currentVibe.animation.speed),
-            ease: getEasing()
-          }
-        }
-      }
-    },
-  };
-
-  const currentLayout = layoutVariants[currentVibe.layout] || layoutVariants.standard;
-
-  const handleScrollDown = () => {
-    const gallerySection = document.getElementById('gallery-section');
-    if (gallerySection) {
-      gallerySection.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
-
-  const fadeInVariants: Variants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: (i = 0) => ({ 
-      opacity: 1, 
-      y: 0, 
-      transition: { 
-        duration: 0.5, 
-        delay: i * 0.1, 
-        ease: getEasing() 
-      }
-    }),
-    exit: { 
-      opacity: 0, 
-      y: -10, 
-      transition: { 
-        duration: 0.3, 
-        ease: getEasing() 
-      }
-    }
-  };
-
-  const cardVariants: Variants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { 
-      opacity: 1, 
-      y: 0, 
-      transition: { duration: 0.4, ease: getEasing() } 
-    },
-    hover: { 
-      y: -10, 
-      boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
-      transition: { duration: 0.2, ease: getEasing() } 
-    },
-    exit: { 
-      opacity: 0, 
-      y: 10, 
-      transition: { duration: 0.3, ease: getEasing() } 
-    }
-  };
-
-  const contentFlowVariants: Variants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.15,
-        ease: getEasing()
-      }
-    },
-    exit: {
-      opacity: 0,
-      transition: {
-        staggerChildren: 0.05,
-        staggerDirection: -1,
-        ease: getEasing()
-      }
-    }
-  };
-
-  const [scrollY, setScrollY] = React.useState(0);
+  // For header parallax effect
+  const [scrollY, setScrollY] = useState(0);
   
   useEffect(() => {
     const handleScroll = () => {
@@ -238,11 +73,16 @@ const VibeContent = () => {
     [0, 30]
   );
 
+  // Determine if this is the "Soft Organic" vibe
+  const isSoftOrganic = currentVibe.name.toLowerCase().includes("organic");
+  const containerClass = isSoftOrganic ? 'soft-organic-container' : '';
+
   return (
     <div 
-      className="min-h-screen bg-background text-foreground transition-colors duration-500 relative overflow-hidden"
+      className={`min-h-screen bg-background transition-colors duration-500 relative ${containerClass}`}
       onMouseMove={handleMouseMove}
     >
+      {/* Background effects */}
       <motion.div 
         className="fixed inset-0 pointer-events-none z-0" 
         style={{ background: backgroundGradient }}
@@ -265,178 +105,113 @@ const VibeContent = () => {
         style={{ y: backgroundParallax }}
       />
 
+      {/* Header */}
       <motion.header 
-        className="relative z-10 py-6 px-4 sm:px-6 lg:px-8 border-b backdrop-blur-lg bg-background/30"
+        className="relative z-10 py-4 px-4 sm:px-6 lg:px-8"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ 
-          duration: 0.4 * (1/currentVibe.animation.speed), 
-          ease: getEasing() 
-        }}
+        transition={{ duration: 0.4 * (1/currentVibe.animation.speed), ease: getEasing() }}
         style={{ y: headerParallax }}
       >
-        <div className="container mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.2, duration: 0.5, ease: getEasing() }}
-            className="flex items-center"
-          >
-            <div className="flex flex-col items-start">
-              <h1 className="text-3xl font-bold flex items-center gap-2">
-                Vibe <span className="text-primary">UI</span>
-                <motion.span 
-                  className="inline-block text-primary relative ml-1"
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: 0.5, duration: 0.5, ease: getEasing() }}
-                >
-                  Shift
-                  <motion.div 
-                    className="absolute -top-1 -right-1"
-                    animate={{ 
-                      scale: [1, 1.5, 1],
-                      opacity: [1, 0.8, 1],
-                      rotate: [0, 5, 0, -5, 0]
-                    }}
-                    transition={{ duration: 2, repeat: Infinity, repeatDelay: 5 }}
+        <div className="container mx-auto">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.2, duration: 0.5, ease: getEasing() }}
+            >
+              <div className="flex flex-col items-start">
+                <h1 className="text-3xl font-bold flex items-center gap-2">
+                  Vibe <span className="text-primary">UI</span>
+                  <motion.span 
+                    className="inline-block text-primary relative ml-1"
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 0.5, duration: 0.5, ease: getEasing() }}
                   >
-                    <Sparkles className="h-3 w-3 text-primary" />
-                  </motion.div>
-                </motion.span>
-              </h1>
-              <p className="text-muted-foreground text-sm">
-                A dynamic UI experience that changes on every reload
-              </p>
+                    Shift
+                    <motion.div 
+                      className="absolute -top-1 -right-1"
+                      animate={{ 
+                        scale: [1, 1.5, 1],
+                        opacity: [1, 0.8, 1],
+                        rotate: [0, 5, 0, -5, 0]
+                      }}
+                      transition={{ duration: 2, repeat: Infinity, repeatDelay: 5 }}
+                    >
+                      <Sparkles className="h-3 w-3 text-primary" />
+                    </motion.div>
+                  </motion.span>
+                </h1>
+                <p className="text-muted-foreground text-sm mt-1">
+                  A dynamic UI experience that changes on every reload
+                </p>
+              </div>
+            </motion.div>
+            <div className="vibe-control-panel">
+              <VibeControls />
             </div>
-          </motion.div>
-          <VibeControls />
+          </div>
         </div>
       </motion.header>
 
-      <motion.main 
-        className="container relative z-10 mx-auto py-8 px-4 sm:px-6 lg:px-8 overflow-hidden"
-        initial="hidden"
-        animate="visible"
-        exit="exit"
-        variants={contentFlowVariants}
-      >
-        <AnimatePresence mode="wait">
-          <motion.div 
-            key={currentVibe.id}
-            className={currentLayout.containerClass}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-            variants={contentFlowVariants}
-          >
-            <motion.section 
-              className={`space-y-6 ${currentVibe.layout === 'centered' ? 'max-w-2xl mx-auto text-center' : ''}`}
-              variants={currentLayout.variants}
+      {/* Main content */}
+      <main className="container mx-auto py-8 px-4 sm:px-6 lg:px-8 relative z-10">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease: getEasing() }}
+          className="grid grid-cols-1 lg:grid-cols-2 gap-8"
+        >
+          {/* Left column - Vibe Info */}
+          <section className="space-y-6">
+            <motion.div
+              className="flex items-center space-x-2"
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5, ease: getEasing() }}
             >
-              <motion.div
-                className="relative"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.6 }}
-              >
-                <motion.div 
-                  className="absolute -z-10 w-full h-full blur-3xl opacity-20 bg-gradient-to-r from-primary/50 via-accent/30 to-secondary/50"
-                  animate={{ 
-                    rotate: [0, 5, -5, 0],
-                    scale: [1, 1.05, 0.98, 1]
-                  }}
-                  transition={{ 
-                    duration: 8, 
-                    repeat: Infinity,
-                    repeatType: "reverse"
-                  }}
-                />
-                
-                <motion.div className="flex items-center space-x-2 mb-2">
-                  <motion.div 
-                    className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/20"
-                    animate={{
-                      scale: [1, 1.05, 1],
-                      opacity: [0.7, 1, 0.7]
-                    }}
-                    transition={{ 
-                      duration: 3, 
-                      repeat: Infinity,
-                      repeatType: "reverse"
-                    }}
-                  >
-                    <ChevronLeft className="h-4 w-4 text-primary" />
-                  </motion.div>
-                  
-                  <motion.h2 
-                    className="text-3xl font-bold tracking-tight flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2"
-                    variants={fadeInVariants}
-                    custom={0}
-                  >
-                    Current Vibe: <span className="text-primary">{currentVibe.name}</span>
-                  </motion.h2>
-                </motion.div>
-                
-                <motion.p 
-                  className="text-lg text-muted-foreground mt-3 max-w-2xl"
-                  variants={fadeInVariants}
-                  custom={1}
-                >
-                  This UI dynamically changes its entire appearance, layout, and interactions
-                  based on the randomly selected vibe. Reload the page or click "New Vibe" to experience
-                  a completely different UI while maintaining functionality.
-                </motion.p>
-              </motion.div>
-              
-              <motion.div 
-                className="pt-6"
-                variants={fadeInVariants}
-                custom={2}
-              >
-                <VibeInfo />
-              </motion.div>
-            </motion.section>
+              <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/10">
+                <ChevronLeft className="h-4 w-4 text-primary" />
+              </div>
+              <h2 className="text-3xl font-bold">
+                Current Vibe: <span className="text-primary">{currentVibe.name}</span>
+              </h2>
+            </motion.div>
             
-            <motion.section 
-              className={`space-y-6 ${currentVibe.layout === 'centered' ? 'max-w-2xl mx-auto' : ''}`}
-              variants={currentLayout.variants}
+            <motion.p 
+              className="text-lg text-muted-foreground mt-3 max-w-2xl"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2, duration: 0.5, ease: getEasing() }}
             >
-              <motion.div 
-                whileInView={{ opacity: [0, 1], y: [20, 0] }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5 }}
-              >
-                <VibeDemoElements />
-              </motion.div>
-            </motion.section>
-          </motion.div>
-        </AnimatePresence>
-        
-        {currentVibe.layout === 'centered' && (
-          <motion.div 
-            className="flex justify-center mt-12 mb-16"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.8, duration: 0.5, ease: getEasing() }}
+              This UI dynamically changes its entire appearance, layout, and interactions
+              based on the randomly selected vibe. Reload the page or click "New Vibe" to experience
+              a completely different UI while maintaining functionality.
+            </motion.p>
+            
+            <motion.div 
+              className="pt-6"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3, duration: 0.5, ease: getEasing() }}
+            >
+              <VibeInfo />
+            </motion.div>
+          </section>
+          
+          {/* Right column - Demo elements */}
+          <motion.section 
+            className="space-y-6"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4, duration: 0.5, ease: getEasing() }}
           >
-            <button 
-              onClick={handleScrollDown} 
-              className="flex flex-col items-center text-muted-foreground hover:text-primary transition-colors group"
-              aria-label="Scroll down to gallery"
-            >
-              <span className="mb-2 group-hover:scale-105 transition-transform">Explore Gallery</span>
-              <motion.div
-                animate={{ y: [0, 8, 0] }}
-                transition={{ repeat: Infinity, duration: 1.5 }}
-                className="group-hover:text-primary"
-              >
-                <ArrowDown strokeWidth={1.5} />
-              </motion.div>
-            </button>
-          </motion.div>
-        )}
+            <VibeDemoElements />
+          </motion.section>
+        </motion.div>
         
+        {/* Gallery section */}
         <motion.div 
           id="gallery-section"
           className="mt-16"
@@ -447,10 +222,10 @@ const VibeContent = () => {
         >
           <VibeGallery />
         </motion.div>
-      </motion.main>
+      </main>
 
       <motion.footer 
-        className="relative z-10 mt-auto py-6 px-4 sm:px-6 lg:px-8 border-t backdrop-blur-lg bg-background/30"
+        className="relative z-10 mt-auto py-6 px-4 sm:px-6 lg:px-8 border-t backdrop-blur-sm bg-background/30"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1, duration: 0.5, ease: getEasing() }}
@@ -486,13 +261,6 @@ const VibeContent = () => {
                         color 0.6s ease,
                         box-shadow 0.6s ease,
                         transform 0.6s ease;
-          }
-          
-          .layout-standard,
-          .layout-asymmetric,
-          .layout-centered,
-          .layout-sidebar {
-            transition: all 0.5s ease;
           }
           
           /* Enhanced scrollbar */

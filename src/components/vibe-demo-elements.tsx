@@ -17,25 +17,39 @@ import { ChevronRight, Star, Heart, MessageSquare } from 'lucide-react';
 export function VibeDemoElements() {
   const { vibeState } = useVibe();
   const { currentVibe } = vibeState;
+  
+  // Check if this is the "Soft Organic" vibe
+  const isSoftOrganic = currentVibe.name.toLowerCase().includes("organic");
+  const buttonClasses = isSoftOrganic ? {
+    primary: 'soft-organic-primary-button',
+    secondary: 'soft-organic-secondary-button',
+    outline: 'soft-organic-outline-button',
+    ghost: 'soft-organic-ghost-button',
+    link: 'soft-organic-link-button'
+  } : {};
+  
+  const cardClass = isSoftOrganic ? 'soft-organic-card' : '';
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {/* Interactive Elements */}
       <div className="space-y-4">
         <h3 className="text-xl font-semibold">Interactive Elements</h3>
         <div className="flex flex-wrap gap-3">
-          <Button variant="default">Primary Button</Button>
-          <Button variant="secondary">Secondary Button</Button>
-          <Button variant="outline">Outline Button</Button>
-          <Button variant="ghost">Ghost Button</Button>
-          <Button variant="link">Link Button</Button>
+          <Button variant="default" className={buttonClasses.primary}>Primary Button</Button>
+          <Button variant="secondary" className={buttonClasses.secondary}>Secondary Button</Button>
+          <Button variant="outline" className={buttonClasses.outline}>Outline Button</Button>
+          <Button variant="ghost" className={buttonClasses.ghost}>Ghost Button</Button>
+          <Button variant="link" className={buttonClasses.link}>Link Button</Button>
         </div>
-        <div className="flex flex-wrap gap-3 items-center">
+        <div className="flex flex-wrap gap-3 items-center mt-4">
           <Input placeholder="Standard input" className="max-w-[250px]" />
-          <Badge>Badge</Badge>
-          <Badge variant="secondary">Secondary Badge</Badge>
-          <Badge variant="outline">Outline Badge</Badge>
-          <Badge variant="destructive">Destructive Badge</Badge>
+          <div className="flex flex-wrap gap-2 items-center">
+            <Badge>Badge</Badge>
+            <Badge variant="secondary">Secondary Badge</Badge>
+            <Badge variant="outline">Outline Badge</Badge>
+            <Badge variant="destructive">Destructive Badge</Badge>
+          </div>
         </div>
       </div>
 
@@ -43,7 +57,7 @@ export function VibeDemoElements() {
       <div className="space-y-4">
         <h3 className="text-xl font-semibold">Card Components</h3>
         <div className="grid gap-4 grid-cols-1 md:grid-cols-2">
-          <Card className={`vibe-card`}>
+          <Card className={`shadow-sm hover:shadow-md transition-shadow ${cardClass}`}>
             <CardHeader>
               <CardTitle>Card Title</CardTitle>
               <CardDescription>Card description with details</CardDescription>
@@ -57,11 +71,11 @@ export function VibeDemoElements() {
             </CardFooter>
           </Card>
 
-          <Card className={`vibe-card`}>
+          <Card className={`shadow-sm hover:shadow-md transition-shadow ${cardClass}`}>
             <CardHeader>
               <div className="flex justify-between items-start">
                 <CardTitle>Interactive Card</CardTitle>
-                <div className="morphing-shape p-2 bg-primary text-primary-foreground flex items-center justify-center">
+                <div className="p-2 rounded-full bg-primary/20 text-primary flex items-center justify-center">
                   <Star className="h-4 w-4" />
                 </div>
               </div>

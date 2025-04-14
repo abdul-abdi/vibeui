@@ -4,7 +4,7 @@ import { useVibe } from '@/lib/vibe-engine';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { motion } from 'framer-motion';
-import { Circle, Type, Layers, Layout } from 'lucide-react';
+import { Circle, Layout, Type, Clock } from 'lucide-react';
 
 export function VibeInfo() {
   const { vibeState } = useVibe();
@@ -33,182 +33,142 @@ export function VibeInfo() {
 
   const primaryFont = currentVibe.fonts.primary.split(',')[0].replace(/'/g, '');
   
+  // Check if this is the "Soft Organic" vibe
+  const isSoftOrganic = currentVibe.name.toLowerCase().includes("organic");
+  const cardClass = isSoftOrganic ? 'soft-organic-card' : '';
+  
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.5, ease: getEasing() }}
-    >
-      <Card className="overflow-hidden backdrop-blur-sm bg-card/80 border-primary/10">
-        <CardHeader className="pb-3">
-          <CardTitle className="flex items-center gap-2 text-2xl">
-            <motion.span
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.1, duration: 0.4, ease: getEasing() }}
-              className="text-primary"
-            >
-              {currentVibe.name}
-            </motion.span>
-            <motion.div
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ delay: 0.3, type: "spring" }}
-              className="text-primary/70"
-            >
-              <Circle className="h-5 w-5" />
-            </motion.div>
-          </CardTitle>
-          <CardDescription className="line-clamp-2">{currentVibe.description}</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-6">
+    <div className={`vibe-info-card ${cardClass}`}>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5, ease: getEasing() }}
+      >
+        <div className="flex items-center gap-2">
           <motion.div 
-            className="grid grid-cols-4 gap-3"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.2, ease: getEasing() }}
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ delay: 0.3, type: "spring" }}
+            className="w-5 h-5 rounded-full bg-primary/20 flex items-center justify-center"
           >
-            <motion.div 
-              className="flex flex-col items-center space-y-2"
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.2, ease: getEasing() }}
-            >
-              <Layout className="h-5 w-5 text-primary mb-1" />
-              <h4 className="text-xs font-semibold uppercase tracking-wider">Layout</h4>
-              <div className="w-full h-1 bg-primary/30 rounded-full mt-1"></div>
-              <Badge variant="outline" className="capitalize text-xs px-2 py-0 h-5 bg-background/50">
-                {currentVibe.layout}
-              </Badge>
-            </motion.div>
-            
-            <motion.div 
-              className="flex flex-col items-center space-y-2"
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.3, ease: getEasing() }}
-            >
-              <Type className="h-5 w-5 text-primary mb-1" />
-              <h4 className="text-xs font-semibold uppercase tracking-wider">Typography</h4>
-              <div className="w-full h-1 bg-primary/30 rounded-full mt-1"></div>
-              <p className="text-xs text-center text-muted-foreground">
-                {primaryFont}
-              </p>
-            </motion.div>
-            
-            <motion.div 
-              className="flex flex-col items-center space-y-2"
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.4, ease: getEasing() }}
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary mb-1">
-                <path d="M5 16V9h14V2"></path>
-                <path d="M5 22V21"></path>
-                <path d="M19 22v-6"></path>
-                <path d="M5 9a3 3 0 0 0 3-3 3 3 0 0 0-3-3"></path>
-                <path d="M19 9a3 3 0 0 1-3-3 3 3 0 0 1 3-3"></path>
-              </svg>
-              <h4 className="text-xs font-semibold uppercase tracking-wider">Animation</h4>
-              <div className="w-full h-1 bg-primary/30 rounded-full mt-1"></div>
-              <p className="text-xs text-center text-muted-foreground">
-                {currentVibe.animation.speed}x speed
-              </p>
-            </motion.div>
-            
-            <motion.div 
-              className="flex flex-col items-center space-y-2"
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.5, ease: getEasing() }}
-            >
-              <Circle className="h-5 w-5 text-primary mb-1" />
-              <h4 className="text-xs font-semibold uppercase tracking-wider">Radius</h4>
-              <div className="w-full h-1 bg-primary/30 rounded-full mt-1"></div>
-              <p className="text-xs text-center text-muted-foreground">
-                {currentVibe.radius.md}
-              </p>
-            </motion.div>
+            <Circle className="h-3 w-3 text-primary" />
           </motion.div>
+          <h2 className="text-2xl font-bold text-gray-800">
+            {currentVibe.name}
+          </h2>
+        </div>
+        
+        <p className="text-muted-foreground mt-2 text-sm">
+          {currentVibe.description}
+        </p>
+
+        <div className="grid grid-cols-4 gap-6 mt-6">
+          {/* Layout */}
+          <div className="vibe-attribute">
+            <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+              <Layout className="h-5 w-5 text-primary" />
+            </div>
+            <span className="vibe-attribute-label">Layout</span>
+            <span className="vibe-attribute-value capitalize">
+              {currentVibe.layout}
+            </span>
+          </div>
           
-          <div className="space-y-3">
-            <motion.h4 
-              className="text-sm font-medium"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.6, ease: getEasing() }}
+          {/* Typography */}
+          <div className="vibe-attribute">
+            <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+              <Type className="h-5 w-5 text-primary" />
+            </div>
+            <span className="vibe-attribute-label">Typography</span>
+            <span className="vibe-attribute-value">
+              {primaryFont}
+            </span>
+          </div>
+          
+          {/* Animation */}
+          <div className="vibe-attribute">
+            <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+              <Clock className="h-5 w-5 text-primary" />
+            </div>
+            <span className="vibe-attribute-label">Animation</span>
+            <span className="vibe-attribute-value">
+              {currentVibe.animation.speed}x
+            </span>
+          </div>
+          
+          {/* Radius */}
+          <div className="vibe-attribute">
+            <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M2 12h2a8 8 0 0 1 8-8v2" />
+                <path d="M2 12v-2a8 8 0 0 1 8-8h2" />
+                <path d="M22 12h-2a8 8 0 0 1-8 8v-2" />
+                <path d="M22 12v2a8 8 0 0 1-8 8h-2" />
+              </svg>
+            </div>
+            <span className="vibe-attribute-label">Radius</span>
+            <span className="vibe-attribute-value">
+              {currentVibe.radius.md}
+            </span>
+          </div>
+        </div>
+        
+        <div className="mt-6">
+          <h3 className="text-sm font-medium text-gray-700">Color Palette</h3>
+          <div className="flex flex-wrap gap-2 mt-2">
+            <motion.div
+              custom={0}
+              initial="hidden"
+              animate="visible"
+              variants={colorVariants}
+              className="vibe-color-pill bg-primary text-primary-foreground"
             >
-              Color Palette
-            </motion.h4>
-            <motion.div 
-              className="flex flex-wrap gap-2"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.7, ease: getEasing() }}
+              Primary
+            </motion.div>
+            
+            <motion.div
+              custom={1}
+              initial="hidden"
+              animate="visible"
+              variants={colorVariants}
+              className="vibe-color-pill bg-secondary text-secondary-foreground"
             >
-              <motion.div
-                custom={0}
-                initial="hidden"
-                animate="visible"
-                variants={colorVariants}
-                className="relative group"
-              >
-                <Badge variant="outline" className="bg-primary text-primary-foreground group-hover:scale-110 transition-transform">
-                  Primary
-                </Badge>
-              </motion.div>
-              
-              <motion.div
-                custom={1}
-                initial="hidden"
-                animate="visible"
-                variants={colorVariants}
-                className="relative group"
-              >
-                <Badge variant="outline" className="bg-secondary text-secondary-foreground group-hover:scale-110 transition-transform">
-                  Secondary
-                </Badge>
-              </motion.div>
-              
-              <motion.div
-                custom={2}
-                initial="hidden"
-                animate="visible"
-                variants={colorVariants}
-                className="relative group"
-              >
-                <Badge variant="outline" className="bg-accent text-accent-foreground group-hover:scale-110 transition-transform">
-                  Accent
-                </Badge>
-              </motion.div>
-              
-              <motion.div
-                custom={3}
-                initial="hidden"
-                animate="visible"
-                variants={colorVariants}
-                className="relative group"
-              >
-                <Badge variant="outline" className="bg-muted text-muted-foreground group-hover:scale-110 transition-transform">
-                  Muted
-                </Badge>
-              </motion.div>
+              Secondary
+            </motion.div>
+            
+            <motion.div
+              custom={2}
+              initial="hidden"
+              animate="visible"
+              variants={colorVariants}
+              className="vibe-color-pill bg-accent text-accent-foreground"
+            >
+              Accent
+            </motion.div>
+            
+            <motion.div
+              custom={3}
+              initial="hidden"
+              animate="visible"
+              variants={colorVariants}
+              className="vibe-color-pill bg-muted text-muted-foreground"
+            >
+              Muted
             </motion.div>
           </div>
+        </div>
 
-          <motion.div
-            className="pt-2"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.8, ease: getEasing() }}
-          >
-            <div className="text-xs text-muted-foreground flex items-center justify-end gap-2">
-              <Layers className="h-3 w-3" />
-              <span>Generated with Vibe Engine</span>
-            </div>
-          </motion.div>
-        </CardContent>
-      </Card>
-    </motion.div>
+        <div className="flex items-center justify-end gap-2 mt-6 text-xs text-muted-foreground">
+          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M5 16V9h14V2"></path>
+            <path d="M5 22V21"></path>
+            <path d="M19 22v-6"></path>
+            <path d="M5 9a3 3 0 0 0 3-3 3 3 0 0 0-3-3"></path>
+            <path d="M19 9a3 3 0 0 1-3-3 3 3 0 0 1 3-3"></path>
+          </svg>
+          <span>Generated with Vibe Engine</span>
+        </div>
+      </motion.div>
+    </div>
   );
 }

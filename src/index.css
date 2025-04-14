@@ -1,4 +1,3 @@
-
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@400;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=DM+Serif+Display&family=Quicksand:wght@400;500;600;700&family=Roboto+Mono:wght@400;500;600;700&family=Abril+Fatface&display=swap');
 
 @tailwind base;
@@ -17,7 +16,7 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 221.2 83% 53.3%;
+    --primary: 160 84% 39%;
     --primary-foreground: 210 40% 98%;
 
     --secondary: 210 40% 96.1%;
@@ -34,7 +33,7 @@
 
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 221.2 83% 53.3%;
+    --ring: 160 84% 39%;
     
     --radius-sm: 0.25rem;
     --radius-md: 0.5rem;
@@ -95,12 +94,12 @@
 
   * {
     @apply border-border;
-    transition: background-color 0.4s var(--animation-easing), 
-                color 0.4s var(--animation-easing), 
-                border-color 0.4s var(--animation-easing), 
-                box-shadow 0.4s var(--animation-easing), 
-                transform 0.4s var(--animation-easing),
-                opacity 0.4s var(--animation-easing);
+    transition: background-color 0.3s var(--animation-easing), 
+                color 0.3s var(--animation-easing), 
+                border-color 0.3s var(--animation-easing), 
+                box-shadow 0.3s var(--animation-easing), 
+                transform 0.3s var(--animation-easing),
+                opacity 0.3s var(--animation-easing);
   }
 
   html {
@@ -290,4 +289,67 @@
 
 .hover-3d:hover {
   transform: perspective(800px) rotateY(-5deg) rotateX(5deg);
+}
+
+/* Custom components */
+
+.vibe-control-panel {
+  @apply flex items-center gap-2 p-2 bg-white rounded-full shadow-md;
+}
+
+.vibe-control-button {
+  @apply p-2 rounded-full transition-colors hover:bg-gray-100 flex items-center justify-center;
+}
+
+.vibe-info-card {
+  @apply bg-white/90 backdrop-blur-sm rounded-xl p-6 shadow-sm border border-gray-100;
+}
+
+.vibe-attribute {
+  @apply flex flex-col items-center justify-center;
+}
+
+.vibe-attribute-label {
+  @apply text-xs font-medium text-gray-500 uppercase tracking-wider mt-2;
+}
+
+.vibe-attribute-value {
+  @apply text-sm font-medium mt-1;
+}
+
+.vibe-color-pill {
+  @apply h-8 rounded-full px-3 flex items-center text-xs font-medium transition-transform hover:scale-105;
+}
+
+/* Soft Organic theme specific styles */
+.soft-organic-container {
+  @apply bg-gradient-to-br from-green-50 to-teal-50 min-h-screen;
+}
+
+.soft-organic-card {
+  @apply bg-white rounded-2xl border-none shadow-sm;
+}
+
+.soft-organic-button {
+  @apply rounded-full px-5 py-2.5 font-medium text-sm transition-all;
+}
+
+.soft-organic-primary-button {
+  @apply bg-emerald-500 text-white hover:bg-emerald-600 soft-organic-button;
+}
+
+.soft-organic-secondary-button {
+  @apply bg-gray-100 text-gray-800 hover:bg-gray-200 soft-organic-button;
+}
+
+.soft-organic-outline-button {
+  @apply border border-gray-300 bg-transparent hover:bg-gray-50 soft-organic-button;
+}
+
+.soft-organic-ghost-button {
+  @apply bg-transparent hover:bg-gray-50 soft-organic-button;
+}
+
+.soft-organic-link-button {
+  @apply text-emerald-500 hover:text-emerald-600 underline-offset-2 hover:underline soft-organic-button px-0 py-0;
 }

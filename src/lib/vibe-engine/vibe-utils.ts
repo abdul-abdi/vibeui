@@ -1,4 +1,3 @@
-
 import { VibeSettings } from './types';
 
 // Apply vibe settings to CSS variables on the document root
@@ -73,6 +72,18 @@ export function applyVibe(vibe: VibeSettings): void {
     root.style.setProperty('--primary-rgb', hslToRgb(primaryHSL[0], primaryHSL[1], primaryHSL[2]));
   }
   
+  // Apply special styles for the "Soft Organic" vibe
+  if (vibe.name.toLowerCase().includes("organic")) {
+    document.body.classList.add('soft-organic-theme');
+    // Set specific colors for soft organic theme
+    if (!vibe.colors.primary.includes('160')) {
+      root.style.setProperty('--primary', '160 84% 39%');
+    }
+  } else {
+    document.body.classList.remove('soft-organic-theme');
+  }
+  
+  // Process secondary and accent colors for RGB values
   const secondaryHSL = vibe.colors.secondary.replace(/hsl\(|\)/g, '').split(' ');
   if (secondaryHSL.length >= 3) {
     root.style.setProperty('--secondary-h', secondaryHSL[0]);
