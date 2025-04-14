@@ -1,7 +1,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { VibeSettings, VibeState } from './types';
-import { getRandomVibePreset, getVibePresetById } from './vibe-presets';
+import { getRandomVibePreset, getVibePresetById, vibePresets } from './vibe-presets';
 import { applyVibe } from './vibe-utils';
 import { fetchAiVibes, generateNewVibe } from './ai-vibes';
 import { toast } from '@/hooks/use-toast';
@@ -82,13 +82,7 @@ export const VibeProvider: React.FC<{ children: React.ReactNode }> = ({ children
       newVibe = aiVibes.find(v => v.id === vibeId) || getVibePresetById(vibeId);
     } else {
       // Get random from all vibes (built-in + AI)
-      const allVibes = [...aiVibes];
-      
-      // Only add presets if there are no AI vibes or randomly
-      if (allVibes.length === 0 || Math.random() > 0.5) {
-        const presets = require('./vibe-presets').vibePresets;
-        allVibes.push(...presets);
-      }
+      const allVibes = [...aiVibes, ...vibePresets];
       
       const randomIndex = Math.floor(Math.random() * allVibes.length);
       newVibe = allVibes[randomIndex];
