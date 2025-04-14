@@ -53,6 +53,9 @@ export function VibeInfo() {
   const isBrutalist = currentVibe.name.toLowerCase().includes("brutal");
   const isPlayful = currentVibe.name.toLowerCase().includes("playful") ||
                    currentVibe.name.toLowerCase().includes("vibrant");
+  const isElectric = currentVibe.name.toLowerCase().includes("electric") || 
+                    currentVibe.name.toLowerCase().includes("pop") ||
+                    currentVibe.name.toLowerCase().includes("neon");
   
   const cardClass = isSoftOrganic ? 'soft-organic-card' : 
                     isDarkTech ? 'dark-tech-card' :
@@ -69,17 +72,20 @@ export function VibeInfo() {
       return 'bg-yellow-50';
     } else if (isPlayful) {
       return 'bg-gradient-to-br from-purple-50 to-pink-50';
+    } else if (isElectric) {
+      return 'bg-gradient-to-br from-slate-800 to-slate-900';
     } else {
       return 'bg-gradient-to-br from-slate-50 to-slate-100/50';
     }
   };
   
   return (
-    <div className={`vibe-info-card ${cardClass}`}>
+    <div className={`vibe-info-card ${cardClass} h-full`}>
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5, ease: getEasing() }}
+        className="h-full flex flex-col"
       >
         <div className="flex items-center gap-2">
           <motion.div 
@@ -94,15 +100,17 @@ export function VibeInfo() {
               <Layers className="h-5 w-5 text-purple-400" />
             ) : isBrutalist ? (
               <Shuffle className="h-5 w-5 text-primary" />
+            ) : isElectric ? (
+              <Sparkles className="h-5 w-5 text-primary" />
             ) : (
               <Circle className="h-5 w-5 text-primary" />
             )}
           </motion.div>
           <div>
-            <h2 className="text-2xl font-bold text-gray-800">
+            <h2 className="text-2xl font-bold">
               {currentVibe.name}
             </h2>
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
               <Badge variant="outline" className={isSoftOrganic ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : ''}>
                 {currentVibe.layout.charAt(0).toUpperCase() + currentVibe.layout.slice(1)} Layout
               </Badge>
@@ -119,43 +127,43 @@ export function VibeInfo() {
 
         <Card className={`mt-6 border ${isSoftOrganic ? 'border-emerald-200' : isDarkTech ? 'border-slate-700' : ''} ${generateGradientStyle()}`}>
           <CardContent className="p-6">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 gap-y-6">
               {/* Layout */}
-              <div className="vibe-attribute">
-                <div className={`w-10 h-10 rounded-lg ${isSoftOrganic ? 'bg-white' : 'bg-primary/10'} flex items-center justify-center`}>
+              <div className="vibe-attribute flex flex-col gap-1">
+                <div className={`w-10 h-10 rounded-lg ${isSoftOrganic ? 'bg-white' : 'bg-primary/10'} flex items-center justify-center mb-1`}>
                   <Layout className={`h-5 w-5 ${isSoftOrganic ? 'text-emerald-600' : 'text-primary'}`} />
                 </div>
-                <span className="vibe-attribute-label">Layout</span>
-                <span className="vibe-attribute-value capitalize">
+                <span className="vibe-attribute-label text-xs text-muted-foreground">Layout</span>
+                <span className="vibe-attribute-value text-sm font-medium capitalize">
                   {currentVibe.layout}
                 </span>
               </div>
               
               {/* Typography */}
-              <div className="vibe-attribute">
-                <div className={`w-10 h-10 rounded-lg ${isSoftOrganic ? 'bg-white' : 'bg-primary/10'} flex items-center justify-center`}>
+              <div className="vibe-attribute flex flex-col gap-1">
+                <div className={`w-10 h-10 rounded-lg ${isSoftOrganic ? 'bg-white' : 'bg-primary/10'} flex items-center justify-center mb-1`}>
                   <Type className={`h-5 w-5 ${isSoftOrganic ? 'text-emerald-600' : 'text-primary'}`} />
                 </div>
-                <span className="vibe-attribute-label">Typography</span>
-                <span className="vibe-attribute-value">
+                <span className="vibe-attribute-label text-xs text-muted-foreground">Typography</span>
+                <span className="vibe-attribute-value text-sm font-medium">
                   {primaryFont}
                 </span>
               </div>
               
               {/* Animation */}
-              <div className="vibe-attribute">
-                <div className={`w-10 h-10 rounded-lg ${isSoftOrganic ? 'bg-white' : 'bg-primary/10'} flex items-center justify-center`}>
+              <div className="vibe-attribute flex flex-col gap-1">
+                <div className={`w-10 h-10 rounded-lg ${isSoftOrganic ? 'bg-white' : 'bg-primary/10'} flex items-center justify-center mb-1`}>
                   <Clock className={`h-5 w-5 ${isSoftOrganic ? 'text-emerald-600' : 'text-primary'}`} />
                 </div>
-                <span className="vibe-attribute-label">Animation</span>
-                <span className="vibe-attribute-value">
+                <span className="vibe-attribute-label text-xs text-muted-foreground">Animation</span>
+                <span className="vibe-attribute-value text-sm font-medium">
                   {currentVibe.animation.speed}x
                 </span>
               </div>
               
               {/* Radius */}
-              <div className="vibe-attribute">
-                <div className={`w-10 h-10 rounded-lg ${isSoftOrganic ? 'bg-white' : 'bg-primary/10'} flex items-center justify-center ${isSoftOrganic ? 'text-emerald-600' : 'text-primary'}`}>
+              <div className="vibe-attribute flex flex-col gap-1">
+                <div className={`w-10 h-10 rounded-lg ${isSoftOrganic ? 'bg-white' : 'bg-primary/10'} flex items-center justify-center mb-1 ${isSoftOrganic ? 'text-emerald-600' : 'text-primary'}`}>
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M2 12h2a8 8 0 0 1 8-8v2" />
                     <path d="M2 12v-2a8 8 0 0 1 8-8h2" />
@@ -163,8 +171,8 @@ export function VibeInfo() {
                     <path d="M22 12v2a8 8 0 0 1-8 8h-2" />
                   </svg>
                 </div>
-                <span className="vibe-attribute-label">Radius</span>
-                <span className="vibe-attribute-value">
+                <span className="vibe-attribute-label text-xs text-muted-foreground">Radius</span>
+                <span className="vibe-attribute-value text-sm font-medium">
                   {currentVibe.radius.md}
                 </span>
               </div>
@@ -173,7 +181,7 @@ export function VibeInfo() {
         </Card>
         
         <div className="mt-6">
-          <h3 className="text-sm font-medium text-gray-700 mb-3">Color Palette</h3>
+          <h3 className="text-sm font-medium mb-3">Color Palette</h3>
           <div className="grid grid-cols-4 gap-2">
             <motion.div
               custom={0}
@@ -222,8 +230,8 @@ export function VibeInfo() {
         </div>
         
         <div className="mt-6">
-          <h3 className="text-sm font-medium text-gray-700 mb-2">Responsive Design</h3>
-          <div className="flex items-center gap-4">
+          <h3 className="text-sm font-medium mb-2">Responsive Design</h3>
+          <div className="flex flex-wrap items-center gap-4">
             <div className="flex items-center">
               <Smartphone className="h-4 w-4 text-muted-foreground mr-1.5" />
               <span className="text-xs text-muted-foreground">Mobile-first design</span>
@@ -236,7 +244,7 @@ export function VibeInfo() {
         </div>
 
         <TooltipProvider>
-          <div className="flex items-center justify-between mt-8">
+          <div className="flex items-center justify-between mt-auto pt-8">
             <div className="flex items-center gap-2 text-xs text-muted-foreground">
               <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M5 16V9h14V2"></path>

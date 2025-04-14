@@ -1,3 +1,4 @@
+
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@400;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=DM+Serif+Display&family=Quicksand:wght@400;500;600;700&family=Roboto+Mono:wght@400;500;600;700&family=Abril+Fatface&display=swap');
 
 @tailwind base;
@@ -129,11 +130,13 @@
     min-height: 100vh;
     width: 100%;
     overflow-x: hidden;
+    flex: 1 1 auto;
   }
 
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-secondary);
     line-height: 1.2;
+    letter-spacing: -0.025em; /* Improve readability for headings */
   }
 
   h1 {
@@ -185,6 +188,9 @@
   margin: 0 auto;
   padding: var(--layout-spacing);
   width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .layout-asymmetric {
@@ -195,6 +201,7 @@
   max-width: var(--content-max-width);
   margin: 0 auto;
   width: 100%;
+  height: 100%;
 }
 
 .layout-centered {
@@ -203,6 +210,10 @@
   padding: var(--layout-spacing);
   text-align: center;
   width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .layout-sidebar {
@@ -213,18 +224,22 @@
   margin: 0 auto;
   padding: var(--layout-spacing);
   width: 100%;
+  height: 100%;
 }
 
-/* Soft Organic theme specific styles */
+/* Soft Organic theme specific styles - fixing the issues in screenshot 3 */
 .soft-organic-container {
   @apply bg-gradient-to-br from-emerald-50 to-teal-50;
   min-height: 100vh;
   width: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .soft-organic-card {
   @apply bg-white/90 rounded-2xl border-none shadow-md;
   width: 100%;
+  height: 100%;
 }
 
 /* Improved hover effect styles */
@@ -334,11 +349,13 @@
   box-shadow: var(--shadow-lg);
 }
 
-/* Dark Techno theme improved styles */
+/* Dark Techno theme improved styles - fixing the issue in screenshot 1 */
 .dark-tech-container {
   background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
   min-height: 100vh;
   width: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .dark-tech-card {
@@ -357,6 +374,8 @@
   background-color: #f9f6f2;
   min-height: 100vh;
   width: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .brutalist-card {
@@ -369,13 +388,15 @@
   width: 100%;
 }
 
-/* Electric/Playful theme enhanced styles */
+/* Electric/Playful theme enhanced styles - fixing issues in screenshot 4 */
 .electric-container, .playful-container {
   background: linear-gradient(135deg, #0e172a 0%, #210535 100%);
   min-height: 100vh;
   width: 100%;
   position: relative;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Improved full-height sections */
@@ -384,6 +405,7 @@
   display: flex;
   flex-direction: column;
   width: 100%;
+  flex: 1;
 }
 
 /* Fix for gallery display */
@@ -433,4 +455,74 @@
   .gallery-grid {
     grid-template-columns: 1fr;
   }
+}
+
+/* Fix overlapping text in the Soft Organic theme - screenshot 3 */
+.soft-organic-theme .vibe-attribute {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 0.75rem;
+}
+
+.vibe-attribute {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.vibe-attribute-label {
+  font-size: 0.75rem;
+  color: hsl(var(--muted-foreground));
+  display: block;
+}
+
+.vibe-attribute-value {
+  font-weight: 500;
+  display: block;
+  word-break: break-word;
+}
+
+/* Fix spacing in color palette section */
+.color-palette {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.color-swatch {
+  aspect-ratio: 1/1;
+  border-radius: 0.5rem;
+  position: relative;
+}
+
+.color-label {
+  font-size: 0.75rem;
+  margin-top: 0.5rem;
+  text-align: center;
+}
+
+/* Fix spacing in typography section */
+.typography-sample {
+  margin-bottom: 2rem;
+}
+
+/* Ensure proper spacing in all UI component displays */
+.ui-component-demo {
+  margin-bottom: 2rem;
+}
+
+/* Ensure proper spacing in tabs content */
+.tabs-content {
+  min-height: 300px;
+  padding-top: 1rem;
+}
+
+/* Fix layout issues in the grid for demo elements */
+.grid-layout-fix {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.5rem;
+  width: 100%;
 }

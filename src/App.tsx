@@ -9,7 +9,14 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 
 // Create a client
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      staleTime: 60 * 1000,
+    },
+  },
+});
 
 function App() {
   return (

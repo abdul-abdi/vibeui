@@ -32,13 +32,16 @@ export function VibeDemoElements() {
   const isBrutalist = currentVibe.name.toLowerCase().includes("brutal");
   const isPlayful = currentVibe.name.toLowerCase().includes("playful") ||
                   currentVibe.name.toLowerCase().includes("vibrant");
+  const isElectric = currentVibe.name.toLowerCase().includes("electric") || 
+                   currentVibe.name.toLowerCase().includes("pop") ||
+                   currentVibe.name.toLowerCase().includes("neon");
   
   // Get vibe-specific class names
   const getCardClass = () => {
     if (isSoftOrganic) return 'soft-organic-card';
     if (isDarkTech) return 'dark-tech-card';
     if (isBrutalist) return 'brutalist-card';
-    if (isPlayful) return 'playful-card';
+    if (isPlayful || isElectric) return 'playful-card';
     return '';
   };
 
@@ -46,6 +49,7 @@ export function VibeDemoElements() {
     if (isSoftOrganic) return 'soft-organic-primary-button';
     if (isDarkTech) return 'neon-glow-button';
     if (isBrutalist) return 'brutal-button';
+    if (isElectric || isPlayful) return 'electric-button';
     return '';
   };
 
@@ -61,7 +65,7 @@ export function VibeDemoElements() {
 
     return (
       <motion.button
-        className="vibe-color-pill flex items-center justify-between gap-2 w-full"
+        className="vibe-color-pill flex items-center justify-between gap-2 w-full p-2 rounded"
         style={{ 
           backgroundColor: `hsl(${color})`,
           color: color.includes('foreground') ? `hsl(${color})` : 
@@ -116,10 +120,11 @@ export function VibeDemoElements() {
               Typography
             </TabsTrigger>
           </TabsList>
-          <TabsContent value="ui-components" className="space-y-8 h-full">
+
+          <TabsContent value="ui-components" className="space-y-8 h-full min-h-[400px]">
             <Card className={`${getCardClass()} w-full`}>
               <CardHeader>
-                <div className="flex items-center justify-between">
+                <div className="flex flex-wrap items-center justify-between gap-2">
                   <CardTitle className="text-xl flex items-center gap-2">
                     <LayoutGrid className="h-5 w-5" /> 
                     UI Components
@@ -200,10 +205,10 @@ export function VibeDemoElements() {
             </Card>
           </TabsContent>
 
-          <TabsContent value="interactive" className="space-y-8">
+          <TabsContent value="interactive" className="space-y-8 min-h-[400px]">
             <Card className={`${getCardClass()} w-full`}>
               <CardHeader>
-                <div className="flex items-center justify-between">
+                <div className="flex flex-wrap items-center justify-between gap-2">
                   <CardTitle className="text-xl flex items-center gap-2">
                     <MousePointer className="h-5 w-5" /> 
                     Interactive Elements
@@ -219,7 +224,7 @@ export function VibeDemoElements() {
                   {/* Interactive button with animation */}
                   <div className="space-y-2">
                     <div className="text-sm font-medium mb-2">Interactive Buttons</div>
-                    <div className="flex gap-4">
+                    <div className="flex flex-wrap gap-4">
                       <motion.button
                         className={`px-4 py-2 rounded-lg bg-primary text-primary-foreground flex items-center gap-2 ${isBrutalist ? 'brutal-button' : ''}`}
                         whileHover={{ scale: 1.05 }}
@@ -273,7 +278,7 @@ export function VibeDemoElements() {
                   {/* Animated Icon */}
                   <div className="space-y-2 pt-4">
                     <div className="text-sm font-medium mb-2">Animated Icons</div>
-                    <div className="flex gap-6 items-center justify-center py-4">
+                    <div className="flex flex-wrap gap-6 items-center justify-center py-4">
                       <motion.div
                         animate={{ 
                           rotate: [0, 360],
@@ -322,10 +327,10 @@ export function VibeDemoElements() {
             </Card>
           </TabsContent>
 
-          <TabsContent value="typography" className="space-y-8">
+          <TabsContent value="typography" className="space-y-8 min-h-[400px]">
             <Card className={`${getCardClass()} w-full`}>
               <CardHeader>
-                <div className="flex items-center justify-between">
+                <div className="flex flex-wrap items-center justify-between gap-2">
                   <CardTitle className="text-xl flex items-center gap-2">
                     <Type className="h-5 w-5" /> 
                     Typography

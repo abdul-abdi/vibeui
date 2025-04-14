@@ -94,6 +94,7 @@ const VibeContent = () => {
     <div 
       className={`min-h-screen w-full bg-background transition-colors duration-500 relative overflow-x-hidden ${containerClass}`}
       onMouseMove={handleMouseMove}
+      style={{ display: 'flex', flexDirection: 'column' }}
     >
       {/* Background effects */}
       <motion.div 
@@ -216,7 +217,7 @@ const VibeContent = () => {
       </motion.header>
 
       {/* Main content */}
-      <main className="container mx-auto py-8 px-4 sm:px-6 lg:px-8 relative z-10 flex-grow w-full max-w-full">
+      <main className="container mx-auto py-8 px-4 sm:px-6 lg:px-8 relative z-10 flex-grow w-full max-w-full flex flex-col">
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -328,158 +329,162 @@ const VibeContent = () => {
       
       <Toaster />
       
-      <style>
-        {`
-          :root {
-            transition: color 0.5s ease, background-color 0.5s ease;
-          }
-          
-          .transitioning-vibe * {
-            transition: background-color 0.6s ease, 
-                        border-color 0.6s ease, 
-                        color 0.6s ease,
-                        box-shadow 0.6s ease,
-                        transform 0.6s ease;
-          }
-          
-          /* Enhanced scrollbar */
-          ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-          }
-          
-          ::-webkit-scrollbar-thumb {
-            background: hsl(var(--primary) / 0.3);
-            border-radius: 4px;
-          }
-          
-          ::-webkit-scrollbar-thumb:hover {
-            background: hsl(var(--primary) / 0.5);
-          }
-          
-          ::-webkit-scrollbar-track {
-            background: hsl(var(--muted) / 0.3);
-          }
-          
-          /* Improved full-height layout for all themes */
-          #root {
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-            width: 100%;
-            overflow-x: hidden;
-          }
-          
-          /* Fix Dark Techno specific layout issues */
-          .dark-tech-container {
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-            min-height: 100vh;
-            width: 100vw;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-          }
-          
-          /* Fix layout for brutalist theme */
-          .brutalist-container {
-            background-color: #f9f6f2;
-            min-height: 100vh;
-            width: 100vw;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-          }
-          
-          /* Fix layout for organic theme */
-          .soft-organic-container {
-            background: linear-gradient(135deg, #f0fdf5 0%, #ecfdf5 100%);
-            min-height: 100vh;
-            width: 100vw;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-          }
-          
-          /* Fix layout for electric theme */
-          .electric-container, .playful-container {
-            background: linear-gradient(135deg, #0e172a 0%, #210535 100%);
-            min-height: 100vh;
-            width: 100vw;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-          }
-          
-          /* Ensure cards take full width */
-          .vibe-info-card, .component-container {
-            width: 100%;
-          }
-          
-          /* Fix for dark techno theme specifics */
-          .dark-techno-theme .dark-tech-card {
-            width: 100%;
-            height: 100%;
-            max-width: 100%;
-          }
-          
-          /* Fix layout spacing for all themes */
+      <style jsx global>{`
+        :root {
+          transition: color 0.5s ease, background-color 0.5s ease;
+        }
+        
+        .transitioning-vibe * {
+          transition: background-color 0.6s ease, 
+                      border-color 0.6s ease, 
+                      color 0.6s ease,
+                      box-shadow 0.6s ease,
+                      transform 0.6s ease;
+        }
+        
+        /* Enhanced scrollbar */
+        ::-webkit-scrollbar {
+          width: 8px;
+          height: 8px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+          background: hsl(var(--primary) / 0.3);
+          border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+          background: hsl(var(--primary) / 0.5);
+        }
+        
+        ::-webkit-scrollbar-track {
+          background: hsl(var(--muted) / 0.3);
+        }
+        
+        /* Improved full-height layout for all themes */
+        #root {
+          display: flex;
+          flex-direction: column;
+          min-height: 100vh;
+          width: 100%;
+          overflow-x: hidden;
+        }
+        
+        /* Fix Dark Techno specific layout issues */
+        .dark-tech-container {
+          background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+          min-height: 100vh;
+          width: 100%;
+          margin: 0;
+          padding: 0;
+          display: flex;
+          flex-direction: column;
+        }
+        
+        /* Fix layout for brutalist theme */
+        .brutalist-container {
+          background-color: #f9f6f2;
+          min-height: 100vh;
+          width: 100%;
+          margin: 0;
+          padding: 0;
+          display: flex;
+          flex-direction: column;
+        }
+        
+        /* Fix layout for organic theme */
+        .soft-organic-container {
+          background: linear-gradient(135deg, #f0fdf5 0%, #ecfdf5 100%);
+          min-height: 100vh;
+          width: 100%;
+          margin: 0;
+          padding: 0;
+          display: flex;
+          flex-direction: column;
+        }
+        
+        /* Fix layout for electric theme */
+        .electric-container, .playful-container {
+          background: linear-gradient(135deg, #0e172a 0%, #210535 100%);
+          min-height: 100vh;
+          width: 100%;
+          margin: 0;
+          padding: 0;
+          display: flex;
+          flex-direction: column;
+        }
+        
+        /* Fix for Soft Organic theme text layout (screenshot 3) */
+        .soft-organic-theme .typography-section h1,
+        .soft-organic-theme .typography-section h2,
+        .soft-organic-theme .typography-section h3 {
+          letter-spacing: -0.02em;
+          word-spacing: 0.1em;
+        }
+        
+        .soft-organic-theme .layout-info {
+          margin-right: 1rem;
+          white-space: nowrap;
+        }
+        
+        /* Fix for the text spacing in screenshot 3 */
+        .vibe-attribute {
+          white-space: normal;
+          overflow: visible;
+          text-overflow: clip;
+          word-break: break-word;
+          margin-bottom: 0.5rem;
+        }
+        
+        /* Fix spacing for all themes */
+        .container {
+          width: 100%;
+          max-width: var(--content-max-width);
+          padding-left: 1rem;
+          padding-right: 1rem;
+        }
+        
+        @media (min-width: 640px) {
           .container {
-            width: 100%;
-            max-width: 100%;
+            padding-left: 1.5rem;
+            padding-right: 1.5rem;
+          }
+        }
+        
+        @media (min-width: 1024px) {
+          .container {
             padding-left: 2rem;
             padding-right: 2rem;
           }
-          
-          @media (max-width: 640px) {
-            .container {
-              padding-left: 1rem;
-              padding-right: 1rem;
-            }
-          }
-          
-          /* Enforce proper grid layout */
-          .grid {
-            display: grid;
-            width: 100%;
-          }
-          
-          /* Fix for the card displays in the demo elements section */
-          .vibe-demo-card {
-            width: 100%;
-            height: 100%;
-          }
-          
-          /* Soft Organic theme specific styles */
-          .soft-organic-theme h1, .soft-organic-theme h2, .soft-organic-theme h3 {
-            color: hsl(160, 84%, 20%);
-          }
-          
-          .dark-techno-theme h1, .dark-techno-theme h2, .dark-techno-theme h3 {
-            text-shadow: 0 0 8px rgba(var(--primary-rgb), 0.5);
-          }
-          
-          .electric-pop-theme h1, .electric-pop-theme h2, .electric-pop-theme h3 {
-            background: linear-gradient(45deg, hsl(var(--primary)), hsl(var(--accent)));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: color-cycle 10s infinite;
-          }
-          
-          /* Typewriter effect for headings */
-          .typewriter-effect {
-            display: inline-block;
-            overflow: hidden;
-            border-right: 2px solid;
-            white-space: nowrap;
-            margin: 0;
-            animation: typewriter 3.5s steps(40, end), blink 1s step-end infinite;
-          }
-        `}
-      </style>
+        }
+        
+        /* Enforce proper grid layout for all vibes */
+        .grid {
+          display: grid;
+          width: 100%;
+          gap: 1rem;
+        }
+        
+        /* Fix for the Electric Pop vibe in screenshot 4 */
+        .electric-pop-theme .color-palette-item {
+          padding: 0.25rem;
+          border-radius: 0.5rem;
+          overflow: hidden;
+          aspect-ratio: 1/1;
+        }
+        
+        /* Fix for Neo Brutalism theme in screenshot 2 */
+        .neo-brutalist-theme button {
+          box-shadow: 3px 3px 0 #000;
+          border: 2px solid #000;
+          transition: all 0.1s ease;
+        }
+        
+        .neo-brutalist-theme button:active {
+          transform: translate(3px, 3px);
+          box-shadow: 0px 0px 0 #000;
+        }
+      `}</style>
     </div>
   );
 };

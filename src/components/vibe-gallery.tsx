@@ -93,14 +93,14 @@ export function VibeGallery() {
         animate={isInView ? "visible" : "hidden"}
         variants={cardVariants}
         whileHover={{ y: -8, transition: { duration: 0.2 } }}
-        className="relative"
+        className="relative h-full"
       >
         <div 
           className="relative z-10 h-full"
           onMouseMove={handleMouseMove}
         >
           <motion.div
-            className="absolute inset-0 z-0 opacity-0 group-hover:opacity-100 bg-gradient-to-br from-primary/20 via-accent/20 to-secondary/20 pointer-events-none duration-500 transition-opacity"
+            className="absolute inset-0 z-0 opacity-0 group-hover:opacity-100 bg-gradient-to-br from-primary/20 via-accent/20 to-secondary/20 pointer-events-none transition-opacity duration-500"
             style={{ maskImage }}
           />
           {children}
@@ -108,6 +108,12 @@ export function VibeGallery() {
       </motion.div>
     );
   };
+
+  // Check if current vibe is electric/playful for special styles
+  const isElectricOrPlayful = vibeState.currentVibe.name.toLowerCase().includes("electric") || 
+                             vibeState.currentVibe.name.toLowerCase().includes("pop") ||
+                             vibeState.currentVibe.name.toLowerCase().includes("neon") ||
+                             vibeState.currentVibe.name.toLowerCase().includes("playful");
 
   return (
     <motion.section 
@@ -126,7 +132,7 @@ export function VibeGallery() {
       />
       
       <motion.div 
-        className="flex justify-between items-center relative z-10"
+        className="flex flex-wrap justify-between items-center relative z-10 gap-4"
         initial={{ opacity: 0, y: -20 }}
         animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: -20 }}
         transition={{ duration: 0.4, ease: getEasing() }}
@@ -163,10 +169,10 @@ export function VibeGallery() {
         <Carousel className="w-full">
           <CarouselContent>
             {aiVibes.map((vibe, index) => (
-              <CarouselItem key={vibe.id} className="md:basis-1/2 lg:basis-1/3 xl:basis-1/4 p-1">
+              <CarouselItem key={vibe.id} className="md:basis-1/2 lg:basis-1/3 xl:basis-1/4 p-1 h-full">
                 <CardWithShine index={index}>
                   <Card 
-                    className={`h-full transition-all group hover:shadow-lg border border-border/50 ${
+                    className={`h-full transition-all duration-300 group hover:shadow-lg border border-border/50 ${
                       currentVibeId === vibe.id ? 'ring-2 ring-primary shadow-lg' : ''
                     }`}
                   >
@@ -203,7 +209,7 @@ export function VibeGallery() {
                           whileHover={{ scale: 1.2 }}
                           transition={{ type: "spring", stiffness: 400, damping: 10 }}
                         >
-                          <span className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-popover text-popover-foreground text-xs px-2 py-1 rounded opacity-0 group-hover/color:opacity-100 transition-opacity">Primary</span>
+                          <span className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-popover text-popover-foreground text-xs px-2 py-1 rounded opacity-0 group-hover/color:opacity-100 transition-opacity shadow-md">Primary</span>
                         </motion.div>
                         <motion.div 
                           className="w-6 h-6 rounded-full border cursor-pointer relative group/color" 
@@ -212,7 +218,7 @@ export function VibeGallery() {
                           whileHover={{ scale: 1.2 }}
                           transition={{ type: "spring", stiffness: 400, damping: 10 }}
                         >
-                          <span className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-popover text-popover-foreground text-xs px-2 py-1 rounded opacity-0 group-hover/color:opacity-100 transition-opacity">Secondary</span>
+                          <span className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-popover text-popover-foreground text-xs px-2 py-1 rounded opacity-0 group-hover/color:opacity-100 transition-opacity shadow-md">Secondary</span>
                         </motion.div>
                         <motion.div 
                           className="w-6 h-6 rounded-full border cursor-pointer relative group/color" 
@@ -221,7 +227,7 @@ export function VibeGallery() {
                           whileHover={{ scale: 1.2 }}
                           transition={{ type: "spring", stiffness: 400, damping: 10 }}
                         >
-                          <span className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-popover text-popover-foreground text-xs px-2 py-1 rounded opacity-0 group-hover/color:opacity-100 transition-opacity">Accent</span>
+                          <span className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-popover text-popover-foreground text-xs px-2 py-1 rounded opacity-0 group-hover/color:opacity-100 transition-opacity shadow-md">Accent</span>
                         </motion.div>
                         <motion.div 
                           className="w-6 h-6 rounded-full border cursor-pointer relative group/color" 
@@ -230,7 +236,7 @@ export function VibeGallery() {
                           whileHover={{ scale: 1.2 }}
                           transition={{ type: "spring", stiffness: 400, damping: 10 }}
                         >
-                          <span className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-popover text-popover-foreground text-xs px-2 py-1 rounded opacity-0 group-hover/color:opacity-100 transition-opacity">Background</span>
+                          <span className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-popover text-popover-foreground text-xs px-2 py-1 rounded opacity-0 group-hover/color:opacity-100 transition-opacity shadow-md">Background</span>
                         </motion.div>
                       </motion.div>
                       <div className="flex flex-wrap gap-2">
@@ -242,7 +248,7 @@ export function VibeGallery() {
                         </Badge>
                       </div>
                     </CardContent>
-                    <CardFooter>
+                    <CardFooter className="mt-auto">
                       <Button 
                         variant={currentVibeId === vibe.id ? "secondary" : "default"} 
                         className="w-full group/btn relative overflow-hidden" 
@@ -273,13 +279,13 @@ export function VibeGallery() {
             ))}
           </CarouselContent>
           <CarouselPrevious 
-            className="left-1 bg-background/70 backdrop-blur-sm hover:bg-background/90 border border-border/50"
+            className={`left-1 bg-background/70 backdrop-blur-sm hover:bg-background/90 border border-border/50 ${isElectricOrPlayful ? 'text-primary-foreground' : ''}`}
             aria-label="Previous vibe"
           >
             <ChevronLeft className="h-4 w-4" />
           </CarouselPrevious>
           <CarouselNext 
-            className="right-1 bg-background/70 backdrop-blur-sm hover:bg-background/90 border border-border/50" 
+            className={`right-1 bg-background/70 backdrop-blur-sm hover:bg-background/90 border border-border/50 ${isElectricOrPlayful ? 'text-primary-foreground' : ''}`}
             aria-label="Next vibe"
           >
             <ChevronRight className="h-4 w-4" />
