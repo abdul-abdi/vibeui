@@ -1,7 +1,64 @@
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.38.4";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { VibeSettings } from "../../../src/lib/vibe-engine/types.ts";
+
+// Define VibeSettings type locally instead of importing from frontend code
+type VibeLayout = 'standard' | 'asymmetric' | 'centered' | 'sidebar';
+
+type ColorTheme = {
+  background: string;
+  foreground: string;
+  card: string;
+  cardForeground: string;
+  primary: string;
+  primaryForeground: string;
+  secondary: string;
+  secondaryForeground: string;
+  muted: string;
+  mutedForeground: string;
+  accent: string;
+  accentForeground: string;
+  destructive: string;
+  destructiveForeground: string;
+  border: string;
+  input: string;
+  ring: string;
+};
+
+type VibeSettings = {
+  id: string;
+  name: string;
+  description: string;
+  layout: VibeLayout;
+  colors: ColorTheme;
+  fonts: {
+    primary: string;
+    secondary: string;
+    accent: string;
+    mono: string;
+  };
+  radius: {
+    sm: string;
+    md: string;
+    lg: string;
+  };
+  spacing: {
+    layoutSpacing: string;
+    cardSpacing: string;
+    elementSpacing: string;
+  };
+  animation: {
+    speed: number;
+    easing: string;
+    entrance: string;
+    hover: string;
+  };
+  shadows: {
+    sm: string;
+    md: string;
+    lg: string;
+  };
+};
 
 const GOOGLE_AI_API_KEY = Deno.env.get("GOOGLE_AI_API_KEY");
 
