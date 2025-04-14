@@ -1,22 +1,6 @@
 # VibeUI
 
-<div align="center">
-  
-  <svg width="100" height="100" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <g id="gradient-circle">
-      <circle cx="16" cy="16" r="15" fill="url(#gradient)" strokeWidth="2"/>
-      <path d="M10 16.5L14 20.5L22 12.5" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-    </g>
-    <defs>
-      <linearGradient id="gradient" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
-        <stop offset="0%" stop-color="#FF5757"/>
-        <stop offset="25%" stop-color="#FFBD59"/>
-        <stop offset="50%" stop-color="#4CD471"/>
-        <stop offset="75%" stop-color="#5E8AF7"/>
-        <stop offset="100%" stop-color="#C061F7"/>
-      </linearGradient>
-    </defs>
-  </svg>
+<img src="public/favicon.svg" alt="VibeUI Screenshot" width="100" align="center" />
   
   **The Ultimate UI Design Inspiration Platform**
   
