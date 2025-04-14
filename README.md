@@ -1,73 +1,189 @@
-# Welcome to your Lovable project
+# VibeUI
 
-## Project info
+<div align="center">
+  
+  ![VibeUI Logo](https://via.placeholder.com/150x150?text=VibeUI)
+  
+  **The Ultimate UI Design Inspiration Platform**
+  
+  [Demo](https://vibeui.vercel.app) | [Documentation](#documentation) | [Features](#key-features) | [Deploy](#deployment)
+  
+</div>
 
-**URL**: https://lovable.dev/projects/7554561a-bff5-443a-b623-e27374961def
+## 🌟 Overview
 
-## How can I edit this code?
+VibeUI is a dynamic design system and UI inspiration platform that helps designers and developers discover new interface styles and aesthetics. It generates unique design "vibes" that can be customized, exported, and applied to your own projects.
 
-There are several ways of editing your application.
+With VibeUI, you can:
+- Explore different design aesthetics from minimal to playful
+- Generate AI-powered design themes with a single click
+- See live previews of UI components with your chosen vibe
+- Export design tokens and styles for use in your own projects
 
-**Use Lovable**
+<div align="center">
+  
+  ![VibeUI Screenshot](https://via.placeholder.com/800x450?text=VibeUI+Screenshot)
+  
+</div>
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/7554561a-bff5-443a-b623-e27374961def) and start prompting.
+## ✨ Key Features
 
-Changes made via Lovable will be committed automatically to this repo.
+- **Dynamic Vibe Generation** - Create and explore unlimited design styles
+- **Real-time Preview** - See how components look with different vibes
+- **AI-powered Themes** - Generate custom themes based on keywords
+- **Code Export** - Get ready-to-use CSS variables and design tokens
+- **Theme History** - Save and revisit your favorite design vibes
+- **Responsive Design** - Works on all devices from mobile to desktop
+- **Dark/Light Mode** - Each vibe works with both dark and light color schemes
 
-**Use your preferred IDE**
+## 🚀 Getting Started
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### Prerequisites
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+- Node.js (v16 or higher)
+- npm or yarn
+- Git
 
-Follow these steps:
+### Installation
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+1. Clone the repository:
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+```bash
+git clone https://github.com/yourusername/vibeui.git
+cd vibeui
 ```
 
-**Edit a file directly in GitHub**
+2. Install dependencies:
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+```bash
+npm install
+# or
+yarn install
+```
 
-**Use GitHub Codespaces**
+3. Set up environment variables:
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+Copy the `.env.example` file to `.env.local`:
 
-## What technologies are used for this project?
+```bash
+cp .env.example .env.local
+```
 
-This project is built with:
+Update the values in `.env.local` with your own Supabase credentials.
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+4. Start the development server:
 
-## How can I deploy this project?
+```bash
+npm run dev
+# or
+yarn dev
+```
 
-Simply open [Lovable](https://lovable.dev/projects/7554561a-bff5-443a-b623-e27374961def) and click on Share -> Publish.
+5. Open your browser and visit `http://localhost:8080`
 
-## Can I connect a custom domain to my Lovable project?
+## 📖 Documentation
 
-Yes, you can!
+### Project Structure
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+```
+vibeui/
+├── public/          # Static assets
+│   ├── components/  # UI components
+│   ├── lib/         # Utilities and helper functions
+│   ├── pages/       # Application pages
+│   ├── hooks/       # Custom React hooks
+│   ├── integrations/# Third-party integrations (Supabase)
+│   └── main.tsx     # Application entry point
+├── dist/            # Build output
+└── supabase/        # Supabase configuration
+```
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+### Vibe Engine
+
+The core of VibeUI is the vibe engine, which generates and applies design themes. The engine consists of:
+
+- `vibe-context.tsx` - Context provider for vibe state
+- `vibe-presets.ts` - Collection of predefined vibes
+- `vibe-utils.ts` - Utilities for applying vibes to the UI
+- `ai-vibes.ts` - Integration with AI for dynamic vibe generation
+
+### Component Gallery
+
+VibeUI includes a comprehensive gallery of components that showcase each design vibe. These components include:
+
+- Basic elements (buttons, inputs, cards)
+- Layout components (navigation, sidebars)
+- Interactive elements (modals, tooltips)
+- Data visualization samples
+
+## 🔧 Usage Guide
+
+### Generating New Vibes
+
+1. Click the "New Vibe" button to generate a random design theme
+2. Use the lock button to prevent accidental changes
+3. Navigate through your vibe history with the arrow buttons
+
+### Customizing Vibes
+
+1. Use the AI vibe generator to create a theme based on keywords
+2. Adjust colors, typography, and spacing as needed
+3. See real-time updates on the component showcase
+
+### Exporting Vibes
+
+1. Click the "Export" button in the vibe controls
+2. Choose your desired format (CSS variables, Tailwind config, etc.)
+3. Copy the code or download the configuration file
+
+## 🛠️ Technologies Used
+
+- **React** - UI framework
+- **TypeScript** - Type safety
+- **Next.js** - React framework
+- **Tailwind CSS** - Utility-first CSS
+- **Framer Motion** - Animations
+- **shadcn/ui** - Component library
+- **Supabase** - Backend and edge functions
+- **React Query** - Data fetching
+- **React Router** - Navigation
+
+## 🚢 Deployment
+
+VibeUI is optimized for deployment on Vercel. For detailed deployment instructions, see [DEPLOYMENT.md](DEPLOYMENT.md).
+
+Quick deployment steps:
+
+1. Fork or clone this repository
+2. Import your repository to Vercel
+3. Set environment variables
+4. Deploy
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fyourusername%2Fvibeui)
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## 🙏 Acknowledgements
+
+- [shadcn/ui](https://ui.shadcn.com/) for the beautiful component library
+- [Supabase](https://supabase.com/) for the backend infrastructure
+- [Framer Motion](https://www.framer.com/motion/) for the animation library
+- [Lovable](https://lovable.dev/) for project support
+
+---
+
+<div align="center">
+  Made with ❤️ by the VibeUI Team
+</div>

@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useVibe } from '@/lib/vibe-engine';
 import { 
@@ -14,7 +13,7 @@ import {
   Code, 
   Zap
 } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { Card, CardContent } from './ui/card';
 import { Button } from './ui/button';
 
@@ -67,14 +66,14 @@ export function FeatureShowcase() {
   return (
     <section className="py-16">
       <div className="container mx-auto px-4">
-        <motion.div 
+        <m.div 
           className="text-center mb-16"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.6, ease: getEasing() }}
         >
-          <motion.div 
+          <m.div 
             className="inline-flex items-center justify-center mb-4 px-4 py-1.5 rounded-full bg-primary/10 text-primary"
             initial={{ opacity: 0, scale: 0.8 }}
             whileInView={{ opacity: 1, scale: 1 }}
@@ -83,18 +82,18 @@ export function FeatureShowcase() {
           >
             <Sparkles className="mr-2 h-4 w-4" />
             <span className="text-sm font-medium">Design Inspiration</span>
-          </motion.div>
+          </m.div>
           
           <h2 className="text-3xl md:text-4xl font-bold mb-6">Explore Design Possibilities</h2>
           <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
             VibeUI provides a collection of design inspirations to help spark creativity
             and explore different visual directions for your projects.
           </p>
-        </motion.div>
+        </m.div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {featureItems.map((item, index) => (
-            <motion.div
+            <m.div
               key={index}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -103,7 +102,7 @@ export function FeatureShowcase() {
             >
               <Card className="h-full transition-all hover:shadow-md group relative overflow-hidden">
                 <CardContent className="p-6 flex flex-col h-full">
-                  <motion.div
+                  <m.div
                     className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity"
                     initial={false}
                     whileHover={{ opacity: 1 }}
@@ -115,11 +114,11 @@ export function FeatureShowcase() {
                   <p className="text-muted-foreground flex-grow">{item.description}</p>
                 </CardContent>
               </Card>
-            </motion.div>
+            </m.div>
           ))}
         </div>
 
-        <motion.div 
+        <m.div 
           className="mt-16 text-center"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -136,7 +135,7 @@ export function FeatureShowcase() {
               View Example
             </Button>
           </div>
-        </motion.div>
+        </m.div>
       </div>
     </section>
   );

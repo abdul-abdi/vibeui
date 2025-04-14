@@ -7,52 +7,49 @@ export function applyVibe(vibe: VibeSettings): void {
   // Add a transition class to the root element for smooth color transitions
   root.classList.add('transitioning-vibe');
   
-  // Apply colors
-  root.style.setProperty('--background', vibe.colors.background);
-  root.style.setProperty('--foreground', vibe.colors.foreground);
-  root.style.setProperty('--card', vibe.colors.card);
-  root.style.setProperty('--card-foreground', vibe.colors.cardForeground);
-  root.style.setProperty('--primary', vibe.colors.primary);
-  root.style.setProperty('--primary-foreground', vibe.colors.primaryForeground);
-  root.style.setProperty('--secondary', vibe.colors.secondary);
-  root.style.setProperty('--secondary-foreground', vibe.colors.secondaryForeground);
-  root.style.setProperty('--muted', vibe.colors.muted);
-  root.style.setProperty('--muted-foreground', vibe.colors.mutedForeground);
-  root.style.setProperty('--accent', vibe.colors.accent);
-  root.style.setProperty('--accent-foreground', vibe.colors.accentForeground);
-  root.style.setProperty('--destructive', vibe.colors.destructive);
-  root.style.setProperty('--destructive-foreground', vibe.colors.destructiveForeground);
-  root.style.setProperty('--border', vibe.colors.border);
-  root.style.setProperty('--input', vibe.colors.input);
-  root.style.setProperty('--ring', vibe.colors.ring);
+  // Apply all CSS variables in a single batch to reduce layout thrashing
+  const cssVars = {
+    '--background': vibe.colors.background,
+    '--foreground': vibe.colors.foreground,
+    '--card': vibe.colors.card,
+    '--card-foreground': vibe.colors.cardForeground,
+    '--primary': vibe.colors.primary,
+    '--primary-foreground': vibe.colors.primaryForeground,
+    '--secondary': vibe.colors.secondary,
+    '--secondary-foreground': vibe.colors.secondaryForeground,
+    '--muted': vibe.colors.muted,
+    '--muted-foreground': vibe.colors.mutedForeground,
+    '--accent': vibe.colors.accent,
+    '--accent-foreground': vibe.colors.accentForeground,
+    '--destructive': vibe.colors.destructive,
+    '--destructive-foreground': vibe.colors.destructiveForeground,
+    '--border': vibe.colors.border,
+    '--input': vibe.colors.input,
+    '--ring': vibe.colors.ring,
+    '--font-primary': vibe.fonts.primary,
+    '--font-secondary': vibe.fonts.secondary,
+    '--font-accent': vibe.fonts.accent,
+    '--font-mono': vibe.fonts.mono,
+    '--radius-sm': vibe.radius.sm,
+    '--radius-md': vibe.radius.md,
+    '--radius-lg': vibe.radius.lg,
+    '--layout-spacing': vibe.spacing.layoutSpacing,
+    '--card-spacing': vibe.spacing.cardSpacing,
+    '--element-spacing': vibe.spacing.elementSpacing,
+    '--animation-speed': vibe.animation.speed.toString(),
+    '--shadow-sm': vibe.shadows.sm,
+    '--shadow-md': vibe.shadows.md,
+    '--shadow-lg': vibe.shadows.lg,
+  };
   
-  // Apply fonts
-  root.style.setProperty('--font-primary', vibe.fonts.primary);
-  root.style.setProperty('--font-secondary', vibe.fonts.secondary);
-  root.style.setProperty('--font-accent', vibe.fonts.accent);
-  root.style.setProperty('--font-mono', vibe.fonts.mono);
-  
-  // Apply radiuses
-  root.style.setProperty('--radius-sm', vibe.radius.sm);
-  root.style.setProperty('--radius-md', vibe.radius.md);
-  root.style.setProperty('--radius-lg', vibe.radius.lg);
-  
-  // Apply spacing
-  root.style.setProperty('--layout-spacing', vibe.spacing.layoutSpacing);
-  root.style.setProperty('--card-spacing', vibe.spacing.cardSpacing);
-  root.style.setProperty('--element-spacing', vibe.spacing.elementSpacing);
-  
-  // Apply animation settings - Convert array to string for CSS
-  root.style.setProperty('--animation-speed', vibe.animation.speed.toString());
+  // Apply all CSS variables at once
+  Object.entries(cssVars).forEach(([key, value]) => {
+    root.style.setProperty(key, value);
+  });
   
   // Convert the array of bezier curve values to a cubic-bezier string for CSS
   const easingArray = Array.isArray(vibe.animation.easing) ? vibe.animation.easing : [0.4, 0, 0.2, 1];
   root.style.setProperty('--animation-easing', `cubic-bezier(${easingArray.join(', ')})`);
-  
-  // Apply shadows
-  root.style.setProperty('--shadow-sm', vibe.shadows.sm);
-  root.style.setProperty('--shadow-md', vibe.shadows.md);
-  root.style.setProperty('--shadow-lg', vibe.shadows.lg);
 
   // Apply layout class with transition
   const currentLayout = document.body.className.match(/layout-\w+/)?.[0];
@@ -63,42 +60,44 @@ export function applyVibe(vibe: VibeSettings): void {
   // Add the new layout class and trigger a reflow
   document.body.classList.add(`layout-${vibe.layout}`);
   
-  // Add CSS variables with color values that can be used for gradients and overlays
-  const primaryHSL = vibe.colors.primary.replace(/hsl\(|\)/g, '').split(' ');
-  if (primaryHSL.length >= 3) {
-    root.style.setProperty('--primary-h', primaryHSL[0]);
-    root.style.setProperty('--primary-s', primaryHSL[1].replace('%', ''));
-    root.style.setProperty('--primary-l', primaryHSL[2].replace('%', ''));
-    root.style.setProperty('--primary-rgb', hslToRgb(primaryHSL[0], primaryHSL[1], primaryHSL[2]));
-  }
+  // Process color values efficiently
+  processColorValues(vibe, root);
   
   // Apply special vibe-specific styles
   applySpecialVibeStyles(vibe, root);
   
-  // Process secondary and accent colors for RGB values
-  const secondaryHSL = vibe.colors.secondary.replace(/hsl\(|\)/g, '').split(' ');
-  if (secondaryHSL.length >= 3) {
-    root.style.setProperty('--secondary-h', secondaryHSL[0]);
-    root.style.setProperty('--secondary-s', secondaryHSL[1].replace('%', ''));
-    root.style.setProperty('--secondary-l', secondaryHSL[2].replace('%', ''));
-    root.style.setProperty('--secondary-rgb', hslToRgb(secondaryHSL[0], secondaryHSL[1], secondaryHSL[2]));
-  }
-  
-  const accentHSL = vibe.colors.accent.replace(/hsl\(|\)/g, '').split(' ');
-  if (accentHSL.length >= 3) {
-    root.style.setProperty('--accent-h', accentHSL[0]);
-    root.style.setProperty('--accent-s', accentHSL[1].replace('%', ''));
-    root.style.setProperty('--accent-l', accentHSL[2].replace('%', ''));
-    root.style.setProperty('--accent-rgb', hslToRgb(accentHSL[0], accentHSL[1], accentHSL[2]));
-  }
-  
   // Remove the transition class after the transition is complete
-  setTimeout(() => {
-    root.classList.remove('transitioning-vibe');
-  }, 800); // match this to the CSS transition duration
+  // Use requestAnimationFrame to optimize timing
+  requestAnimationFrame(() => {
+    setTimeout(() => {
+      root.classList.remove('transitioning-vibe');
+    }, 600); // Reduced from 800ms for better performance
+  });
 }
 
-// Apply special styles for specific named vibes
+// Process color values for RGB usage - optimized to reduce calculations
+function processColorValues(vibe: VibeSettings, root: HTMLElement): void {
+  // Create a helper function to extract and process HSL values
+  const processColorProperty = (colorValue: string, prefix: string) => {
+    const parts = colorValue.replace(/hsl\(|\)/g, '').split(' ');
+    if (parts.length >= 3) {
+      const h = parts[0];
+      const s = parts[1].replace('%', '');
+      const l = parts[2].replace('%', '');
+      root.style.setProperty(`--${prefix}-h`, h);
+      root.style.setProperty(`--${prefix}-s`, s);
+      root.style.setProperty(`--${prefix}-l`, l);
+      root.style.setProperty(`--${prefix}-rgb`, hslToRgb(h, s, l));
+    }
+  };
+  
+  // Process each color property
+  processColorProperty(vibe.colors.primary, 'primary');
+  processColorProperty(vibe.colors.secondary, 'secondary');
+  processColorProperty(vibe.colors.accent, 'accent');
+}
+
+// Apply special styles for specific named vibes - optimized
 function applySpecialVibeStyles(vibe: VibeSettings, root: HTMLElement): void {
   // Reset all special theme classes first
   document.body.classList.remove(
@@ -111,88 +110,109 @@ function applySpecialVibeStyles(vibe: VibeSettings, root: HTMLElement): void {
     'modern-minimal-theme'
   );
   
-  // Apply theme-specific classes and variables
+  // Apply theme-specific classes and variables - optimized logic
   const vibeName = vibe.name.toLowerCase();
+  let themeClass = '';
+  const styleVars: Record<string, string> = {};
   
   if (vibeName.includes("organic")) {
-    document.body.classList.add('soft-organic-theme');
-    // Set specific colors for soft organic theme
+    themeClass = 'soft-organic-theme';
     if (!vibe.colors.primary.includes('160')) {
-      root.style.setProperty('--primary', '160 84% 39%');
+      styleVars['--primary'] = '160 84% 39%';
     }
-    
-    // Add biomorphic shape variables
-    root.style.setProperty('--organic-blob-1', 'ellipse(30% 40% at 50% 60%)');
-    root.style.setProperty('--organic-blob-2', 'circle(20% at 65% 35%)');
+    styleVars['--organic-blob-1'] = 'ellipse(30% 40% at 50% 60%)';
+    styleVars['--organic-blob-2'] = 'circle(20% at 65% 35%)';
   } 
   else if (vibeName.includes("brutal") || vibeName.includes("neo-brutal")) {
-    document.body.classList.add('neo-brutalism-theme');
-    root.style.setProperty('--brutal-offset-x', '6px');
-    root.style.setProperty('--brutal-offset-y', '6px');
-    root.style.setProperty('--brutal-color', '#000');
+    themeClass = 'neo-brutalism-theme';
+    styleVars['--brutal-offset-x'] = '6px';
+    styleVars['--brutal-offset-y'] = '6px';
+    styleVars['--brutal-color'] = '#000';
   }
-  else if (vibeName.includes("techno") || vibeName.includes("dark") && vibeName.includes("tech")) {
-    document.body.classList.add('dark-techno-theme');
-    // Add neon glow variables
-    root.style.setProperty('--neon-glow', `0 0 10px rgba(${root.style.getPropertyValue('--primary-rgb')}, 0.7), 0 0 20px rgba(${root.style.getPropertyValue('--primary-rgb')}, 0.5)`);
-    root.style.setProperty('--neon-glow-strong', `0 0 15px rgba(${root.style.getPropertyValue('--primary-rgb')}, 0.8), 0 0 30px rgba(${root.style.getPropertyValue('--primary-rgb')}, 0.6), 0 0 45px rgba(${root.style.getPropertyValue('--primary-rgb')}, 0.4)`);
+  else if (vibeName.includes("techno") || (vibeName.includes("dark") && vibeName.includes("tech"))) {
+    themeClass = 'dark-techno-theme';
+    const primaryRgb = root.style.getPropertyValue('--primary-rgb');
+    styleVars['--neon-glow'] = `0 0 10px rgba(${primaryRgb}, 0.7), 0 0 20px rgba(${primaryRgb}, 0.5)`;
+    styleVars['--neon-glow-strong'] = `0 0 15px rgba(${primaryRgb}, 0.8), 0 0 30px rgba(${primaryRgb}, 0.6), 0 0 45px rgba(${primaryRgb}, 0.4)`;
+    styleVars['--enhanced-contrast-text'] = '0 0% 98%';
+    styleVars['--dark-texture'] = 'rgba(20, 20, 25, 0.3)';
   }
   else if (vibeName.includes("electric") || vibeName.includes("pop") || vibeName.includes("neon")) {
-    document.body.classList.add('electric-pop-theme');
-    // Add electric glow variables
-    root.style.setProperty('--electric-glow', `0 0 10px rgba(${root.style.getPropertyValue('--primary-rgb')}, 0.7), 0 0 20px rgba(${root.style.getPropertyValue('--primary-rgb')}, 0.5)`);
-    root.style.setProperty('--electric-gradient', 'linear-gradient(45deg, var(--primary) 0%, var(--accent) 100%)');
+    themeClass = 'electric-pop-theme';
+    const primaryRgb = root.style.getPropertyValue('--primary-rgb');
+    styleVars['--electric-glow'] = `0 0 10px rgba(${primaryRgb}, 0.7), 0 0 20px rgba(${primaryRgb}, 0.5)`;
+    styleVars['--electric-gradient'] = 'linear-gradient(45deg, var(--primary) 0%, var(--accent) 100%)';
+    styleVars['--enhanced-contrast-text'] = '0 0% 98%';
   }
   else if (vibeName.includes("elegant") || vibeName.includes("serif")) {
-    document.body.classList.add('elegant-serif-theme');
-    // Serif theme variables
-    root.style.setProperty('--serif-decoration', '1px solid rgba(0,0,0,0.1)');
-    root.style.setProperty('--serif-spacing', '0.05em');
+    themeClass = 'elegant-serif-theme';
+    styleVars['--serif-decoration'] = '1px solid rgba(0,0,0,0.1)';
+    styleVars['--serif-spacing'] = '0.05em';
   }
   else if (vibeName.includes("playful") || vibeName.includes("vibrant")) {
-    document.body.classList.add('vibrant-playful-theme');
-    // Playful theme variables
-    root.style.setProperty('--playful-shadow', '0 8px 20px -5px rgba(0, 0, 0, 0.15)');
+    themeClass = 'vibrant-playful-theme';
+    styleVars['--playful-shadow'] = '0 8px 20px -5px rgba(0, 0, 0, 0.15)';
   }
   else if (vibeName.includes("minimal") || vibeName.includes("modern")) {
-    document.body.classList.add('modern-minimal-theme');
-    // Minimal theme variables
-    root.style.setProperty('--minimal-border', '1px solid rgba(0,0,0,0.05)');
+    themeClass = 'modern-minimal-theme';
+    styleVars['--minimal-border'] = '1px solid rgba(0,0,0,0.05)';
   }
+
+  // Apply the theme class
+  if (themeClass) {
+    document.body.classList.add(themeClass);
+  }
+  
+  // Apply all style variables at once
+  Object.entries(styleVars).forEach(([key, value]) => {
+    root.style.setProperty(key, value);
+  });
 
   // Apply themed animations
   applyThemedAnimations(vibe, root);
 }
 
-// Apply theme-specific animation settings
+// Apply theme-specific animation settings - optimized
 function applyThemedAnimations(vibe: VibeSettings, root: HTMLElement): void {
   const vibeName = vibe.name.toLowerCase();
+  let animation = '';
   
   if (vibeName.includes("organic")) {
-    root.style.setProperty('--themed-animation', 'float 6s ease-in-out infinite');
+    animation = 'float 6s ease-in-out infinite';
   }
   else if (vibeName.includes("brutal") || vibeName.includes("neo-brutal")) {
-    root.style.setProperty('--themed-animation', 'none'); // Brutalism often avoids animations
+    animation = 'none'; // Brutalism often avoids animations
   }
   else if (vibeName.includes("techno") || (vibeName.includes("dark") && vibeName.includes("tech"))) {
-    root.style.setProperty('--themed-animation', 'pulse 2s ease-in-out infinite');
+    animation = 'pulse 2s ease-in-out infinite';
   }
   else if (vibeName.includes("electric") || vibeName.includes("pop") || vibeName.includes("neon")) {
-    root.style.setProperty('--themed-animation', 'neon-pulse 1.5s ease-in-out infinite');
+    animation = 'neon-pulse 1.5s ease-in-out infinite';
   }
   else if (vibeName.includes("elegant") || vibeName.includes("serif")) {
-    root.style.setProperty('--themed-animation', 'fade-in 0.7s ease-out');
+    animation = 'fade-in 0.7s ease-out';
   }
   else if (vibeName.includes("playful") || vibeName.includes("vibrant")) {
-    root.style.setProperty('--themed-animation', 'bounce-subtle 3s infinite');
+    animation = 'bounce-subtle 3s infinite';
   }
   else {
-    root.style.setProperty('--themed-animation', 'fade-in 0.5s ease-out');
+    animation = 'fade-in 0.5s ease-out';
   }
+  
+  root.style.setProperty('--themed-animation', animation);
 }
 
-// Convert HSL values to RGB for use in rgba() functions
+// Convert HSL values to RGB for use in rgba() functions - optimized with memoization
+const hslToRgbCache = new Map<string, string>();
+
 function hslToRgb(h: string, s: string, l: string): string {
+  const cacheKey = `${h},${s},${l}`;
+  
+  // Check if we have cached this calculation
+  if (hslToRgbCache.has(cacheKey)) {
+    return hslToRgbCache.get(cacheKey)!;
+  }
+  
   // Remove any "%" from s and l
   const hue = parseFloat(h);
   const sat = parseFloat(s.replace('%', '')) / 100;
@@ -219,10 +239,15 @@ function hslToRgb(h: string, s: string, l: string): string {
     b = hue2rgb(p, q, (hue / 360 - 1/3) % 1);
   }
   
-  return `${Math.round(r * 255)}, ${Math.round(g * 255)}, ${Math.round(b * 255)}`;
+  const result = `${Math.round(r * 255)}, ${Math.round(g * 255)}, ${Math.round(b * 255)}`;
+  
+  // Cache the result for future use
+  hslToRgbCache.set(cacheKey, result);
+  
+  return result;
 }
 
-// Generate a CSS animation string from settings
+// Generate a CSS animation string from settings - optimized
 export function generateAnimationCSS(
   name: string,
   keyframes: string,
@@ -231,20 +256,24 @@ export function generateAnimationCSS(
   delay: number = 0
 ): string {
   // Handle easing as either number array or string
-  let easingValue: string;
-  if (Array.isArray(easing)) {
-    easingValue = `cubic-bezier(${easing.join(', ')})`;
-  } else {
-    easingValue = easing;
-  }
+  const easingValue = Array.isArray(easing) 
+    ? `cubic-bezier(${easing.join(', ')})`
+    : easing;
   
   return `${name} ${duration}s ${easingValue} ${delay}s`;
 }
 
-// Convert hex color to HSL for better transitions
+// Convert hex color to HSL for better transitions - optimized with memoization
+const hexToHslCache = new Map<string, string>();
+
 export function hexToHSL(hex: string): string {
   // Remove the # if present
   hex = hex.replace('#', '');
+  
+  // Check if we have cached this conversion
+  if (hexToHslCache.has(hex)) {
+    return hexToHslCache.get(hex)!;
+  }
   
   // Convert hex to rgb
   const r = parseInt(hex.substring(0, 2), 16) / 255;
@@ -284,42 +313,74 @@ export function hexToHSL(hex: string): string {
   s = +(s * 100).toFixed(1);
   l = +(l * 100).toFixed(1);
   
-  return `${h} ${s}% ${l}%`;
+  const result = `${h} ${s}% ${l}%`;
+  
+  // Cache the result
+  hexToHslCache.set(hex, result);
+  
+  return result;
 }
 
-// Get contrast color (black or white) based on background color
+// Get contrast color (black or white) based on background color - optimized with memoization
+const contrastColorCache = new Map<string, string>();
+
 export function getContrastColor(hsl: string): string {
-  const parts = hsl.split(' ');
-  if (parts.length < 3) return 'var(--foreground)';
+  // Check if we have cached this contrast calculation
+  if (contrastColorCache.has(hsl)) {
+    return contrastColorCache.get(hsl)!;
+  }
   
+  const parts = hsl.split(' ');
+  if (parts.length < 3) {
+    const result = 'var(--foreground)';
+    contrastColorCache.set(hsl, result);
+    return result;
+  }
+  
+  // Improve the lightness threshold for better contrast with dark backgrounds
   const l = parseFloat(parts[2].replace('%', ''));
-  return l > 50 ? '0 0% 0%' : '0 0% 100%';
+  
+  // Lower threshold for dark backgrounds to ensure better visibility
+  // Also consider hue and saturation for better color perception
+  const h = parseFloat(parts[0]);
+  const s = parseFloat(parts[1].replace('%', ''));
+  
+  // For certain color ranges (blues, purples) we need different thresholds
+  // as they appear darker to human perception
+  let result: string;
+  if ((h >= 200 && h <= 280) && s > 50) {
+    result = l > 45 ? '0 0% 0%' : '0 0% 100%';
+  } else {
+    result = l > 50 ? '0 0% 0%' : '0 0% 100%';
+  }
+  
+  // Cache the result
+  contrastColorCache.set(hsl, result);
+  
+  return result;
 }
 
 // Generate a themed button style based on current vibe
 export function getThemedButtonStyle(vibe: VibeSettings, variant: string): string {
   const vibeName = vibe.name.toLowerCase();
-  let style = '';
   
   if (vibeName.includes("organic") && variant === 'primary') {
-    style = `
+    return `
       background-color: hsl(var(--primary));
       border-radius: 24px;
       box-shadow: 0 4px 12px rgba(0, 128, 96, 0.2);
     `;
   }
   
-  return style;
+  return '';
 }
 
 // Generate a color palette array from the current vibe
 export function generateColorPalette(vibe: VibeSettings): string[] {
-  const palette: string[] = [
+  return [
     vibe.colors.primary,
     vibe.colors.secondary,
     vibe.colors.accent,
     vibe.colors.muted
   ];
-  
-  return palette;
 }

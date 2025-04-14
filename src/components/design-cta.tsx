@@ -1,9 +1,8 @@
-
 import React from 'react';
 import { useVibe } from '@/lib/vibe-engine';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { Button } from './ui/button';
-import { GitBranch, Lightbulb, Megaphone, Share2 } from 'lucide-react';
+import { Lightbulb, Megaphone } from 'lucide-react';
 
 export function DesignCTA() {
   const { vibeState, changeVibe } = useVibe();
@@ -22,7 +21,7 @@ export function DesignCTA() {
     <section className="py-24 relative overflow-hidden">
       {/* Background decorations */}
       <div className="absolute inset-0 -z-10">
-        <motion.div 
+        <m.div 
           className="absolute top-0 left-0 w-96 h-96 bg-primary/5 rounded-full -translate-x-1/2 -translate-y-1/2"
           animate={{ 
             scale: [1, 1.1, 1],
@@ -31,7 +30,7 @@ export function DesignCTA() {
           transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
         />
         
-        <motion.div 
+        <m.div 
           className="absolute bottom-0 right-0 w-80 h-80 bg-secondary/5 rounded-full translate-x-1/3 translate-y-1/3"
           animate={{ 
             scale: [1, 1.2, 1],
@@ -42,7 +41,7 @@ export function DesignCTA() {
       </div>
       
       <div className="container mx-auto px-4">
-        <motion.div 
+        <m.div 
           className="max-w-3xl mx-auto text-center space-y-8"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -63,15 +62,10 @@ export function DesignCTA() {
             and enhance your creative process.
           </p>
           
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
+          <div className="flex items-center justify-center pt-4">
             <Button size="lg" onClick={() => changeVibe()} className="gap-2">
               <Lightbulb className="h-5 w-5" />
               Generate New Vibe
-            </Button>
-            
-            <Button variant="outline" size="lg" className="gap-2">
-              <GitBranch className="h-5 w-5" />
-              Fork this Project
             </Button>
           </div>
           
@@ -79,15 +73,8 @@ export function DesignCTA() {
             <p className="text-sm text-muted-foreground">
               A design inspiration tool for UI/UX creators
             </p>
-            
-            <div className="ml-auto flex items-center">
-              <Button variant="ghost" size="sm" className="gap-1">
-                <Share2 className="h-4 w-4" />
-                Share
-              </Button>
-            </div>
           </div>
-        </motion.div>
+        </m.div>
       </div>
     </section>
   );

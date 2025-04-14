@@ -1,15 +1,21 @@
-
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useVibe } from '@/lib/vibe-engine';
-import { motion } from 'framer-motion';
+import { Card, CardContent } from '@/components/ui/card';
+import { m } from 'framer-motion';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
-import { Card, CardContent } from './ui/card';
 import { Badge } from './ui/badge';
 import { Quote } from 'lucide-react';
 
 export function Testimonials() {
   const { vibeState } = useVibe();
   const { currentVibe } = vibeState;
+  const [isLowPerformanceMode, setIsLowPerformanceMode] = useState(false);
+  
+  useEffect(() => {
+    // Check if low-performance mode should be enabled
+    const isLowPerf = localStorage.getItem('lowPerformanceMode') === 'true';
+    setIsLowPerformanceMode(isLowPerf);
+  }, []);
   
   // Helper for consistent easing
   const getEasing = () => {
@@ -45,49 +51,53 @@ export function Testimonials() {
   ];
 
   return (
-    <section className="py-16 bg-muted/30">
+    <section className="py-8 bg-muted/30">
       <div className="container mx-auto px-4">
-        <motion.div 
-          className="text-center mb-16"
+        <m.div 
+          className="text-center mb-8 sm:mb-12"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, ease: getEasing() }}
+          viewport={{ once: true, margin: isLowPerformanceMode ? "-50px" : "-100px" }}
+          transition={{ duration: isLowPerformanceMode ? 0.3 : 0.6, ease: getEasing() }}
         >
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">What Designers Are Saying</h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+          <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-2 md:mb-4">What Designers Are Saying</h2>
+          <p className="text-base md:text-lg text-muted-foreground max-w-2xl mx-auto">
             See how VibeUI is helping designers explore visual concepts and find inspiration.
           </p>
-        </motion.div>
+        </m.div>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {testimonials.map((item, index) => (
-            <motion.div
+            <m.div
               key={index}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.1, duration: 0.5, ease: getEasing() }}
+              viewport={{ once: true, margin: isLowPerformanceMode ? "-50px" : "-100px" }}
+              transition={{ 
+                delay: isLowPerformanceMode ? 0 : index * 0.1, 
+                duration: isLowPerformanceMode ? 0.3 : 0.5, 
+                ease: getEasing() 
+              }}
             >
               <Card className="h-full">
-                <CardContent className="p-6">
-                  <Quote className="h-8 w-8 text-primary/40 mb-4" />
-                  <p className="mb-6 text-lg">{item.content}</p>
+                <CardContent className="p-4 sm:p-6">
+                  <Quote className="h-6 w-6 sm:h-8 sm:w-8 text-primary/40 mb-3 sm:mb-4" />
+                  <p className="mb-4 sm:mb-6 text-base sm:text-lg">{item.content}</p>
                   <div className="flex items-center">
-                    <Avatar className="h-12 w-12 mr-4">
-                      <AvatarFallback className="bg-primary/10 text-primary">{item.avatar}</AvatarFallback>
+                    <Avatar className="h-10 w-10 sm:h-12 sm:w-12 mr-3 sm:mr-4">
+                      <AvatarFallback className="bg-primary/10 text-primary text-xs sm:text-sm">{item.avatar}</AvatarFallback>
                     </Avatar>
                     <div>
-                      <p className="font-semibold">{item.author}</p>
-                      <p className="text-sm text-muted-foreground">{item.role}</p>
+                      <p className="font-semibold text-sm sm:text-base">{item.author}</p>
+                      <p className="text-xs sm:text-sm text-muted-foreground">{item.role}</p>
                     </div>
-                    <Badge variant="outline" className="ml-auto">
+                    <Badge variant="outline" className="ml-auto text-xs">
                       {item.company}
                     </Badge>
                   </div>
                 </CardContent>
               </Card>
-            </motion.div>
+            </m.div>
           ))}
         </div>
       </div>
