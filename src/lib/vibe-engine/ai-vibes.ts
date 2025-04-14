@@ -42,7 +42,7 @@ export const generateNewVibe = async (theme?: string, mood?: string): Promise<Vi
   try {
     const response = await supabase.functions.invoke("generate-vibe", {
       body: { theme, mood },
-      timeout: 15000, // Increase timeout for the edge function
+      // Remove the timeout property as it's not supported in the FunctionInvokeOptions type
     });
 
     if (response.error) {
