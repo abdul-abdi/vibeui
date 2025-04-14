@@ -1,3 +1,4 @@
+
 import React, { useEffect, useRef } from 'react';
 import { VibeProvider, useVibe } from '@/lib/vibe-engine';
 import { VibeControls } from '@/components/vibe-controls';
@@ -6,7 +7,7 @@ import { VibeDemoElements } from '@/components/vibe-demo-elements';
 import { VibeGallery } from '@/components/vibe-gallery';
 import { Toaster } from '@/components/ui/toaster';
 import { motion, Variants, useMotionTemplate, useMotionValue, useTransform, AnimatePresence } from 'framer-motion';
-import { ArrowDown, Sparkles } from 'lucide-react';
+import { ArrowDown, Sparkles, ChevronLeft, Circle } from 'lucide-react';
 
 const VibeContent = () => {
   const { vibeState, changeVibe } = useVibe();
@@ -265,7 +266,7 @@ const VibeContent = () => {
       />
 
       <motion.header 
-        className="relative z-10 py-6 px-4 sm:px-6 lg:px-8 border-b backdrop-blur-lg"
+        className="relative z-10 py-6 px-4 sm:px-6 lg:px-8 border-b backdrop-blur-lg bg-background/30"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ 
@@ -279,32 +280,35 @@ const VibeContent = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.2, duration: 0.5, ease: getEasing() }}
+            className="flex items-center"
           >
-            <h1 className="text-3xl font-bold flex items-center gap-2">
-              Vibe UI
-              <motion.span 
-                className="inline-block text-primary relative"
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.5, duration: 0.5, ease: getEasing() }}
-              >
-                Shift
-                <motion.div 
-                  className="absolute -top-1 -right-1"
-                  animate={{ 
-                    scale: [1, 1.5, 1],
-                    opacity: [1, 0.8, 1],
-                    rotate: [0, 5, 0, -5, 0]
-                  }}
-                  transition={{ duration: 2, repeat: Infinity, repeatDelay: 5 }}
+            <div className="flex flex-col items-start">
+              <h1 className="text-3xl font-bold flex items-center gap-2">
+                Vibe <span className="text-primary">UI</span>
+                <motion.span 
+                  className="inline-block text-primary relative ml-1"
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: 0.5, duration: 0.5, ease: getEasing() }}
                 >
-                  <Sparkles className="h-3 w-3 text-primary" />
-                </motion.div>
-              </motion.span>
-            </h1>
-            <p className="text-muted-foreground">
-              A dynamic UI experience that changes on every reload
-            </p>
+                  Shift
+                  <motion.div 
+                    className="absolute -top-1 -right-1"
+                    animate={{ 
+                      scale: [1, 1.5, 1],
+                      opacity: [1, 0.8, 1],
+                      rotate: [0, 5, 0, -5, 0]
+                    }}
+                    transition={{ duration: 2, repeat: Infinity, repeatDelay: 5 }}
+                  >
+                    <Sparkles className="h-3 w-3 text-primary" />
+                  </motion.div>
+                </motion.span>
+              </h1>
+              <p className="text-muted-foreground text-sm">
+                A dynamic UI experience that changes on every reload
+              </p>
+            </div>
           </motion.div>
           <VibeControls />
         </div>
@@ -349,13 +353,30 @@ const VibeContent = () => {
                   }}
                 />
                 
-                <motion.h2 
-                  className="text-3xl font-bold tracking-tight"
-                  variants={fadeInVariants}
-                  custom={0}
-                >
-                  Current Vibe: <span className="text-primary">{currentVibe.name}</span>
-                </motion.h2>
+                <motion.div className="flex items-center space-x-2 mb-2">
+                  <motion.div 
+                    className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/20"
+                    animate={{
+                      scale: [1, 1.05, 1],
+                      opacity: [0.7, 1, 0.7]
+                    }}
+                    transition={{ 
+                      duration: 3, 
+                      repeat: Infinity,
+                      repeatType: "reverse"
+                    }}
+                  >
+                    <ChevronLeft className="h-4 w-4 text-primary" />
+                  </motion.div>
+                  
+                  <motion.h2 
+                    className="text-3xl font-bold tracking-tight flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2"
+                    variants={fadeInVariants}
+                    custom={0}
+                  >
+                    Current Vibe: <span className="text-primary">{currentVibe.name}</span>
+                  </motion.h2>
+                </motion.div>
                 
                 <motion.p 
                   className="text-lg text-muted-foreground mt-3 max-w-2xl"
@@ -429,7 +450,7 @@ const VibeContent = () => {
       </motion.main>
 
       <motion.footer 
-        className="relative z-10 mt-auto py-6 px-4 sm:px-6 lg:px-8 border-t backdrop-blur-lg"
+        className="relative z-10 mt-auto py-6 px-4 sm:px-6 lg:px-8 border-t backdrop-blur-lg bg-background/30"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1, duration: 0.5, ease: getEasing() }}

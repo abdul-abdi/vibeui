@@ -64,18 +64,66 @@ export function applyVibe(vibe: VibeSettings): void {
   // Add the new layout class and trigger a reflow
   document.body.classList.add(`layout-${vibe.layout}`);
   
-  // Add a CSS variable with color values that can be used for gradients and overlays
+  // Add CSS variables with color values that can be used for gradients and overlays
   const primaryHSL = vibe.colors.primary.replace(/hsl\(|\)/g, '').split(' ');
   if (primaryHSL.length >= 3) {
     root.style.setProperty('--primary-h', primaryHSL[0]);
     root.style.setProperty('--primary-s', primaryHSL[1].replace('%', ''));
     root.style.setProperty('--primary-l', primaryHSL[2].replace('%', ''));
+    root.style.setProperty('--primary-rgb', hslToRgb(primaryHSL[0], primaryHSL[1], primaryHSL[2]));
+  }
+  
+  const secondaryHSL = vibe.colors.secondary.replace(/hsl\(|\)/g, '').split(' ');
+  if (secondaryHSL.length >= 3) {
+    root.style.setProperty('--secondary-h', secondaryHSL[0]);
+    root.style.setProperty('--secondary-s', secondaryHSL[1].replace('%', ''));
+    root.style.setProperty('--secondary-l', secondaryHSL[2].replace('%', ''));
+    root.style.setProperty('--secondary-rgb', hslToRgb(secondaryHSL[0], secondaryHSL[1], secondaryHSL[2]));
+  }
+  
+  const accentHSL = vibe.colors.accent.replace(/hsl\(|\)/g, '').split(' ');
+  if (accentHSL.length >= 3) {
+    root.style.setProperty('--accent-h', accentHSL[0]);
+    root.style.setProperty('--accent-s', accentHSL[1].replace('%', ''));
+    root.style.setProperty('--accent-l', accentHSL[2].replace('%', ''));
+    root.style.setProperty('--accent-rgb', hslToRgb(accentHSL[0], accentHSL[1], accentHSL[2]));
   }
   
   // Remove the transition class after the transition is complete
   setTimeout(() => {
     root.classList.remove('transitioning-vibe');
-  }, 600); // match this to the CSS transition duration
+  }, 800); // match this to the CSS transition duration
+}
+
+// Convert HSL values to RGB for use in rgba() functions
+function hslToRgb(h: string, s: string, l: string): string {
+  // Remove any "%" from s and l
+  const hue = parseFloat(h);
+  const sat = parseFloat(s.replace('%', '')) / 100;
+  const light = parseFloat(l.replace('%', '')) / 100;
+  
+  let r, g, b;
+  
+  if (sat === 0) {
+    r = g = b = light; // achromatic
+  } else {
+    const hue2rgb = (p: number, q: number, t: number) => {
+      if (t < 0) t += 1;
+      if (t > 1) t -= 1;
+      if (t < 1/6) return p + (q - p) * 6 * t;
+      if (t < 1/2) return q;
+      if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+      return p;
+    };
+    
+    const q = light < 0.5 ? light * (1 + sat) : light + sat - light * sat;
+    const p = 2 * light - q;
+    r = hue2rgb(p, q, (hue / 360 + 1/3) % 1);
+    g = hue2rgb(p, q, (hue / 360) % 1);
+    b = hue2rgb(p, q, (hue / 360 - 1/3) % 1);
+  }
+  
+  return `${Math.round(r * 255)}, ${Math.round(g * 255)}, ${Math.round(b * 255)}`;
 }
 
 // Generate a CSS animation string from settings

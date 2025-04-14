@@ -1,9 +1,10 @@
+
 import React from 'react';
 import { useVibe } from '@/lib/vibe-engine';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { motion } from 'framer-motion';
-import { Palette, Type, Layers, Circle } from 'lucide-react';
+import { Circle, Type, Layers, Layout } from 'lucide-react';
 
 export function VibeInfo() {
   const { vibeState } = useVibe();
@@ -38,13 +39,14 @@ export function VibeInfo() {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5, ease: getEasing() }}
     >
-      <Card className="overflow-hidden backdrop-blur-sm">
-        <CardHeader>
+      <Card className="overflow-hidden backdrop-blur-sm bg-card/80 border-primary/10">
+        <CardHeader className="pb-3">
           <CardTitle className="flex items-center gap-2 text-2xl">
             <motion.span
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.1, duration: 0.4, ease: getEasing() }}
+              className="text-primary"
             >
               {currentVibe.name}
             </motion.span>
@@ -52,15 +54,16 @@ export function VibeInfo() {
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ delay: 0.3, type: "spring" }}
+              className="text-primary/70"
             >
-              <Palette className="h-5 w-5 text-primary" />
+              <Circle className="h-5 w-5" />
             </motion.div>
           </CardTitle>
           <CardDescription className="line-clamp-2">{currentVibe.description}</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           <motion.div 
-            className="grid grid-cols-2 sm:grid-cols-4 gap-3"
+            className="grid grid-cols-4 gap-3"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.2, ease: getEasing() }}
@@ -71,9 +74,10 @@ export function VibeInfo() {
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.2, ease: getEasing() }}
             >
-              <Circle className="h-5 w-5 text-primary mb-1" />
-              <h4 className="text-sm font-semibold">Layout</h4>
-              <Badge variant="outline" className="capitalize">
+              <Layout className="h-5 w-5 text-primary mb-1" />
+              <h4 className="text-xs font-semibold uppercase tracking-wider">Layout</h4>
+              <div className="w-full h-1 bg-primary/30 rounded-full mt-1"></div>
+              <Badge variant="outline" className="capitalize text-xs px-2 py-0 h-5 bg-background/50">
                 {currentVibe.layout}
               </Badge>
             </motion.div>
@@ -85,7 +89,8 @@ export function VibeInfo() {
               transition={{ delay: 0.3, ease: getEasing() }}
             >
               <Type className="h-5 w-5 text-primary mb-1" />
-              <h4 className="text-sm font-semibold">Typography</h4>
+              <h4 className="text-xs font-semibold uppercase tracking-wider">Typography</h4>
+              <div className="w-full h-1 bg-primary/30 rounded-full mt-1"></div>
               <p className="text-xs text-center text-muted-foreground">
                 {primaryFont}
               </p>
@@ -104,7 +109,8 @@ export function VibeInfo() {
                 <path d="M5 9a3 3 0 0 0 3-3 3 3 0 0 0-3-3"></path>
                 <path d="M19 9a3 3 0 0 1-3-3 3 3 0 0 1 3-3"></path>
               </svg>
-              <h4 className="text-sm font-semibold">Animation</h4>
+              <h4 className="text-xs font-semibold uppercase tracking-wider">Animation</h4>
+              <div className="w-full h-1 bg-primary/30 rounded-full mt-1"></div>
               <p className="text-xs text-center text-muted-foreground">
                 {currentVibe.animation.speed}x speed
               </p>
@@ -117,7 +123,8 @@ export function VibeInfo() {
               transition={{ delay: 0.5, ease: getEasing() }}
             >
               <Circle className="h-5 w-5 text-primary mb-1" />
-              <h4 className="text-sm font-semibold">Radius</h4>
+              <h4 className="text-xs font-semibold uppercase tracking-wider">Radius</h4>
+              <div className="w-full h-1 bg-primary/30 rounded-full mt-1"></div>
               <p className="text-xs text-center text-muted-foreground">
                 {currentVibe.radius.md}
               </p>
@@ -146,7 +153,7 @@ export function VibeInfo() {
                 variants={colorVariants}
                 className="relative group"
               >
-                <Badge variant="secondary" className="bg-primary text-primary-foreground group-hover:scale-110 transition-transform">
+                <Badge variant="outline" className="bg-primary text-primary-foreground group-hover:scale-110 transition-transform">
                   Primary
                 </Badge>
               </motion.div>
@@ -158,7 +165,7 @@ export function VibeInfo() {
                 variants={colorVariants}
                 className="relative group"
               >
-                <Badge variant="secondary" className="bg-secondary text-secondary-foreground group-hover:scale-110 transition-transform">
+                <Badge variant="outline" className="bg-secondary text-secondary-foreground group-hover:scale-110 transition-transform">
                   Secondary
                 </Badge>
               </motion.div>
@@ -170,7 +177,7 @@ export function VibeInfo() {
                 variants={colorVariants}
                 className="relative group"
               >
-                <Badge variant="secondary" className="bg-accent text-accent-foreground group-hover:scale-110 transition-transform">
+                <Badge variant="outline" className="bg-accent text-accent-foreground group-hover:scale-110 transition-transform">
                   Accent
                 </Badge>
               </motion.div>
@@ -182,7 +189,7 @@ export function VibeInfo() {
                 variants={colorVariants}
                 className="relative group"
               >
-                <Badge variant="secondary" className="bg-muted text-muted-foreground group-hover:scale-110 transition-transform">
+                <Badge variant="outline" className="bg-muted text-muted-foreground group-hover:scale-110 transition-transform">
                   Muted
                 </Badge>
               </motion.div>
