@@ -6,7 +6,7 @@ import { ArrowRight, Lightbulb, ThumbsUp, TrendingUp } from 'lucide-react';
 import { Button } from './ui/button';
 
 export function DesignInspiration() {
-  const { vibeState } = useVibe();
+  const { vibeState, changeVibe } = useVibe();
   const { currentVibe } = vibeState;
   
   // Helper for consistent easing
