@@ -92,9 +92,8 @@ const VibeContent = () => {
 
   return (
     <div 
-      className={`min-h-screen w-full bg-background transition-colors duration-500 relative overflow-x-hidden ${containerClass}`}
+      className={`min-h-screen bg-background transition-colors duration-500 relative ${containerClass}`}
       onMouseMove={handleMouseMove}
-      style={{ display: 'flex', flexDirection: 'column' }}
     >
       {/* Background effects */}
       <motion.div 
@@ -168,13 +167,13 @@ const VibeContent = () => {
 
       {/* Header */}
       <motion.header 
-        className="relative z-10 py-4 px-4 sm:px-6 lg:px-8 sticky top-0 backdrop-blur-sm bg-background/50 w-full"
+        className="relative z-10 py-4 px-4 sm:px-6 lg:px-8 sticky top-0 backdrop-blur-sm bg-background/50"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 * (1/currentVibe.animation.speed), ease: getEasing() }}
         style={{ y: headerParallax }}
       >
-        <div className="container mx-auto max-w-full">
+        <div className="container mx-auto">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <motion.div 
               initial={{ opacity: 0 }}
@@ -217,15 +216,15 @@ const VibeContent = () => {
       </motion.header>
 
       {/* Main content */}
-      <main className="container mx-auto py-8 px-4 sm:px-6 lg:px-8 relative z-10 flex-grow w-full max-w-full flex flex-col">
+      <main className="container mx-auto py-8 px-4 sm:px-6 lg:px-8 relative z-10 flex-grow">
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: getEasing() }}
-          className="grid grid-cols-1 lg:grid-cols-2 gap-8 w-full"
+          className="grid grid-cols-1 lg:grid-cols-2 gap-8"
         >
           {/* Left column - Vibe Info */}
-          <section className="space-y-6 w-full">
+          <section className="space-y-6">
             <motion.div
               className="flex items-center space-x-2"
               initial={{ opacity: 0, x: -20 }}
@@ -282,7 +281,7 @@ const VibeContent = () => {
           
           {/* Right column - Demo elements */}
           <motion.section 
-            className="space-y-6 w-full"
+            className="space-y-6"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4, duration: 0.5, ease: getEasing() }}
@@ -294,7 +293,7 @@ const VibeContent = () => {
         {/* Gallery section */}
         <motion.div 
           id="gallery-section"
-          className="mt-16 w-full"
+          className="mt-16"
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
@@ -305,7 +304,7 @@ const VibeContent = () => {
       </main>
 
       <motion.footer 
-        className="relative z-10 mt-auto py-6 px-4 sm:px-6 lg:px-8 border-t backdrop-blur-sm bg-background/30 w-full"
+        className="relative z-10 mt-auto py-6 px-4 sm:px-6 lg:px-8 border-t backdrop-blur-sm bg-background/30"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1, duration: 0.5, ease: getEasing() }}
@@ -329,162 +328,210 @@ const VibeContent = () => {
       
       <Toaster />
       
-      <style jsx global>{`
-        :root {
-          transition: color 0.5s ease, background-color 0.5s ease;
-        }
-        
-        .transitioning-vibe * {
-          transition: background-color 0.6s ease, 
-                      border-color 0.6s ease, 
-                      color 0.6s ease,
-                      box-shadow 0.6s ease,
-                      transform 0.6s ease;
-        }
-        
-        /* Enhanced scrollbar */
-        ::-webkit-scrollbar {
-          width: 8px;
-          height: 8px;
-        }
-        
-        ::-webkit-scrollbar-thumb {
-          background: hsl(var(--primary) / 0.3);
-          border-radius: 4px;
-        }
-        
-        ::-webkit-scrollbar-thumb:hover {
-          background: hsl(var(--primary) / 0.5);
-        }
-        
-        ::-webkit-scrollbar-track {
-          background: hsl(var(--muted) / 0.3);
-        }
-        
-        /* Improved full-height layout for all themes */
-        #root {
-          display: flex;
-          flex-direction: column;
-          min-height: 100vh;
-          width: 100%;
-          overflow-x: hidden;
-        }
-        
-        /* Fix Dark Techno specific layout issues */
-        .dark-tech-container {
-          background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-          min-height: 100vh;
-          width: 100%;
-          margin: 0;
-          padding: 0;
-          display: flex;
-          flex-direction: column;
-        }
-        
-        /* Fix layout for brutalist theme */
-        .brutalist-container {
-          background-color: #f9f6f2;
-          min-height: 100vh;
-          width: 100%;
-          margin: 0;
-          padding: 0;
-          display: flex;
-          flex-direction: column;
-        }
-        
-        /* Fix layout for organic theme */
-        .soft-organic-container {
-          background: linear-gradient(135deg, #f0fdf5 0%, #ecfdf5 100%);
-          min-height: 100vh;
-          width: 100%;
-          margin: 0;
-          padding: 0;
-          display: flex;
-          flex-direction: column;
-        }
-        
-        /* Fix layout for electric theme */
-        .electric-container, .playful-container {
-          background: linear-gradient(135deg, #0e172a 0%, #210535 100%);
-          min-height: 100vh;
-          width: 100%;
-          margin: 0;
-          padding: 0;
-          display: flex;
-          flex-direction: column;
-        }
-        
-        /* Fix for Soft Organic theme text layout (screenshot 3) */
-        .soft-organic-theme .typography-section h1,
-        .soft-organic-theme .typography-section h2,
-        .soft-organic-theme .typography-section h3 {
-          letter-spacing: -0.02em;
-          word-spacing: 0.1em;
-        }
-        
-        .soft-organic-theme .layout-info {
-          margin-right: 1rem;
-          white-space: nowrap;
-        }
-        
-        /* Fix for the text spacing in screenshot 3 */
-        .vibe-attribute {
-          white-space: normal;
-          overflow: visible;
-          text-overflow: clip;
-          word-break: break-word;
-          margin-bottom: 0.5rem;
-        }
-        
-        /* Fix spacing for all themes */
-        .container {
-          width: 100%;
-          max-width: var(--content-max-width);
-          padding-left: 1rem;
-          padding-right: 1rem;
-        }
-        
-        @media (min-width: 640px) {
-          .container {
-            padding-left: 1.5rem;
-            padding-right: 1.5rem;
+      <style>
+        {`
+          :root {
+            transition: color 0.5s ease, background-color 0.5s ease;
           }
-        }
-        
-        @media (min-width: 1024px) {
-          .container {
-            padding-left: 2rem;
-            padding-right: 2rem;
+          
+          .transitioning-vibe * {
+            transition: background-color 0.6s ease, 
+                        border-color 0.6s ease, 
+                        color 0.6s ease,
+                        box-shadow 0.6s ease,
+                        transform 0.6s ease;
           }
-        }
-        
-        /* Enforce proper grid layout for all vibes */
-        .grid {
-          display: grid;
-          width: 100%;
-          gap: 1rem;
-        }
-        
-        /* Fix for the Electric Pop vibe in screenshot 4 */
-        .electric-pop-theme .color-palette-item {
-          padding: 0.25rem;
-          border-radius: 0.5rem;
-          overflow: hidden;
-          aspect-ratio: 1/1;
-        }
-        
-        /* Fix for Neo Brutalism theme in screenshot 2 */
-        .neo-brutalist-theme button {
-          box-shadow: 3px 3px 0 #000;
-          border: 2px solid #000;
-          transition: all 0.1s ease;
-        }
-        
-        .neo-brutalist-theme button:active {
-          transform: translate(3px, 3px);
-          box-shadow: 0px 0px 0 #000;
-        }
-      `}</style>
+          
+          /* Enhanced scrollbar */
+          ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+          }
+          
+          ::-webkit-scrollbar-thumb {
+            background: hsl(var(--primary) / 0.3);
+            border-radius: 4px;
+          }
+          
+          ::-webkit-scrollbar-thumb:hover {
+            background: hsl(var(--primary) / 0.5);
+          }
+          
+          ::-webkit-scrollbar-track {
+            background: hsl(var(--muted) / 0.3);
+          }
+          
+          /* Soft Organic Theme-specific styles */
+          .soft-organic-theme .soft-organic-card {
+            border-radius: 24px;
+            border-color: rgba(16, 185, 129, 0.2);
+            box-shadow: 0 4px 20px rgba(16, 185, 129, 0.1);
+          }
+          
+          .soft-organic-theme .soft-organic-primary-button {
+            border-radius: 24px;
+            background-color: hsl(160, 84%, 39%);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+          }
+          
+          .soft-organic-theme .soft-organic-secondary-button {
+            border-radius: 24px;
+            background-color: rgba(16, 185, 129, 0.1);
+            color: hsl(160, 84%, 39%);
+          }
+          
+          .soft-organic-theme .soft-organic-outline-button {
+            border-radius: 24px;
+            border-color: rgba(16, 185, 129, 0.3);
+            color: hsl(160, 84%, 39%);
+          }
+          
+          .soft-organic-theme .soft-organic-input {
+            border-radius: 16px;
+            border-color: rgba(16, 185, 129, 0.2);
+          }
+          
+          .soft-organic-theme .soft-organic-badge {
+            background-color: rgba(16, 185, 129, 0.1);
+            color: hsl(160, 84%, 39%);
+            border-radius: 12px;
+          }
+          
+          /* Dark Techno Theme-specific styles */
+          .dark-techno-theme .dark-tech-card {
+            background-color: rgba(30, 30, 35, 0.7);
+            border-color: rgba(139, 92, 246, 0.3);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+          }
+          
+          .dark-techno-theme .neon-glow-button {
+            border: 1px solid rgba(var(--primary-rgb), 0.7);
+            box-shadow: 0 0 10px rgba(var(--primary-rgb), 0.5);
+            text-shadow: 0 0 5px rgba(var(--primary-rgb), 0.5);
+          }
+          
+          .dark-techno-theme .neon-outline-button {
+            background-color: transparent;
+            border: 1px solid rgba(var(--primary-rgb), 0.7);
+            color: hsl(var(--primary));
+            text-shadow: 0 0 5px rgba(var(--primary-rgb), 0.5);
+          }
+          
+          .dark-techno-theme .neon-input {
+            background-color: rgba(30, 30, 35, 0.5);
+            border-color: rgba(var(--primary-rgb), 0.3);
+          }
+          
+          .dark-techno-theme .neon-badge {
+            background-color: rgba(var(--primary-rgb), 0.2);
+            text-shadow: 0 0 5px rgba(var(--primary-rgb), 0.5);
+          }
+          
+          /* Neo Brutalism Theme-specific styles */
+          .neo-brutalism-theme .brutalist-card {
+            background-color: #ffffff;
+            border: 2px solid #000000;
+            box-shadow: 4px 4px 0 #000000;
+            border-radius: 0;
+          }
+          
+          .neo-brutalism-theme .brutal-button {
+            background-color: hsl(var(--primary));
+            color: hsl(var(--primary-foreground));
+            border: 2px solid #000000;
+            box-shadow: 3px 3px 0 #000000;
+            border-radius: 0;
+            transition: transform 0.1s ease, box-shadow 0.1s ease;
+          }
+          
+          .neo-brutalism-theme .brutal-button:hover {
+            transform: translate(-1px, -1px);
+            box-shadow: 4px 4px 0 #000000;
+          }
+          
+          .neo-brutalism-theme .brutal-button:active {
+            transform: translate(2px, 2px);
+            box-shadow: 1px 1px 0 #000000;
+          }
+          
+          /* Electric Pop Theme-specific styles */
+          .electric-pop-theme .neon-card {
+            background-color: rgba(10, 10, 20, 0.8);
+            border-color: rgba(var(--primary-rgb), 0.5);
+            box-shadow: 0 0 20px rgba(var(--primary-rgb), 0.3);
+          }
+          
+          .electric-pop-theme .neon-glow-button {
+            border: 1px solid rgba(var(--primary-rgb), 0.7);
+            box-shadow: 0 0 10px rgba(var(--primary-rgb), 0.5);
+            text-shadow: 0 0 5px rgba(var(--primary-rgb), 0.5);
+            background: linear-gradient(45deg, hsl(var(--primary)), hsl(var(--accent)));
+            animation: neon-pulse 2s infinite;
+          }
+          
+          /* Text styles */
+          .vibe-attribute {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 0.5rem;
+          }
+          
+          .vibe-attribute-label {
+            font-size: 0.75rem;
+            color: hsl(var(--muted-foreground));
+          }
+          
+          .vibe-attribute-value {
+            font-size: 0.875rem;
+            font-weight: 500;
+          }
+          
+          /* For demo color pills */
+          .vibe-color-pill {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 2rem;
+            padding: 0 0.75rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+            border-radius: 9999px;
+          }
+          
+          /* Animated elements utility class */
+          .animated-element {
+            transition: all 0.3s ease;
+          }
+          
+          /* Typography specifics for different themes */
+          .soft-organic-theme h1, .soft-organic-theme h2, .soft-organic-theme h3 {
+            color: hsl(160, 84%, 20%);
+          }
+          
+          .dark-techno-theme h1, .dark-techno-theme h2, .dark-techno-theme h3 {
+            text-shadow: 0 0 8px rgba(var(--primary-rgb), 0.5);
+          }
+          
+          .electric-pop-theme h1, .electric-pop-theme h2, .electric-pop-theme h3 {
+            background: linear-gradient(45deg, hsl(var(--primary)), hsl(var(--accent)));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: color-cycle 10s infinite;
+          }
+          
+          /* Typewriter effect for headings */
+          .typewriter-effect {
+            display: inline-block;
+            overflow: hidden;
+            border-right: 2px solid;
+            white-space: nowrap;
+            margin: 0;
+            animation: typewriter 3.5s steps(40, end), blink 1s step-end infinite;
+          }
+        `}
+      </style>
     </div>
   );
 };

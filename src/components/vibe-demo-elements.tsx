@@ -1,392 +1,322 @@
 
 import React, { useState } from 'react';
-import { useVibe } from '@/lib/vibe-engine';
-import { motion } from 'framer-motion';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Check, X, Copy, CreditCard, LayoutGrid, Type, MousePointer, PenTool } from 'lucide-react';
-import { toast } from '@/hooks/use-toast';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { useVibe } from '@/lib/vibe-engine';
+import { ChevronRight, Star, Heart, MessageSquare, Sparkles, Check, ArrowRight, Palette, Settings } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Separator } from "@/components/ui/separator";
 
 export function VibeDemoElements() {
   const { vibeState } = useVibe();
   const { currentVibe } = vibeState;
+  const [activeTab, setActiveTab] = useState("interactive");
   
-  const [activeTab, setActiveTab] = useState("ui-components");
-  
-  // Helper function to safely get easing for Framer Motion
-  const getEasing = () => {
-    const easing = currentVibe.animation.easing;
-    if (Array.isArray(easing)) {
-      return easing;
-    }
-    return [0.4, 0, 0.2, 1]; // default ease-in-out
-  };
-
   // Check for specific vibes to apply special styles
   const isSoftOrganic = currentVibe.name.toLowerCase().includes("organic");
-  const isDarkTech = currentVibe.name.toLowerCase().includes("techno") || 
-                   currentVibe.name.toLowerCase().includes("dark");
-  const isBrutalist = currentVibe.name.toLowerCase().includes("brutal");
-  const isPlayful = currentVibe.name.toLowerCase().includes("playful") ||
-                  currentVibe.name.toLowerCase().includes("vibrant");
-  const isElectric = currentVibe.name.toLowerCase().includes("electric") || 
-                   currentVibe.name.toLowerCase().includes("pop") ||
-                   currentVibe.name.toLowerCase().includes("neon");
+  const isNeonOrTech = currentVibe.name.toLowerCase().includes("techno") || 
+                       currentVibe.name.toLowerCase().includes("electric") ||
+                       currentVibe.name.toLowerCase().includes("neon");
+  const isElegant = currentVibe.name.toLowerCase().includes("elegant") || 
+                   currentVibe.name.toLowerCase().includes("serif");
+  const isBrutal = currentVibe.name.toLowerCase().includes("brutal") || 
+                  currentVibe.name.toLowerCase().includes("neo");
   
-  // Get vibe-specific class names
-  const getCardClass = () => {
-    if (isSoftOrganic) return 'soft-organic-card';
-    if (isDarkTech) return 'dark-tech-card';
-    if (isBrutalist) return 'brutalist-card';
-    if (isPlayful || isElectric) return 'playful-card';
-    return '';
+  // Dynamic button classes based on vibe
+  const buttonClasses = {
+    primary: isSoftOrganic ? 'soft-organic-primary-button' : 
+             isNeonOrTech ? 'neon-glow-button' : 
+             isBrutal ? 'brutal-button' : '',
+    secondary: isSoftOrganic ? 'soft-organic-secondary-button' : 
+               isNeonOrTech ? 'neon-outline-button' : 
+               isBrutal ? 'brutal-secondary-button' : '',
+    outline: isSoftOrganic ? 'soft-organic-outline-button' : 
+             isNeonOrTech ? 'neon-accent-button' : 
+             isBrutal ? 'brutal-outline-button' : '',
+    ghost: isSoftOrganic ? 'soft-organic-ghost-button' : 
+           isNeonOrTech ? 'neon-ghost-button' : 
+           isBrutal ? 'brutal-ghost-button' : '',
+    link: isSoftOrganic ? 'soft-organic-link-button' : 
+          isNeonOrTech ? 'neon-link-button' : 
+          isBrutal ? 'brutal-link-button' : ''
   };
+  
+  // Dynamic card classes based on vibe
+  const cardClass = isSoftOrganic ? 'soft-organic-card' : 
+                    isNeonOrTech ? 'neon-card' : 
+                    isBrutal ? 'brutal-card' : 
+                    isElegant ? 'elegant-card' : '';
 
-  const getPrimaryButtonClass = () => {
-    if (isSoftOrganic) return 'soft-organic-primary-button';
-    if (isDarkTech) return 'neon-glow-button';
-    if (isBrutalist) return 'brutal-button';
-    if (isElectric || isPlayful) return 'electric-button';
-    return '';
+  // Helper for consistent animation across all elements
+  const getEasing = () => {
+    const easing = currentVibe.animation.easing;
+    return Array.isArray(easing) ? easing : [0.4, 0, 0.2, 1];
   };
-
-  // Demo UI component for copying color values
-  const ColorCopyButton = ({ color, label }: { color: string, label: string }) => {
-    const handleCopy = () => {
-      navigator.clipboard.writeText(color);
-      toast({
-        title: "Copied!",
-        description: `${label} color: ${color}`
-      });
-    };
-
-    return (
-      <motion.button
-        className="vibe-color-pill flex items-center justify-between gap-2 w-full p-2 rounded"
-        style={{ 
-          backgroundColor: `hsl(${color})`,
-          color: color.includes('foreground') ? `hsl(${color})` : 
-                 (color.includes('background') || color.includes('muted') || color.includes('accent')) ? 
-                 'hsl(var(--foreground))' : 'hsl(var(--background))'
-        }}
-        onClick={handleCopy}
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-        transition={{ duration: 0.2 }}
-      >
-        <span>{label}</span>
-        <Copy size={14} />
-      </motion.button>
-    );
+  
+  // Animation variants for elements
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: (i: number) => ({
+      opacity: 1,
+      y: 0,
+      transition: {
+        delay: i * 0.1,
+        duration: 0.4 * (1/currentVibe.animation.speed),
+        ease: getEasing()
+      }
+    })
+  };
+  
+  const tabVariants = {
+    hidden: { opacity: 0, x: -10 },
+    visible: { opacity: 1, x: 0, transition: { duration: 0.3 } },
+    exit: { opacity: 0, x: 10, transition: { duration: 0.3 } }
   };
 
   return (
-    <motion.div 
-      className="w-full h-full"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.5, ease: getEasing() }}
-    >
-      <div className="mb-6">
-        <Tabs 
-          defaultValue="ui-components" 
-          value={activeTab}
-          onValueChange={setActiveTab}
+    <div className="space-y-6">
+      <Tabs defaultValue="interactive" value={activeTab} onValueChange={setActiveTab} className="w-full">
+        <div className="flex justify-between items-center mb-6">
+          <h3 className="text-xl font-semibold">UI Components</h3>
+          <TabsList className="grid grid-cols-3 w-auto">
+            <TabsTrigger value="interactive">Interactive</TabsTrigger>
+            <TabsTrigger value="cards">Cards</TabsTrigger>
+            <TabsTrigger value="typography">Typography</TabsTrigger>
+          </TabsList>
+        </div>
+
+        <motion.div
+          key={activeTab}
+          initial="hidden"
+          animate="visible"
+          exit="exit"
+          variants={tabVariants}
           className="w-full"
         >
-          <TabsList className="w-full grid grid-cols-3 mb-6">
-            <TabsTrigger 
-              value="ui-components"
-              className={`${activeTab === "ui-components" && isBrutalist ? 'border-2 border-black' : ''}`}
-            >
-              <LayoutGrid className="mr-2 h-4 w-4" />
-              UI Components
-            </TabsTrigger>
-            <TabsTrigger 
-              value="interactive"
-              className={`${activeTab === "interactive" && isBrutalist ? 'border-2 border-black' : ''}`}
-            >
-              <MousePointer className="mr-2 h-4 w-4" />
-              Interactive
-            </TabsTrigger>
-            <TabsTrigger 
-              value="typography"
-              className={`${activeTab === "typography" && isBrutalist ? 'border-2 border-black' : ''}`}
-            >
-              <Type className="mr-2 h-4 w-4" />
-              Typography
-            </TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="ui-components" className="space-y-8 h-full min-h-[400px]">
-            <Card className={`${getCardClass()} w-full`}>
+          <TabsContent value="interactive" className="space-y-6">
+            <Card className={`shadow-sm ${cardClass}`}>
               <CardHeader>
-                <div className="flex flex-wrap items-center justify-between gap-2">
-                  <CardTitle className="text-xl flex items-center gap-2">
-                    <LayoutGrid className="h-5 w-5" /> 
-                    UI Components
-                  </CardTitle>
-                  <Badge variant={isBrutalist ? "outline" : "secondary"}>Core</Badge>
-                </div>
-                <CardDescription>
-                  Essential UI elements styled according to the current vibe
-                </CardDescription>
+                <CardTitle className="flex items-center gap-2">
+                  <Settings className="h-5 w-5 text-primary" />
+                  Interactive Elements
+                </CardTitle>
+                <CardDescription>Buttons and form controls with the current vibe styling</CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
-                <motion.div 
-                  className="space-y-2"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.1, duration: 0.5 }}
-                >
-                  <div className="text-sm font-medium mb-2">Buttons</div>
+                <div>
+                  <h4 className="text-sm font-medium mb-3">Buttons</h4>
                   <div className="flex flex-wrap gap-3">
-                    <Button className={getPrimaryButtonClass()}>Primary</Button>
-                    <Button variant="secondary">Secondary</Button>
-                    <Button variant="outline">Outline</Button>
-                    <Button variant="ghost">Ghost</Button>
-                  </div>
-                </motion.div>
-
-                <motion.div 
-                  className="space-y-2"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.2, duration: 0.5 }}
-                >
-                  <div className="text-sm font-medium mb-2">Badges</div>
-                  <div className="flex flex-wrap gap-3">
-                    <Badge>Default</Badge>
-                    <Badge variant="secondary">Secondary</Badge>
-                    <Badge variant="outline">Outline</Badge>
-                    <Badge variant="destructive">Destructive</Badge>
-                  </div>
-                </motion.div>
-
-                <motion.div 
-                  className="space-y-2 w-full"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.3, duration: 0.5 }}
-                >
-                  <div className="text-sm font-medium mb-2">Form Elements</div>
-                  <div className="grid gap-3 w-full">
-                    <Input placeholder="Text input" className="w-full" />
-                  </div>
-                </motion.div>
-
-                <motion.div 
-                  className="space-y-2"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.4, duration: 0.5 }}
-                >
-                  <div className="text-sm font-medium mb-2">Colors</div>
-                  <div className="grid grid-cols-2 gap-2">
-                    <ColorCopyButton color={currentVibe.colors.primary} label="Primary" />
-                    <ColorCopyButton color={currentVibe.colors.secondary} label="Secondary" />
-                    <ColorCopyButton color={currentVibe.colors.accent} label="Accent" />
-                    <ColorCopyButton color={currentVibe.colors.muted} label="Muted" />
-                  </div>
-                </motion.div>
-              </CardContent>
-              <CardFooter>
-                <div className="text-xs text-muted-foreground w-full flex justify-between items-center">
-                  <span>Cohesive styling across all components</span>
-                  <div className="flex items-center gap-1">
-                    <CreditCard className="h-3 w-3" />
-                    <span>Card-based layout</span>
-                  </div>
-                </div>
-              </CardFooter>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="interactive" className="space-y-8 min-h-[400px]">
-            <Card className={`${getCardClass()} w-full`}>
-              <CardHeader>
-                <div className="flex flex-wrap items-center justify-between gap-2">
-                  <CardTitle className="text-xl flex items-center gap-2">
-                    <MousePointer className="h-5 w-5" /> 
-                    Interactive Elements
-                  </CardTitle>
-                  <Badge variant={isBrutalist ? "outline" : "secondary"}>Animated</Badge>
-                </div>
-                <CardDescription>
-                  Interactive components with custom animations and behaviors
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <motion.div className="space-y-4">
-                  {/* Interactive button with animation */}
-                  <div className="space-y-2">
-                    <div className="text-sm font-medium mb-2">Interactive Buttons</div>
-                    <div className="flex flex-wrap gap-4">
-                      <motion.button
-                        className={`px-4 py-2 rounded-lg bg-primary text-primary-foreground flex items-center gap-2 ${isBrutalist ? 'brutal-button' : ''}`}
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        transition={{ duration: 0.2 }}
-                      >
-                        <Check className="h-4 w-4" />
-                        <span>Approve</span>
-                      </motion.button>
-                      
-                      <motion.button
-                        className={`px-4 py-2 rounded-lg bg-destructive text-destructive-foreground flex items-center gap-2 ${isBrutalist ? 'brutal-button' : ''}`}
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        transition={{ duration: 0.2 }}
-                      >
-                        <X className="h-4 w-4" />
-                        <span>Decline</span>
-                      </motion.button>
-                    </div>
-                  </div>
-                  
-                  {/* Hover card effect */}
-                  <div className="space-y-2 pt-4">
-                    <div className="text-sm font-medium mb-2">Hover Effects</div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <motion.div 
-                        className="p-4 rounded-lg bg-secondary/30 hover-elevate"
-                        whileHover={{ y: -5, boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)" }}
-                      >
-                        <div className="font-medium">Elevation Effect</div>
-                        <div className="text-sm text-muted-foreground">Hover to see the card elevate</div>
-                      </motion.div>
-                      
-                      <motion.div 
-                        className="p-4 rounded-lg bg-accent/30 relative overflow-hidden group"
-                        whileHover={{}}
-                      >
-                        <motion.div 
-                          className="absolute inset-0 bg-gradient-to-r from-primary/10 to-transparent"
-                          initial={{ x: '-100%' }}
-                          whileHover={{ x: '100%' }}
-                          transition={{ duration: 0.6 }}
-                        />
-                        <div className="font-medium relative z-10">Sweep Effect</div>
-                        <div className="text-sm text-muted-foreground relative z-10">Hover to see the gradient sweep</div>
-                      </motion.div>
-                    </div>
-                  </div>
-                  
-                  {/* Animated Icon */}
-                  <div className="space-y-2 pt-4">
-                    <div className="text-sm font-medium mb-2">Animated Icons</div>
-                    <div className="flex flex-wrap gap-6 items-center justify-center py-4">
-                      <motion.div
-                        animate={{ 
-                          rotate: [0, 360],
-                          scale: [1, 1.2, 1]
-                        }}
-                        transition={{ 
-                          rotate: { duration: 6, repeat: Infinity, ease: "linear" },
-                          scale: { duration: 3, repeat: Infinity, repeatType: "reverse" }
-                        }}
-                        className="p-3 rounded-full bg-primary/10"
-                      >
-                        <PenTool className="h-6 w-6 text-primary" />
-                      </motion.div>
-                      
-                      <motion.div
-                        animate={{ y: [0, -10, 0] }}
-                        transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                        className="p-3 rounded-full bg-secondary/10"
-                      >
-                        <Type className="h-6 w-6 text-secondary-foreground" />
-                      </motion.div>
-                      
-                      <motion.div
-                        animate={{ 
-                          opacity: [0.5, 1, 0.5],
-                          boxShadow: [
-                            "0 0 0 rgba(var(--primary-rgb), 0.4)",
-                            "0 0 20px rgba(var(--primary-rgb), 0.7)",
-                            "0 0 0 rgba(var(--primary-rgb), 0.4)"
-                          ]
-                        }}
-                        transition={{ duration: 2, repeat: Infinity }}
-                        className="p-3 rounded-full bg-muted"
-                      >
-                        <LayoutGrid className="h-6 w-6 text-foreground" />
-                      </motion.div>
-                    </div>
-                  </div>
-                </motion.div>
-              </CardContent>
-              <CardFooter>
-                <div className="text-xs text-muted-foreground">
-                  Animation speed: {currentVibe.animation.speed}x
-                </div>
-              </CardFooter>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="typography" className="space-y-8 min-h-[400px]">
-            <Card className={`${getCardClass()} w-full`}>
-              <CardHeader>
-                <div className="flex flex-wrap items-center justify-between gap-2">
-                  <CardTitle className="text-xl flex items-center gap-2">
-                    <Type className="h-5 w-5" /> 
-                    Typography
-                  </CardTitle>
-                  <Badge variant={isBrutalist ? "outline" : "secondary"}>Text</Badge>
-                </div>
-                <CardDescription>
-                  Text styles with the current vibe's font family and spacing
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-8">
-                <div className="space-y-4">
-                  <h1 className="text-4xl font-bold">Heading 1</h1>
-                  <h2 className="text-3xl font-semibold">Heading 2</h2>
-                  <h3 className="text-2xl font-medium">Heading 3</h3>
-                  
-                  <hr className="my-4" />
-                  
-                  <p className="text-base">
-                    This is a paragraph with standard text styling that adapts to the current vibe's font family.
-                  </p>
-                  
-                  <p className="text-sm text-muted-foreground">
-                    This is smaller text with muted color, showing contrast in typography.
-                  </p>
-                  
-                  <div className="p-4 bg-muted rounded-md font-mono text-sm">
-                    <code>Code example</code>
-                  </div>
-                  
-                  <div className="flex flex-col sm:flex-row justify-between gap-8 mt-8">
-                    <div>
-                      <h4 className="text-sm font-semibold mb-2">Font Pairings</h4>
-                      <p className="text-sm">
-                        Each vibe uses carefully selected font pairs for harmony
-                      </p>
-                    </div>
+                    <motion.div custom={0} initial="hidden" animate="visible" variants={itemVariants}>
+                      <Button variant="default" className={`${buttonClasses.primary} group`}>
+                        Primary Button
+                        <motion.span 
+                          className="ml-1" 
+                          initial={{ x: 0 }} 
+                          whileHover={{ x: 3 }}
+                          transition={{ duration: 0.2 }}
+                        >
+                          <ArrowRight className="h-4 w-4" />
+                        </motion.span>
+                      </Button>
+                    </motion.div>
                     
-                    <div>
-                      <h4 className="text-sm font-semibold mb-2">Text Spacing</h4>
-                      <p className="text-sm">
-                        Letter spacing and line height optimized for readability
-                      </p>
-                    </div>
+                    <motion.div custom={1} initial="hidden" animate="visible" variants={itemVariants}>
+                      <Button variant="secondary" className={buttonClasses.secondary}>Secondary Button</Button>
+                    </motion.div>
+                    
+                    <motion.div custom={2} initial="hidden" animate="visible" variants={itemVariants}>
+                      <Button variant="outline" className={buttonClasses.outline}>Outline Button</Button>
+                    </motion.div>
+                    
+                    <motion.div custom={3} initial="hidden" animate="visible" variants={itemVariants}>
+                      <Button variant="ghost" className={buttonClasses.ghost}>Ghost Button</Button>
+                    </motion.div>
+                    
+                    <motion.div custom={4} initial="hidden" animate="visible" variants={itemVariants}>
+                      <Button variant="link" className={buttonClasses.link}>Link Button</Button>
+                    </motion.div>
+                  </div>
+                </div>
+                
+                <Separator className="my-4" />
+                
+                <div>
+                  <h4 className="text-sm font-medium mb-3">Form Controls</h4>
+                  <div className="flex flex-wrap gap-3 items-center">
+                    <motion.div custom={5} initial="hidden" animate="visible" variants={itemVariants} className="max-w-[250px]">
+                      <Input placeholder="Standard input" className={isSoftOrganic ? 'soft-organic-input' : isNeonOrTech ? 'neon-input' : ''} />
+                    </motion.div>
+                    
+                    <motion.div custom={6} initial="hidden" animate="visible" variants={itemVariants} className="flex flex-wrap gap-2 items-center">
+                      <Badge className={isSoftOrganic ? 'soft-organic-badge' : isNeonOrTech ? 'neon-badge' : ''}>Badge</Badge>
+                      <Badge variant="secondary" className={isSoftOrganic ? 'soft-organic-secondary-badge' : isNeonOrTech ? 'neon-secondary-badge' : ''}>Secondary Badge</Badge>
+                      <Badge variant="outline" className={isSoftOrganic ? 'soft-organic-outline-badge' : isNeonOrTech ? 'neon-outline-badge' : ''}>Outline Badge</Badge>
+                      <Badge variant="destructive" className={isSoftOrganic ? 'soft-organic-destructive-badge' : isNeonOrTech ? 'neon-destructive-badge' : ''}>Destructive Badge</Badge>
+                    </motion.div>
+                  </div>
+                </div>
+                
+                <div className={`p-4 rounded-lg ${isSoftOrganic ? 'bg-primary/5' : 'bg-secondary/20'} mt-4`}>
+                  <div className="flex items-center gap-2 text-sm">
+                    <Check className="h-4 w-4 text-primary" />
+                    <span>All interactive elements adapt to the current vibe's color scheme and animation style</span>
                   </div>
                 </div>
               </CardContent>
-              <CardFooter>
-                <div className="text-xs text-muted-foreground">
-                  Primary Font: {currentVibe.fonts.primary.split(',')[0].replace(/'/g, '')}
-                </div>
-              </CardFooter>
             </Card>
           </TabsContent>
-        </Tabs>
-      </div>
-    </motion.div>
+
+          <TabsContent value="cards" className="space-y-4">
+            <div className="grid gap-4 grid-cols-1 md:grid-cols-2">
+              <motion.div custom={0} initial="hidden" animate="visible" variants={itemVariants}>
+                <Card className={`shadow-sm hover:shadow-md transition-shadow ${cardClass}`}>
+                  <CardHeader>
+                    <CardTitle>Card Title</CardTitle>
+                    <CardDescription>Card description with details</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <p>This card demonstrates the current vibe styling with automatic transitions.</p>
+                    
+                    <div className={`p-3 rounded-lg mt-4 ${isSoftOrganic ? 'bg-emerald-50' : 'bg-accent/10'}`}>
+                      <p className="text-sm">Cards adapt to each vibe with appropriate styling for headers, content, and actions.</p>
+                    </div>
+                  </CardContent>
+                  <CardFooter className="flex justify-between">
+                    <Button variant="ghost" size="sm">Cancel</Button>
+                    <Button size="sm" className={buttonClasses.primary}>Action</Button>
+                  </CardFooter>
+                </Card>
+              </motion.div>
+
+              <motion.div custom={1} initial="hidden" animate="visible" variants={itemVariants}>
+                <Card className={`shadow-sm hover:shadow-md transition-shadow ${cardClass}`}>
+                  <CardHeader>
+                    <div className="flex justify-between items-start">
+                      <CardTitle>Interactive Card</CardTitle>
+                      <div className={`p-2 rounded-full ${isSoftOrganic ? 'bg-emerald-50 text-emerald-600' : 'bg-primary/20 text-primary'} flex items-center justify-center`}>
+                        <Star className="h-4 w-4" />
+                      </div>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <p>This card showcases content with the current vibe animations and hover effects.</p>
+                    <div className="flex gap-4">
+                      <div className="flex items-center gap-1">
+                        <Heart className={`h-4 w-4 ${isNeonOrTech ? 'text-pink-500' : 'text-rose-500'}`} />
+                        <span className="text-sm text-muted-foreground">24</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <MessageSquare className={`h-4 w-4 ${isNeonOrTech ? 'text-cyan-500' : isSoftOrganic ? 'text-emerald-500' : 'text-blue-500'}`} />
+                        <span className="text-sm text-muted-foreground">12</span>
+                      </div>
+                    </div>
+                  </CardContent>
+                  <CardFooter>
+                    <Button variant="ghost" size="sm" className="ml-auto group">
+                      Read More 
+                      <ChevronRight className="ml-1 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                    </Button>
+                  </CardFooter>
+                </Card>
+              </motion.div>
+            </div>
+            
+            {/* Feature highlight card */}
+            <motion.div custom={2} initial="hidden" animate="visible" variants={itemVariants}>
+              <Card className={`${cardClass} ${isSoftOrganic ? 'border-emerald-200' : isNeonOrTech ? 'border-primary/30' : ''}`}>
+                <CardHeader className={isNeonOrTech ? 'bg-gradient-to-r from-primary/10 to-accent/5' : isSoftOrganic ? 'bg-emerald-50/50' : ''}>
+                  <div className="flex items-center gap-2">
+                    <div className={`p-2 rounded-full ${isSoftOrganic ? 'bg-white text-emerald-600' : isNeonOrTech ? 'bg-black/20 text-primary' : 'bg-primary/20 text-primary'}`}>
+                      <Sparkles className="h-5 w-5" />
+                    </div>
+                    <div>
+                      <CardTitle>Dynamic Styling System</CardTitle>
+                      <CardDescription>Cards adapt to each vibe theme automatically</CardDescription>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent className="pt-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <h4 className="text-sm font-medium">Color Transitions</h4>
+                      <p className="text-sm text-muted-foreground">Colors transition smoothly between themes using HSL values</p>
+                    </div>
+                    <div className="space-y-2">
+                      <h4 className="text-sm font-medium">Responsive Layout</h4>
+                      <p className="text-sm text-muted-foreground">All components automatically adjust to screen size</p>
+                    </div>
+                    <div className="space-y-2">
+                      <h4 className="text-sm font-medium">Animation Timing</h4>
+                      <p className="text-sm text-muted-foreground">Animation speed and easing adjusts to each vibe</p>
+                    </div>
+                    <div className="space-y-2">
+                      <h4 className="text-sm font-medium">Themed Components</h4>
+                      <p className="text-sm text-muted-foreground">Every component adapts to the current theme</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+          </TabsContent>
+
+          <TabsContent value="typography" className="space-y-6">
+            <Card className={`shadow-sm ${cardClass}`}>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Palette className="h-5 w-5 text-primary" />
+                  Typography
+                </CardTitle>
+                <CardDescription>Text styles with the current vibe's font family and spacing</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <motion.div custom={0} initial="hidden" animate="visible" variants={itemVariants} className="space-y-3">
+                  <h1 className={`text-4xl font-bold ${isSoftOrganic ? 'text-emerald-800' : ''}`}>Heading 1</h1>
+                  <h2 className={`text-3xl font-semibold ${isSoftOrganic ? 'text-emerald-700' : ''}`}>Heading 2</h2>
+                  <h3 className={`text-2xl font-medium ${isSoftOrganic ? 'text-emerald-600' : ''}`}>Heading 3</h3>
+                </motion.div>
+                <Separator className="my-4" />
+                <motion.div custom={1} initial="hidden" animate="visible" variants={itemVariants} className="space-y-4">
+                  <div>
+                    <p className="text-lg mb-2">This is a paragraph with standard text styling that adapts to the current vibe's font family.</p>
+                    <p className="text-sm text-muted-foreground">This is smaller text with muted color, showing contrast in typography.</p>
+                  </div>
+                  
+                  <div className={`p-4 rounded-lg ${isSoftOrganic ? 'bg-emerald-50' : 'bg-muted'}`}>
+                    <p><code className="text-sm px-1 py-0.5 rounded bg-muted">Code example</code></p>
+                    <p className="text-sm mt-2">
+                      Structured text elements allow for consistent hierarchy of information. Typography adapts with each vibe change including font
+                      family, weight, and spacing.
+                    </p>
+                  </div>
+                </motion.div>
+                
+                <motion.div custom={2} initial="hidden" animate="visible" variants={itemVariants}>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                    <div className="space-y-2">
+                      <h4 className="text-sm font-medium">Font Pairings</h4>
+                      <p className="text-sm text-muted-foreground">Each vibe uses carefully selected font pairs for harmony</p>
+                    </div>
+                    <div className="space-y-2">
+                      <h4 className="text-sm font-medium">Text Spacing</h4>
+                      <p className="text-sm text-muted-foreground">Letter spacing and line height optimized for readability</p>
+                    </div>
+                  </div>
+                </motion.div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </motion.div>
+      </Tabs>
+    </div>
   );
 }
