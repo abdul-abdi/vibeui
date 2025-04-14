@@ -128,6 +128,28 @@ export default {
 					'0%': { backgroundPosition: '-1000px 0' },
 					'100%': { backgroundPosition: '1000px 0' }
 				},
+				"spotlight": {
+					'0%': { opacity: '0', transform: 'scale(0.8) translateY(20px)' },
+					'100%': { opacity: '1', transform: 'scale(1) translateY(0)' }
+				},
+				"pan-image": {
+					'0%': { backgroundPosition: '0% 0%' },
+					'25%': { backgroundPosition: '100% 0%' },
+					'50%': { backgroundPosition: '100% 100%' },
+					'75%': { backgroundPosition: '0% 100%' },
+					'100%': { backgroundPosition: '0% 0%' }
+				},
+				"color-cycle": {
+					'0%, 100%': { filter: 'hue-rotate(0deg)' },
+					'50%': { filter: 'hue-rotate(30deg)' }
+				},
+				"heartbeat": {
+					'0%': { transform: 'scale(1)' },
+					'14%': { transform: 'scale(1.15)' },
+					'28%': { transform: 'scale(1)' },
+					'42%': { transform: 'scale(1.15)' },
+					'70%': { transform: 'scale(1)' }
+				}
 			},
 			animation: {
 				"accordion-down": "accordion-down 0.2s ease-out",
@@ -146,6 +168,10 @@ export default {
 				"morph": "morph 8s ease-in-out infinite",
 				"gradient-pulse": "gradient-pulse 4s ease-in-out infinite",
 				"shimmer": "shimmer 3s linear infinite",
+				"spotlight": "spotlight 0.7s ease-out forwards",
+				"pan-image": "pan-image 30s ease-in-out infinite",
+				"color-cycle": "color-cycle 10s ease-in-out infinite",
+				"heartbeat": "heartbeat 1.5s ease-in-out infinite"
 			},
 			typography: {
 				DEFAULT: {
@@ -162,7 +188,19 @@ export default {
 				'spacing': 'margin, padding',
 				'width': 'width',
 				'rounded': 'border-radius',
+				'colors': 'color, background-color, border-color, text-decoration-color, fill, stroke',
+				'filter': 'filter',
+				'all': 'all',
 			},
+			transitionDuration: {
+				'400': '400ms',
+				'2000': '2000ms',
+				'3000': '3000ms',
+			},
+			transitionTimingFunction: {
+				'bounce-out': 'cubic-bezier(0.34, 1.56, 0.64, 1)',
+				'smooth': 'cubic-bezier(0.4, 0, 0.2, 1)',
+			}
 		},
 	},
 	plugins: [require("tailwindcss-animate")],
