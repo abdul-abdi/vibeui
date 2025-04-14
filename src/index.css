@@ -1,9 +1,13 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@400;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=DM+Serif+Display&family=Quicksand:wght@400;500;600;700&family=Roboto+Mono:wght@400;500;600;700&family=Abril+Fatface&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
+    /* Base style values will be dynamically updated by vibe engine */
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
 
@@ -13,7 +17,7 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 222.2 47.4% 11.2%;
+    --primary: 221.2 83% 53.3%;
     --primary-foreground: 210 40% 98%;
 
     --secondary: 210 40% 96.1%;
@@ -30,25 +34,33 @@
 
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
-
-    --radius: 0.5rem;
-
-    --sidebar-background: 0 0% 98%;
-
-    --sidebar-foreground: 240 5.3% 26.1%;
-
-    --sidebar-primary: 240 5.9% 10%;
-
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --ring: 221.2 83% 53.3%;
+    
+    --radius-sm: 0.25rem;
+    --radius-md: 0.5rem;
+    --radius-lg: 1rem;
+    
+    /* Animation variables */
+    --animation-speed: 1;
+    --animation-easing: cubic-bezier(0.4, 0, 0.2, 1);
+    
+    /* Layout variables */
+    --layout-type: standard;
+    --content-max-width: 1200px;
+    --layout-spacing: 2rem;
+    --card-spacing: 1.5rem;
+    --element-spacing: 1rem;
+    
+    /* Font variables */
+    --font-primary: 'Inter', sans-serif;
+    --font-secondary: 'Space Grotesk', sans-serif;
+    --font-accent: 'Playfair Display', serif;
+    --font-mono: 'Space Mono', monospace;
+    
+    /* Shadow variables */
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
   }
 
   .dark {
@@ -61,7 +73,7 @@
     --popover: 222.2 84% 4.9%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 210 40% 98%;
+    --primary: 217.2 91.2% 59.8%;
     --primary-foreground: 222.2 47.4% 11.2%;
 
     --secondary: 217.2 32.6% 17.5%;
@@ -78,24 +90,91 @@
 
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --ring: 224.3 76.3% 48%;
   }
-}
 
-@layer base {
   * {
     @apply border-border;
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
   }
 
   body {
     @apply bg-background text-foreground;
+    font-family: var(--font-primary);
   }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-secondary);
+  }
+
+  code, pre {
+    font-family: var(--font-mono);
+  }
+}
+
+/* Animation utility classes */
+.animated-element {
+  animation-duration: calc(var(--animation-duration, 1s) / var(--animation-speed));
+  animation-timing-function: var(--animation-easing);
+}
+
+/* Layout styles */
+.layout-standard {
+  max-width: var(--content-max-width);
+  margin: 0 auto;
+  padding: var(--layout-spacing);
+}
+
+.layout-asymmetric {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: var(--layout-spacing);
+  padding: var(--layout-spacing);
+  max-width: var(--content-max-width);
+  margin: 0 auto;
+}
+
+.layout-centered {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: var(--layout-spacing);
+  text-align: center;
+}
+
+.layout-sidebar {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: var(--layout-spacing);
+  max-width: var(--content-max-width);
+  margin: 0 auto;
+  padding: var(--layout-spacing);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .layout-asymmetric,
+  .layout-sidebar {
+    grid-template-columns: 1fr;
+  }
+}
+
+.vibe-card {
+  border-radius: var(--radius-md);
+  padding: var(--card-spacing);
+  background-color: hsl(var(--card));
+  color: hsl(var(--card-foreground));
+  box-shadow: var(--shadow-md);
+  transition: transform 0.3s var(--animation-easing), box-shadow 0.3s var(--animation-easing);
+}
+
+.vibe-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-lg);
+}
+
+.morphing-shape {
+  animation: morph 8s var(--animation-easing) infinite;
+  border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+  transition: all 1s var(--animation-easing);
+  animation-duration: calc(8s / var(--animation-speed));
 }
