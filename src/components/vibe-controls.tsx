@@ -1,7 +1,9 @@
+
 import React from 'react';
 import { useVibe } from '@/lib/vibe-engine';
 import { Button } from '@/components/ui/button';
 import { Lock, Unlock, RefreshCw, ChevronLeft, ChevronRight } from 'lucide-react';
+import { AiVibeGenerator } from '@/components/ai-vibe-generator';
 
 export function VibeControls() {
   const { vibeState, changeVibe, toggleLock, previousVibe, nextVibe } = useVibe();
@@ -50,6 +52,8 @@ export function VibeControls() {
       >
         <ChevronRight className="h-4 w-4" />
       </Button>
+      
+      <AiVibeGenerator />
     </div>
   );
 }

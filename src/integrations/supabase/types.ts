@@ -9,7 +9,48 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      generated_vibes: {
+        Row: {
+          animation_settings: Json
+          colors: Json
+          created_at: string
+          description: string
+          fonts: Json
+          id: string
+          layout: string
+          name: string
+          radius_settings: Json
+          shadow_settings: Json
+          spacing_settings: Json
+        }
+        Insert: {
+          animation_settings: Json
+          colors: Json
+          created_at?: string
+          description: string
+          fonts: Json
+          id?: string
+          layout: string
+          name: string
+          radius_settings: Json
+          shadow_settings: Json
+          spacing_settings: Json
+        }
+        Update: {
+          animation_settings?: Json
+          colors?: Json
+          created_at?: string
+          description?: string
+          fonts?: Json
+          id?: string
+          layout?: string
+          name?: string
+          radius_settings?: Json
+          shadow_settings?: Json
+          spacing_settings?: Json
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

@@ -4,6 +4,8 @@ import { VibeProvider, useVibe } from '@/lib/vibe-engine';
 import { VibeControls } from '@/components/vibe-controls';
 import { VibeInfo } from '@/components/vibe-info';
 import { VibeDemoElements } from '@/components/vibe-demo-elements';
+import { VibeGallery } from '@/components/vibe-gallery';
+import { Toaster } from '@/components/ui/toaster';
 
 const VibeContent = () => {
   const { vibeState, changeVibe } = useVibe();
@@ -57,6 +59,10 @@ const VibeContent = () => {
             <VibeDemoElements />
           </section>
         </div>
+        
+        <div className="mt-16">
+          <VibeGallery />
+        </div>
       </main>
 
       <footer className="mt-auto py-6 px-4 sm:px-6 lg:px-8 border-t">
@@ -72,6 +78,8 @@ const VibeContent = () => {
           </div>
         </div>
       </footer>
+      
+      <Toaster />
     </div>
   );
 };
