@@ -269,20 +269,21 @@ const VibeContent = () => {
     return (
       <div className="fixed inset-0 flex items-center justify-center bg-background z-50">
         <div className="text-center">
-          <div className="relative inline-block">
-            <svg width="60" height="60" viewBox="0 0 32 32" className="animate-[rotate-hue_8s_linear_infinite]">
-              <circle cx="16" cy="16" r="15" fill="url(#gradient)" strokeWidth="2"/>
-              <path d="M14 16L16 18L20 14" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              <defs>
-                <linearGradient id="gradient" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
-                  <stop offset="0%" stopColor="#FF5757"/>
-                  <stop offset="50%" stopColor="#4CD471"/>
-                  <stop offset="100%" stopColor="#5E8AF7"/>
-                </linearGradient>
-              </defs>
-            </svg>
-          </div>
-          <p className="mt-4 font-medium">Loading VibeUI...</p>
+          <svg width="64" height="64" viewBox="0 0 32 32" className="animate-rotate-hue">
+            <g id="gradient-circle">
+              <circle cx="16" cy="16" r="15" fill="url(#navGradient)" strokeWidth="2"/>
+              <path d="M10 16.5L14 20.5L22 12.5" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            </g>
+            <defs>
+              <linearGradient id="navGradient" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stopColor="#FF5757"/>
+                <stop offset="25%" stopColor="#FFBD59"/>
+                <stop offset="50%" stopColor="#4CD471"/>
+                <stop offset="75%" stopColor="#5E8AF7"/>
+                <stop offset="100%" stopColor="#C061F7"/>
+              </linearGradient>
+            </defs>
+          </svg>
         </div>
       </div>
     );
@@ -398,7 +399,10 @@ const VibeContent = () => {
                 <div className={`flex items-center ${isSoftOrganic ? 'px-3 py-2 rounded-xl bg-white/5 dark:bg-white/10' : ''}`}>
                   <div className="flex items-center">
                     <svg width="32" height="32" viewBox="0 0 32 32" className="animate-rotate-hue mr-2">
-                      <circle cx="16" cy="16" r="15" fill="url(#navGradient)" strokeWidth="2"/>
+                      <g id="gradient-circle">
+                        <circle cx="16" cy="16" r="15" fill="url(#navGradient)" strokeWidth="2"/>
+                        <path d="M10 16.5L14 20.5L22 12.5" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                      </g>
                       <defs>
                         <linearGradient id="navGradient" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
                           <stop offset="0%" stopColor="#FF5757"/>

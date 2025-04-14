@@ -2,39 +2,51 @@
 
 <div align="center">
   
-  ![VibeUI Logo](https://via.placeholder.com/150x150?text=VibeUI)
+  <svg width="100" height="100" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <g id="gradient-circle">
+      <circle cx="16" cy="16" r="15" fill="url(#gradient)" strokeWidth="2"/>
+      <path d="M10 16.5L14 20.5L22 12.5" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+    <defs>
+      <linearGradient id="gradient" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
+        <stop offset="0%" stop-color="#FF5757"/>
+        <stop offset="25%" stop-color="#FFBD59"/>
+        <stop offset="50%" stop-color="#4CD471"/>
+        <stop offset="75%" stop-color="#5E8AF7"/>
+        <stop offset="100%" stop-color="#C061F7"/>
+      </linearGradient>
+    </defs>
+  </svg>
   
   **The Ultimate UI Design Inspiration Platform**
   
-  [Demo](https://vibeui.vercel.app) | [Documentation](#documentation) | [Features](#key-features) | [Deploy](#deployment)
+  [Features](#key-features) | [Getting Started](#getting-started) | [Documentation](#documentation)
   
 </div>
 
 ## 🌟 Overview
 
-VibeUI is a dynamic design system and UI inspiration platform that helps designers and developers discover new interface styles and aesthetics. It generates unique design "vibes" that can be customized, exported, and applied to your own projects.
+VibeUI is a dynamic design system and UI inspiration platform that helps designers and developers discover new interface styles and aesthetics. It generates unique design "vibes" that can be customized, explored, and applied to your own projects.
 
 With VibeUI, you can:
 - Explore different design aesthetics from minimal to playful
-- Generate AI-powered design themes with a single click
+- Generate design themes with a single click
 - See live previews of UI components with your chosen vibe
-- Export design tokens and styles for use in your own projects
+- Experience smooth animations and transitions between themes
 
 <div align="center">
-  
-  ![VibeUI Screenshot](https://via.placeholder.com/800x450?text=VibeUI+Screenshot)
-  
+  <img src="public/screenshot.png" alt="VibeUI Screenshot" width="800" />
 </div>
 
 ## ✨ Key Features
 
 - **Dynamic Vibe Generation** - Create and explore unlimited design styles
 - **Real-time Preview** - See how components look with different vibes
-- **AI-powered Themes** - Generate custom themes based on keywords
-- **Code Export** - Get ready-to-use CSS variables and design tokens
-- **Theme History** - Save and revisit your favorite design vibes
 - **Responsive Design** - Works on all devices from mobile to desktop
+- **Performance Optimized** - Adaptive performance based on device capabilities
 - **Dark/Light Mode** - Each vibe works with both dark and light color schemes
+- **Animation Control** - Smooth transitions between different design states
+- **Modern UI Components** - Showcase design across various interface elements
 
 ## 🚀 Getting Started
 
@@ -61,17 +73,7 @@ npm install
 yarn install
 ```
 
-3. Set up environment variables:
-
-Copy the `.env.example` file to `.env.local`:
-
-```bash
-cp .env.example .env.local
-```
-
-Update the values in `.env.local` with your own Supabase credentials.
-
-4. Start the development server:
+3. Start the development server:
 
 ```bash
 npm run dev
@@ -79,7 +81,7 @@ npm run dev
 yarn dev
 ```
 
-5. Open your browser and visit `http://localhost:8080`
+4. Open your browser and visit `http://localhost:3000`
 
 ## 📖 Documentation
 
@@ -87,54 +89,45 @@ yarn dev
 
 ```
 vibeui/
-├── public/          # Static assets
+├── public/          # Static assets including SVG logo
+├── src/             # Source code
 │   ├── components/  # UI components
-│   ├── lib/         # Utilities and helper functions
+│   ├── lib/         # Utilities and helper functions including vibe engine
 │   ├── pages/       # Application pages
 │   ├── hooks/       # Custom React hooks
-│   ├── integrations/# Third-party integrations (Supabase)
-│   └── main.tsx     # Application entry point
-├── dist/            # Build output
-└── supabase/        # Supabase configuration
+│   └── styles/      # Global styles
 ```
 
 ### Vibe Engine
 
 The core of VibeUI is the vibe engine, which generates and applies design themes. The engine consists of:
 
-- `vibe-context.tsx` - Context provider for vibe state
-- `vibe-presets.ts` - Collection of predefined vibes
-- `vibe-utils.ts` - Utilities for applying vibes to the UI
-- `ai-vibes.ts` - Integration with AI for dynamic vibe generation
+- `vibe-engine.tsx` - Context provider for vibe state
+- `vibe-controls.tsx` - UI controls for manipulating vibes
+- `vibe-demo-elements.tsx` - Showcase components for each vibe
 
-### Component Gallery
+### Component Showcase
 
-VibeUI includes a comprehensive gallery of components that showcase each design vibe. These components include:
+VibeUI includes a comprehensive showcase of components that demonstrate each design vibe:
 
-- Basic elements (buttons, inputs, cards)
-- Layout components (navigation, sidebars)
-- Interactive elements (modals, tooltips)
-- Data visualization samples
+- Basic elements (buttons, cards, typography)
+- Navigation and headers
+- Interactive animations
+- Layout examples
 
 ## 🔧 Usage Guide
 
 ### Generating New Vibes
 
-1. Click the "New Vibe" button to generate a random design theme
-2. Use the lock button to prevent accidental changes
-3. Navigate through your vibe history with the arrow buttons
+1. Click the "Generate New Vibe" button to create a random design theme
+2. See real-time updates on all components
+3. Experience smooth transitions between different vibes
 
-### Customizing Vibes
+### Exploring Features
 
-1. Use the AI vibe generator to create a theme based on keywords
-2. Adjust colors, typography, and spacing as needed
-3. See real-time updates on the component showcase
-
-### Exporting Vibes
-
-1. Click the "Export" button in the vibe controls
-2. Choose your desired format (CSS variables, Tailwind config, etc.)
-3. Copy the code or download the configuration file
+1. Scroll through the interface to see different component examples
+2. Toggle between light and dark mode to see adaptability
+3. Resize your browser to test responsive behavior
 
 ## 🛠️ Technologies Used
 
@@ -143,23 +136,7 @@ VibeUI includes a comprehensive gallery of components that showcase each design 
 - **Next.js** - React framework
 - **Tailwind CSS** - Utility-first CSS
 - **Framer Motion** - Animations
-- **shadcn/ui** - Component library
-- **Supabase** - Backend and edge functions
-- **React Query** - Data fetching
-- **React Router** - Navigation
-
-## 🚢 Deployment
-
-VibeUI is optimized for deployment on Vercel. For detailed deployment instructions, see [DEPLOYMENT.md](DEPLOYMENT.md).
-
-Quick deployment steps:
-
-1. Fork or clone this repository
-2. Import your repository to Vercel
-3. Set environment variables
-4. Deploy
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fyourusername%2Fvibeui)
+- **shadcn/ui** - Component foundations
 
 ## 🤝 Contributing
 
@@ -177,10 +154,10 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## 🙏 Acknowledgements
 
-- [shadcn/ui](https://ui.shadcn.com/) for the beautiful component library
-- [Supabase](https://supabase.com/) for the backend infrastructure
+- [shadcn/ui](https://ui.shadcn.com/) for the component library foundations
 - [Framer Motion](https://www.framer.com/motion/) for the animation library
-- [Lovable](https://lovable.dev/) for project support
+- [Tailwind CSS](https://tailwindcss.com/) for the utility CSS framework
+- [Next.js](https://nextjs.org/) for the React framework
 
 ---
 
