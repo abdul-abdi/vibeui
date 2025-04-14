@@ -40,9 +40,12 @@ export function applyVibe(vibe: VibeSettings): void {
   root.style.setProperty('--card-spacing', vibe.spacing.cardSpacing);
   root.style.setProperty('--element-spacing', vibe.spacing.elementSpacing);
   
-  // Apply animation settings
+  // Apply animation settings - Convert array to string for CSS
   root.style.setProperty('--animation-speed', vibe.animation.speed.toString());
-  root.style.setProperty('--animation-easing', vibe.animation.easing);
+  
+  // Convert the array of bezier curve values to a cubic-bezier string for CSS
+  const easingArray = Array.isArray(vibe.animation.easing) ? vibe.animation.easing : [0.4, 0, 0.2, 1];
+  root.style.setProperty('--animation-easing', `cubic-bezier(${easingArray.join(', ')})`);
   
   // Apply shadows
   root.style.setProperty('--shadow-sm', vibe.shadows.sm);
@@ -58,8 +61,16 @@ export function generateAnimationCSS(
   name: string,
   keyframes: string,
   duration: number,
-  easing: string,
+  easing: number[] | string,
   delay: number = 0
 ): string {
-  return `${name} ${duration}s ${easing} ${delay}s`;
+  // Handle easing as either number array or string
+  let easingValue: string;
+  if (Array.isArray(easing)) {
+    easingValue = `cubic-bezier(${easing.join(', ')})`;
+  } else {
+    easingValue = easing;
+  }
+  
+  return `${name} ${duration}s ${easingValue} ${delay}s`;
 }

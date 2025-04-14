@@ -1,3 +1,4 @@
+
 import React, { useEffect } from 'react';
 import { VibeProvider, useVibe } from '@/lib/vibe-engine';
 import { VibeControls } from '@/components/vibe-controls';
@@ -5,8 +6,8 @@ import { VibeInfo } from '@/components/vibe-info';
 import { VibeDemoElements } from '@/components/vibe-demo-elements';
 import { VibeGallery } from '@/components/vibe-gallery';
 import { Toaster } from '@/components/ui/toaster';
-import { motion, Variants } from 'framer-motion';
-import { ArrowDown } from 'lucide-react';
+import { motion, Variants, useMotionTemplate, useMotionValue, useTransform } from 'framer-motion';
+import { ArrowDown, Sparkles } from 'lucide-react';
 
 const VibeContent = () => {
   const { vibeState, changeVibe } = useVibe();
@@ -30,6 +31,23 @@ const VibeContent = () => {
     return [0.4, 0, 0.2, 1]; // default ease-in-out
   };
 
+  // Motion values for dynamic background effects
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+  
+  const handleMouseMove = (e: React.MouseEvent) => {
+    mouseX.set(e.clientX);
+    mouseY.set(e.clientY);
+  };
+  
+  const backgroundX = useTransform(mouseX, (latest) => latest / 30);
+  const backgroundY = useTransform(mouseY, (latest) => latest / 30);
+  const backgroundGradient = useMotionTemplate`radial-gradient(
+    800px circle at ${backgroundX}px ${backgroundY}px,
+    hsl(var(--primary) / 0.15),
+    transparent 40%
+  )`;
+
   // Dynamic layout variants based on the current vibe
   const layoutVariants: Record<string, {
     containerClass: string;
@@ -38,8 +56,8 @@ const VibeContent = () => {
     standard: { 
       containerClass: "grid gap-8 grid-cols-1 lg:grid-cols-2",
       variants: {
-        enter: { opacity: 0, y: 20 },
-        animate: { 
+        hidden: { opacity: 0, y: 20 },
+        visible: { 
           opacity: 1, 
           y: 0, 
           transition: { 
@@ -52,8 +70,8 @@ const VibeContent = () => {
     sidebar: {
       containerClass: "grid gap-8 grid-cols-1 lg:grid-cols-[280px_1fr]",
       variants: {
-        enter: { opacity: 0, x: -50 },
-        animate: { 
+        hidden: { opacity: 0, x: -50 },
+        visible: { 
           opacity: 1, 
           x: 0, 
           transition: { 
@@ -66,8 +84,8 @@ const VibeContent = () => {
     asymmetric: {
       containerClass: "grid gap-8 grid-cols-1 lg:grid-cols-[2fr_1fr]",
       variants: {
-        enter: { opacity: 0, scale: 0.95 },
-        animate: { 
+        hidden: { opacity: 0, scale: 0.95 },
+        visible: { 
           opacity: 1, 
           scale: 1, 
           transition: { 
@@ -80,8 +98,8 @@ const VibeContent = () => {
     centered: {
       containerClass: "flex flex-col items-center",
       variants: {
-        enter: { opacity: 0 },
-        animate: { 
+        hidden: { opacity: 0 },
+        visible: { 
           opacity: 1, 
           transition: { 
             duration: 0.4 * (1/currentVibe.animation.speed),
@@ -102,10 +120,57 @@ const VibeContent = () => {
     }
   };
 
+  // Enhanced animation variants for elements
+  const fadeInVariants: Variants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: (i = 0) => ({ 
+      opacity: 1, 
+      y: 0, 
+      transition: { 
+        duration: 0.5, 
+        delay: i * 0.1, 
+        ease: getEasing() 
+      }
+    })
+  };
+
+  const cardVariants: Variants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { 
+      opacity: 1, 
+      y: 0, 
+      transition: { duration: 0.4, ease: getEasing() } 
+    },
+    hover: { 
+      y: -10, 
+      boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
+      transition: { duration: 0.2, ease: getEasing() } 
+    }
+  };
+
+  const contentFlowVariants: Variants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.15,
+        ease: getEasing()
+      }
+    }
+  };
+
   return (
-    <div className={`min-h-screen bg-background text-foreground transition-colors duration-500`}>
+    <div 
+      className={`min-h-screen bg-background text-foreground transition-colors duration-500`}
+      onMouseMove={handleMouseMove}
+    >
+      <motion.div 
+        className="fixed inset-0 pointer-events-none z-0" 
+        style={{ background: backgroundGradient }}
+      />
+
       <motion.header 
-        className="py-6 px-4 sm:px-6 lg:px-8 border-b"
+        className="relative z-10 py-6 px-4 sm:px-6 lg:px-8 border-b backdrop-blur-sm"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ 
@@ -119,9 +184,27 @@ const VibeContent = () => {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.2, duration: 0.5, ease: getEasing() }}
           >
-            <h1 className="text-3xl font-bold">
+            <h1 className="text-3xl font-bold flex items-center gap-2">
               Vibe UI
-              <span className="inline-block ml-2 text-primary">Shift</span>
+              <motion.span 
+                className="inline-block text-primary relative"
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.5, duration: 0.5, ease: getEasing() }}
+              >
+                Shift
+                <motion.div 
+                  className="absolute -top-1 -right-1"
+                  animate={{ 
+                    scale: [1, 1.5, 1],
+                    opacity: [1, 0.8, 1],
+                    rotate: [0, 5, 0, -5, 0]
+                  }}
+                  transition={{ duration: 2, repeat: Infinity, repeatDelay: 5 }}
+                >
+                  <Sparkles className="h-3 w-3 text-primary" />
+                </motion.div>
+              </motion.span>
             </h1>
             <p className="text-muted-foreground">
               A dynamic UI experience that changes on every reload
@@ -132,83 +215,61 @@ const VibeContent = () => {
       </motion.header>
 
       <motion.main 
-        className="container mx-auto py-8 px-4 sm:px-6 lg:px-8"
-        initial="enter"
-        animate="animate"
-        variants={{
-          enter: { opacity: 0 },
-          animate: { 
-            opacity: 1, 
-            transition: { 
-              duration: 0.5, 
-              staggerChildren: 0.1 * (1/currentVibe.animation.speed),
-              ease: getEasing()
-            } 
-          }
-        }}
+        className="container relative z-10 mx-auto py-8 px-4 sm:px-6 lg:px-8 overflow-hidden"
+        initial="hidden"
+        animate="visible"
+        variants={contentFlowVariants}
       >
         <motion.div 
           className={currentLayout.containerClass}
-          variants={{
-            enter: { opacity: 0 },
-            animate: { opacity: 1 }
-          }}
+          variants={contentFlowVariants}
         >
           <motion.section 
             className={`space-y-6 ${currentVibe.layout === 'centered' ? 'max-w-2xl mx-auto text-center' : ''}`}
             variants={currentLayout.variants}
           >
-            <motion.h2 
-              className="text-3xl font-bold tracking-tight"
-              variants={{
-                enter: { opacity: 0, y: 20 },
-                animate: { 
-                  opacity: 1, 
-                  y: 0, 
-                  transition: { 
-                    duration: 0.4 * (1/currentVibe.animation.speed),
-                    ease: getEasing()
-                  } 
-                }
-              }}
+            <motion.div
+              className="relative"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.6 }}
             >
-              Current Vibe: <span className="text-primary">{currentVibe.name}</span>
-            </motion.h2>
-            
-            <motion.p 
-              className="text-lg text-muted-foreground"
-              variants={{
-                enter: { opacity: 0, y: 20 },
-                animate: { 
-                  opacity: 1, 
-                  y: 0, 
-                  transition: { 
-                    duration: 0.4 * (1/currentVibe.animation.speed),
-                    delay: 0.1,
-                    ease: getEasing()
-                  } 
-                }
-              }}
-            >
-              This UI dynamically changes its entire appearance, layout, and interactions
-              based on the randomly selected vibe. Reload the page or click "New Vibe" to experience
-              a completely different UI while maintaining functionality.
-            </motion.p>
+              <motion.div 
+                className="absolute -z-10 w-full h-full blur-3xl opacity-20 bg-gradient-to-r from-primary/50 via-accent/30 to-secondary/50"
+                animate={{ 
+                  rotate: [0, 5, -5, 0],
+                  scale: [1, 1.05, 0.98, 1]
+                }}
+                transition={{ 
+                  duration: 8, 
+                  repeat: Infinity,
+                  repeatType: "reverse"
+                }}
+              />
+              
+              <motion.h2 
+                className="text-3xl font-bold tracking-tight"
+                variants={fadeInVariants}
+                custom={0}
+              >
+                Current Vibe: <span className="text-primary">{currentVibe.name}</span>
+              </motion.h2>
+              
+              <motion.p 
+                className="text-lg text-muted-foreground mt-3 max-w-2xl"
+                variants={fadeInVariants}
+                custom={1}
+              >
+                This UI dynamically changes its entire appearance, layout, and interactions
+                based on the randomly selected vibe. Reload the page or click "New Vibe" to experience
+                a completely different UI while maintaining functionality.
+              </motion.p>
+            </motion.div>
             
             <motion.div 
-              className="pt-4"
-              variants={{
-                enter: { opacity: 0, y: 20 },
-                animate: { 
-                  opacity: 1, 
-                  y: 0, 
-                  transition: { 
-                    duration: 0.4 * (1/currentVibe.animation.speed),
-                    delay: 0.2,
-                    ease: getEasing()
-                  } 
-                }
-              }}
+              className="pt-6"
+              variants={fadeInVariants}
+              custom={2}
             >
               <VibeInfo />
             </motion.div>
@@ -218,7 +279,13 @@ const VibeContent = () => {
             className={`space-y-6 ${currentVibe.layout === 'centered' ? 'max-w-2xl mx-auto' : ''}`}
             variants={currentLayout.variants}
           >
-            <VibeDemoElements />
+            <motion.div 
+              whileInView={{ opacity: [0, 1], y: [20, 0] }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+            >
+              <VibeDemoElements />
+            </motion.div>
           </motion.section>
         </motion.div>
         
@@ -258,7 +325,7 @@ const VibeContent = () => {
       </motion.main>
 
       <motion.footer 
-        className="mt-auto py-6 px-4 sm:px-6 lg:px-8 border-t"
+        className="relative z-10 mt-auto py-6 px-4 sm:px-6 lg:px-8 border-t backdrop-blur-sm"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1, duration: 0.5, ease: getEasing() }}
@@ -268,7 +335,11 @@ const VibeContent = () => {
             Vibe UI - A dynamic UI experience that changes on every page reload
           </p>
           <div className="flex items-center gap-2">
-            <div className="h-2 w-2 rounded-full bg-primary animate-pulse-soft"></div>
+            <motion.div 
+              className="h-2 w-2 rounded-full bg-primary"
+              animate={{ scale: [1, 1.5, 1], opacity: [0.7, 1, 0.7] }} 
+              transition={{ repeat: Infinity, duration: 2 }}
+            />
             <span className="text-sm text-muted-foreground">
               {new Date().toLocaleDateString()} · {currentVibe.name}
             </span>

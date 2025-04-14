@@ -20,38 +20,38 @@ export default {
 		},
 		extend: {
 			colors: {
-				border: 'var(--border)',
-				input: 'var(--input)',
-				ring: 'var(--ring)',
-				background: 'var(--background)',
-				foreground: 'var(--foreground)',
+				border: 'hsl(var(--border))',
+				input: 'hsl(var(--input))',
+				ring: 'hsl(var(--ring))',
+				background: 'hsl(var(--background))',
+				foreground: 'hsl(var(--foreground))',
 				primary: {
-					DEFAULT: 'var(--primary)',
-					foreground: 'var(--primary-foreground)'
+					DEFAULT: 'hsl(var(--primary))',
+					foreground: 'hsl(var(--primary-foreground))'
 				},
 				secondary: {
-					DEFAULT: 'var(--secondary)',
-					foreground: 'var(--secondary-foreground)'
+					DEFAULT: 'hsl(var(--secondary))',
+					foreground: 'hsl(var(--secondary-foreground))'
 				},
 				destructive: {
-					DEFAULT: 'var(--destructive)',
-					foreground: 'var(--destructive-foreground)'
+					DEFAULT: 'hsl(var(--destructive))',
+					foreground: 'hsl(var(--destructive-foreground))'
 				},
 				muted: {
-					DEFAULT: 'var(--muted)',
-					foreground: 'var(--muted-foreground)'
+					DEFAULT: 'hsl(var(--muted))',
+					foreground: 'hsl(var(--muted-foreground))'
 				},
 				accent: {
-					DEFAULT: 'var(--accent)',
-					foreground: 'var(--accent-foreground)'
+					DEFAULT: 'hsl(var(--accent))',
+					foreground: 'hsl(var(--accent-foreground))'
 				},
 				popover: {
-					DEFAULT: 'var(--popover)',
-					foreground: 'var(--popover-foreground)'
+					DEFAULT: 'hsl(var(--popover))',
+					foreground: 'hsl(var(--popover-foreground))'
 				},
 				card: {
-					DEFAULT: 'var(--card)',
-					foreground: 'var(--card-foreground)'
+					DEFAULT: 'hsl(var(--card))',
+					foreground: 'hsl(var(--card-foreground))'
 				}
 			},
 			borderRadius: {
@@ -79,6 +79,10 @@ export default {
 				"spin-slow": {
 					'0%': { transform: 'rotate(0deg)' },
 					'100%': { transform: 'rotate(360deg)' },
+				},
+				"glow": {
+					'0%, 100%': { boxShadow: '0 0 5px 0px rgba(var(--primary-rgb), 0.3)' },
+					'50%': { boxShadow: '0 0 20px 5px rgba(var(--primary-rgb), 0.6)' },
 				},
 				"slide-in-right": {
 					'0%': { transform: 'translateX(100%)' },
@@ -116,6 +120,14 @@ export default {
 					'50%': { borderRadius: '30% 60% 70% 40%/50% 60% 30% 60%' },
 					'100%': { borderRadius: '60% 40% 30% 70%/60% 30% 70% 40%' },
 				},
+				"gradient-pulse": {
+					'0%, 100%': { backgroundSize: '100% 100%' },
+					'50%': { backgroundSize: '200% 200%' },
+				},
+				"shimmer": {
+					'0%': { backgroundPosition: '-1000px 0' },
+					'100%': { backgroundPosition: '1000px 0' }
+				},
 			},
 			animation: {
 				"accordion-down": "accordion-down 0.2s ease-out",
@@ -123,6 +135,7 @@ export default {
 				"pulse-soft": "pulse-soft 3s ease-in-out infinite",
 				"float": "float 6s ease-in-out infinite",
 				"spin-slow": "spin-slow 10s linear infinite",
+				"glow": "glow 2.5s ease-in-out infinite",
 				"slide-in-right": "slide-in-right 0.5s ease-out",
 				"slide-in-left": "slide-in-left 0.5s ease-out",
 				"slide-in-up": "slide-in-up 0.5s ease-out",
@@ -131,6 +144,8 @@ export default {
 				"bounce-subtle": "bounce-subtle 2s ease-in-out infinite",
 				"wave": "wave 2.5s ease-in-out infinite",
 				"morph": "morph 8s ease-in-out infinite",
+				"gradient-pulse": "gradient-pulse 4s ease-in-out infinite",
+				"shimmer": "shimmer 3s linear infinite",
 			},
 			typography: {
 				DEFAULT: {
@@ -138,6 +153,15 @@ export default {
 						maxWidth: '100%',
 					},
 				},
+			},
+			backdropBlur: {
+				xs: '2px',
+			},
+			transitionProperty: {
+				'height': 'height',
+				'spacing': 'margin, padding',
+				'width': 'width',
+				'rounded': 'border-radius',
 			},
 		},
 	},

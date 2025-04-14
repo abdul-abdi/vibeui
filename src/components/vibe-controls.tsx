@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useVibe } from '@/lib/vibe-engine';
 import { Button } from '@/components/ui/button';
@@ -22,17 +23,55 @@ export function VibeControls() {
     return [0.4, 0, 0.2, 1]; // default ease-in-out
   };
 
+  // Controls container animation
+  const containerVariants = {
+    hidden: { opacity: 0, y: -20 },
+    visible: { 
+      opacity: 1, 
+      y: 0,
+      transition: {
+        duration: 0.4,
+        staggerChildren: 0.08,
+        ease: getEasing()
+      }
+    }
+  };
+
+  // Item animation for each control button
+  const itemVariants = {
+    hidden: { opacity: 0, y: -10 },
+    visible: { 
+      opacity: 1, 
+      y: 0,
+      transition: { duration: 0.3, ease: getEasing() }
+    }
+  };
+
+  // Sparkles animation
+  const sparkleVariants = {
+    hidden: { opacity: 0, scale: 0 },
+    visible: { 
+      opacity: [0, 1, 0], 
+      scale: [0, 1, 0.5],
+      transition: { duration: 1, repeat: Infinity, repeatDelay: 3 } 
+    }
+  };
+
   return (
     <motion.div 
-      className="flex items-center gap-2 p-2 bg-card/80 backdrop-blur-sm rounded-md shadow-md"
-      initial={{ opacity: 0, y: -20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4, delay: 0.3, ease: getEasing() }}
+      className="flex items-center gap-2 p-2 bg-card/80 backdrop-blur-sm rounded-md shadow-md border border-border/50"
+      initial="hidden"
+      animate="visible"
+      variants={containerVariants}
     >
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger asChild>
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            <motion.div 
+              variants={itemVariants}
+              whileHover={{ scale: 1.05 }} 
+              whileTap={{ scale: 0.95 }}
+            >
               <Button 
                 variant="outline" 
                 size="icon" 
@@ -59,6 +98,7 @@ export function VibeControls() {
         <Tooltip>
           <TooltipTrigger asChild>
             <motion.div 
+              variants={itemVariants}
               whileHover={{ scale: 1.05 }} 
               whileTap={{ scale: 0.95 }}
               className="relative"
@@ -67,7 +107,7 @@ export function VibeControls() {
                 variant="default" 
                 onClick={() => changeVibe()}
                 disabled={vibeState.isLocked}
-                className="animated-element relative overflow-hidden"
+                className="animated-element relative overflow-hidden group"
                 aria-label="Generate new vibe"
               >
                 <motion.span
@@ -76,11 +116,11 @@ export function VibeControls() {
                   whileHover={{ x: '100%' }}
                   transition={{ duration: 0.8 }}
                 />
-                New Vibe
+                <span className="relative z-10">New Vibe</span>
                 <motion.div
                   animate={{ rotate: isGenerating ? 360 : 0 }}
                   transition={{ duration: 1, ease: "linear", repeat: isGenerating ? Infinity : 0 }}
-                  className="ml-2"
+                  className="ml-2 relative z-10"
                 >
                   <RefreshCw className="h-4 w-4" />
                 </motion.div>
@@ -88,9 +128,7 @@ export function VibeControls() {
               {!vibeState.isLocked && (
                 <motion.div 
                   className="absolute top-0 right-0 -mt-1 -mr-1"
-                  initial={{ scale: 0 }}
-                  animate={{ scale: [0, 1.2, 1] }}
-                  transition={{ duration: 0.4, delay: 0.2 }}
+                  variants={sparkleVariants}
                 >
                   <Sparkles className="h-3 w-3 text-primary" />
                 </motion.div>
@@ -102,7 +140,11 @@ export function VibeControls() {
         
         <Tooltip>
           <TooltipTrigger asChild>
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            <motion.div 
+              variants={itemVariants}
+              whileHover={{ scale: 1.05 }} 
+              whileTap={{ scale: 0.95 }}
+            >
               <Button 
                 variant="outline" 
                 size="icon" 
@@ -129,7 +171,11 @@ export function VibeControls() {
         
         <Tooltip>
           <TooltipTrigger asChild>
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            <motion.div 
+              variants={itemVariants}
+              whileHover={{ scale: 1.05 }} 
+              whileTap={{ scale: 0.95 }}
+            >
               <Button 
                 variant="outline" 
                 size="icon" 
@@ -145,7 +191,9 @@ export function VibeControls() {
           <TooltipContent>Next vibe</TooltipContent>
         </Tooltip>
         
-        <AiVibeGenerator />
+        <motion.div variants={itemVariants}>
+          <AiVibeGenerator />
+        </motion.div>
       </TooltipProvider>
     </motion.div>
   );
