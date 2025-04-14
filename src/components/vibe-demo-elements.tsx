@@ -17,20 +17,22 @@ import { motion } from 'framer-motion';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 
+// Helper function to check for specific themes
+const checkVibeType = (vibeName: string, keywords: string[]): boolean => {
+  const lowerName = vibeName.toLowerCase();
+  return keywords.some(keyword => lowerName.includes(keyword));
+};
+
 export function VibeDemoElements() {
   const { vibeState } = useVibe();
   const { currentVibe } = vibeState;
   const [activeTab, setActiveTab] = useState("interactive");
   
   // Check for specific vibes to apply special styles
-  const isSoftOrganic = currentVibe.name.toLowerCase().includes("organic");
-  const isNeonOrTech = currentVibe.name.toLowerCase().includes("techno") || 
-                       currentVibe.name.toLowerCase().includes("electric") ||
-                       currentVibe.name.toLowerCase().includes("neon");
-  const isElegant = currentVibe.name.toLowerCase().includes("elegant") || 
-                   currentVibe.name.toLowerCase().includes("serif");
-  const isBrutal = currentVibe.name.toLowerCase().includes("brutal") || 
-                  currentVibe.name.toLowerCase().includes("neo");
+  const isSoftOrganic = checkVibeType(currentVibe.name, ["organic", "soft", "natural"]);
+  const isNeonOrTech = checkVibeType(currentVibe.name, ["techno", "electric", "neon", "cyber", "digital"]);
+  const isElegant = checkVibeType(currentVibe.name, ["elegant", "serif", "classic"]);
+  const isBrutal = checkVibeType(currentVibe.name, ["brutal", "neo", "bold"]);
   
   // Dynamic button classes based on vibe
   const buttonClasses = {
@@ -54,7 +56,7 @@ export function VibeDemoElements() {
   // Dynamic card classes based on vibe
   const cardClass = isSoftOrganic ? 'soft-organic-card' : 
                     isNeonOrTech ? 'neon-card' : 
-                    isBrutal ? 'brutal-card' : 
+                    isBrutal ? 'brutalist-card' : 
                     isElegant ? 'elegant-card' : '';
 
   // Helper for consistent animation across all elements
@@ -86,7 +88,7 @@ export function VibeDemoElements() {
   return (
     <div className="space-y-6">
       <Tabs defaultValue="interactive" value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <div className="flex justify-between items-center mb-6">
+        <div className="flex justify-between items-center mb-6 flex-wrap gap-4">
           <h3 className="text-xl font-semibold">UI Components</h3>
           <TabsList className="grid grid-cols-3 w-auto">
             <TabsTrigger value="interactive">Interactive</TabsTrigger>
@@ -153,7 +155,7 @@ export function VibeDemoElements() {
                 <div>
                   <h4 className="text-sm font-medium mb-3">Form Controls</h4>
                   <div className="flex flex-wrap gap-3 items-center">
-                    <motion.div custom={5} initial="hidden" animate="visible" variants={itemVariants} className="max-w-[250px]">
+                    <motion.div custom={5} initial="hidden" animate="visible" variants={itemVariants} className="w-full sm:max-w-[250px]">
                       <Input placeholder="Standard input" className={isSoftOrganic ? 'soft-organic-input' : isNeonOrTech ? 'neon-input' : ''} />
                     </motion.div>
                     
@@ -168,7 +170,7 @@ export function VibeDemoElements() {
                 
                 <div className={`p-4 rounded-lg ${isSoftOrganic ? 'bg-primary/5' : 'bg-secondary/20'} mt-4`}>
                   <div className="flex items-center gap-2 text-sm">
-                    <Check className="h-4 w-4 text-primary" />
+                    <Check className="h-4 w-4 text-primary flex-shrink-0" />
                     <span>All interactive elements adapt to the current vibe's color scheme and animation style</span>
                   </div>
                 </div>
@@ -179,7 +181,7 @@ export function VibeDemoElements() {
           <TabsContent value="cards" className="space-y-4">
             <div className="grid gap-4 grid-cols-1 md:grid-cols-2">
               <motion.div custom={0} initial="hidden" animate="visible" variants={itemVariants}>
-                <Card className={`shadow-sm hover:shadow-md transition-shadow ${cardClass}`}>
+                <Card className={`shadow-sm hover:shadow-md transition-shadow h-full ${cardClass}`}>
                   <CardHeader>
                     <CardTitle>Card Title</CardTitle>
                     <CardDescription>Card description with details</CardDescription>
@@ -199,7 +201,7 @@ export function VibeDemoElements() {
               </motion.div>
 
               <motion.div custom={1} initial="hidden" animate="visible" variants={itemVariants}>
-                <Card className={`shadow-sm hover:shadow-md transition-shadow ${cardClass}`}>
+                <Card className={`shadow-sm hover:shadow-md transition-shadow h-full ${cardClass}`}>
                   <CardHeader>
                     <div className="flex justify-between items-start">
                       <CardTitle>Interactive Card</CardTitle>
@@ -246,7 +248,7 @@ export function VibeDemoElements() {
                   </div>
                 </CardHeader>
                 <CardContent className="pt-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <h4 className="text-sm font-medium">Color Transitions</h4>
                       <p className="text-sm text-muted-foreground">Colors transition smoothly between themes using HSL values</p>

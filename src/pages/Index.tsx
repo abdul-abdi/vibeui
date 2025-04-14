@@ -9,11 +9,18 @@ import { Toaster } from '@/components/ui/toaster';
 import { motion, useMotionTemplate, useMotionValue, useTransform } from 'framer-motion';
 import { ArrowDown, Sparkles, ChevronLeft } from 'lucide-react';
 
+// Function to check if we're in a specific vibe theme
+const checkVibeType = (vibeName: string, keywords: string[]): boolean => {
+  const lowerName = vibeName.toLowerCase();
+  return keywords.some(keyword => lowerName.includes(keyword));
+};
+
 const VibeContent = () => {
   const { vibeState, changeVibe } = useVibe();
   const { currentVibe } = vibeState;
   const isInitialLoad = useRef(true);
 
+  // Load a vibe on initial render if not locked
   useEffect(() => {
     if (!vibeState.isLocked) {
       if (isInitialLoad.current) {
@@ -23,8 +30,9 @@ const VibeContent = () => {
         }, 300);
       }
     }
-  }, []);
+  }, [changeVibe, vibeState.isLocked]);
 
+  // Helper function for consistent easing across animations
   const getEasing = () => {
     const easing = currentVibe.animation.easing;
     if (Array.isArray(easing)) {
@@ -33,6 +41,7 @@ const VibeContent = () => {
     return [0.4, 0, 0.2, 1];
   };
 
+  // Interactive background effect
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
   
@@ -74,14 +83,11 @@ const VibeContent = () => {
   );
 
   // Determine vibe for specific styling
-  const isSoftOrganic = currentVibe.name.toLowerCase().includes("organic");
-  const isDarkTech = currentVibe.name.toLowerCase().includes("techno");
-  const isBrutalist = currentVibe.name.toLowerCase().includes("brutal");
-  const isPlayful = currentVibe.name.toLowerCase().includes("playful") || 
-                  currentVibe.name.toLowerCase().includes("vibrant");
-  const isElectric = currentVibe.name.toLowerCase().includes("electric") || 
-                    currentVibe.name.toLowerCase().includes("pop") ||
-                    currentVibe.name.toLowerCase().includes("neon");
+  const isSoftOrganic = checkVibeType(currentVibe.name, ["organic", "soft", "natural"]);
+  const isDarkTech = checkVibeType(currentVibe.name, ["techno", "cyber", "digital", "tech"]);
+  const isBrutalist = checkVibeType(currentVibe.name, ["brutal", "neo", "bold"]);
+  const isPlayful = checkVibeType(currentVibe.name, ["playful", "vibrant", "fun", "creative"]);
+  const isElectric = checkVibeType(currentVibe.name, ["electric", "pop", "neon", "bright"]);
   
   // Dynamic container classes based on vibe
   const containerClass = isSoftOrganic ? 'soft-organic-container' : 
@@ -92,17 +98,17 @@ const VibeContent = () => {
 
   return (
     <div 
-      className={`min-h-screen bg-background transition-colors duration-500 relative ${containerClass}`}
+      className={`min-h-screen bg-background transition-colors duration-500 relative overflow-guard ${containerClass}`}
       onMouseMove={handleMouseMove}
     >
       {/* Background effects */}
       <motion.div 
-        className="fixed inset-0 pointer-events-none z-0" 
+        className="fixed inset-0 pointer-events-none z-0 hardware-accelerated" 
         style={{ background: backgroundGradient }}
       />
       
       <motion.div
-        className="fixed inset-0 pointer-events-none z-0 opacity-30"
+        className="fixed inset-0 pointer-events-none z-0 opacity-30 hardware-accelerated"
         animate={{ 
           background: [
             `linear-gradient(to right, hsl(var(--primary) / 0.05), hsl(var(--secondary) / 0.05))`,
@@ -121,7 +127,7 @@ const VibeContent = () => {
       {/* Special background effects for specific themes */}
       {isSoftOrganic && (
         <motion.div 
-          className="fixed bottom-0 left-0 right-0 h-64 pointer-events-none z-0 opacity-20"
+          className="fixed bottom-0 left-0 right-0 h-64 pointer-events-none z-0 opacity-20 hardware-accelerated"
           style={{
             background: 'linear-gradient(to top, rgba(16, 185, 129, 0.1) 0%, transparent 100%)',
           }}
@@ -130,7 +136,7 @@ const VibeContent = () => {
       
       {isDarkTech && (
         <motion.div 
-          className="fixed inset-0 pointer-events-none z-0"
+          className="fixed inset-0 pointer-events-none z-0 hardware-accelerated"
           style={{
             background: 'radial-gradient(circle at 50% 50%, rgba(139, 92, 246, 0.15), transparent 70%)',
           }}
@@ -148,13 +154,13 @@ const VibeContent = () => {
       {isElectric && (
         <>
           <motion.div 
-            className="fixed inset-0 pointer-events-none z-0 opacity-30"
+            className="fixed inset-0 pointer-events-none z-0 opacity-30 hardware-accelerated"
             style={{
               background: 'linear-gradient(45deg, rgba(var(--primary-rgb), 0.1) 0%, rgba(var(--accent-rgb), 0.1) 100%)',
             }}
           />
           {/* Animated grid lines */}
-          <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+          <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden hardware-accelerated">
             <div className="absolute inset-0 opacity-10" 
                 style={{
                   backgroundImage: 'linear-gradient(var(--primary) 1px, transparent 1px), linear-gradient(90deg, var(--primary) 1px, transparent 1px)',
@@ -208,7 +214,7 @@ const VibeContent = () => {
                 </p>
               </div>
             </motion.div>
-            <div className="vibe-control-panel">
+            <div className="vibe-control-panel w-full sm:w-auto">
               <VibeControls />
             </div>
           </div>
@@ -327,211 +333,6 @@ const VibeContent = () => {
       </motion.footer>
       
       <Toaster />
-      
-      <style>
-        {`
-          :root {
-            transition: color 0.5s ease, background-color 0.5s ease;
-          }
-          
-          .transitioning-vibe * {
-            transition: background-color 0.6s ease, 
-                        border-color 0.6s ease, 
-                        color 0.6s ease,
-                        box-shadow 0.6s ease,
-                        transform 0.6s ease;
-          }
-          
-          /* Enhanced scrollbar */
-          ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-          }
-          
-          ::-webkit-scrollbar-thumb {
-            background: hsl(var(--primary) / 0.3);
-            border-radius: 4px;
-          }
-          
-          ::-webkit-scrollbar-thumb:hover {
-            background: hsl(var(--primary) / 0.5);
-          }
-          
-          ::-webkit-scrollbar-track {
-            background: hsl(var(--muted) / 0.3);
-          }
-          
-          /* Soft Organic Theme-specific styles */
-          .soft-organic-theme .soft-organic-card {
-            border-radius: 24px;
-            border-color: rgba(16, 185, 129, 0.2);
-            box-shadow: 0 4px 20px rgba(16, 185, 129, 0.1);
-          }
-          
-          .soft-organic-theme .soft-organic-primary-button {
-            border-radius: 24px;
-            background-color: hsl(160, 84%, 39%);
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
-          }
-          
-          .soft-organic-theme .soft-organic-secondary-button {
-            border-radius: 24px;
-            background-color: rgba(16, 185, 129, 0.1);
-            color: hsl(160, 84%, 39%);
-          }
-          
-          .soft-organic-theme .soft-organic-outline-button {
-            border-radius: 24px;
-            border-color: rgba(16, 185, 129, 0.3);
-            color: hsl(160, 84%, 39%);
-          }
-          
-          .soft-organic-theme .soft-organic-input {
-            border-radius: 16px;
-            border-color: rgba(16, 185, 129, 0.2);
-          }
-          
-          .soft-organic-theme .soft-organic-badge {
-            background-color: rgba(16, 185, 129, 0.1);
-            color: hsl(160, 84%, 39%);
-            border-radius: 12px;
-          }
-          
-          /* Dark Techno Theme-specific styles */
-          .dark-techno-theme .dark-tech-card {
-            background-color: rgba(30, 30, 35, 0.7);
-            border-color: rgba(139, 92, 246, 0.3);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
-          }
-          
-          .dark-techno-theme .neon-glow-button {
-            border: 1px solid rgba(var(--primary-rgb), 0.7);
-            box-shadow: 0 0 10px rgba(var(--primary-rgb), 0.5);
-            text-shadow: 0 0 5px rgba(var(--primary-rgb), 0.5);
-          }
-          
-          .dark-techno-theme .neon-outline-button {
-            background-color: transparent;
-            border: 1px solid rgba(var(--primary-rgb), 0.7);
-            color: hsl(var(--primary));
-            text-shadow: 0 0 5px rgba(var(--primary-rgb), 0.5);
-          }
-          
-          .dark-techno-theme .neon-input {
-            background-color: rgba(30, 30, 35, 0.5);
-            border-color: rgba(var(--primary-rgb), 0.3);
-          }
-          
-          .dark-techno-theme .neon-badge {
-            background-color: rgba(var(--primary-rgb), 0.2);
-            text-shadow: 0 0 5px rgba(var(--primary-rgb), 0.5);
-          }
-          
-          /* Neo Brutalism Theme-specific styles */
-          .neo-brutalism-theme .brutalist-card {
-            background-color: #ffffff;
-            border: 2px solid #000000;
-            box-shadow: 4px 4px 0 #000000;
-            border-radius: 0;
-          }
-          
-          .neo-brutalism-theme .brutal-button {
-            background-color: hsl(var(--primary));
-            color: hsl(var(--primary-foreground));
-            border: 2px solid #000000;
-            box-shadow: 3px 3px 0 #000000;
-            border-radius: 0;
-            transition: transform 0.1s ease, box-shadow 0.1s ease;
-          }
-          
-          .neo-brutalism-theme .brutal-button:hover {
-            transform: translate(-1px, -1px);
-            box-shadow: 4px 4px 0 #000000;
-          }
-          
-          .neo-brutalism-theme .brutal-button:active {
-            transform: translate(2px, 2px);
-            box-shadow: 1px 1px 0 #000000;
-          }
-          
-          /* Electric Pop Theme-specific styles */
-          .electric-pop-theme .neon-card {
-            background-color: rgba(10, 10, 20, 0.8);
-            border-color: rgba(var(--primary-rgb), 0.5);
-            box-shadow: 0 0 20px rgba(var(--primary-rgb), 0.3);
-          }
-          
-          .electric-pop-theme .neon-glow-button {
-            border: 1px solid rgba(var(--primary-rgb), 0.7);
-            box-shadow: 0 0 10px rgba(var(--primary-rgb), 0.5);
-            text-shadow: 0 0 5px rgba(var(--primary-rgb), 0.5);
-            background: linear-gradient(45deg, hsl(var(--primary)), hsl(var(--accent)));
-            animation: neon-pulse 2s infinite;
-          }
-          
-          /* Text styles */
-          .vibe-attribute {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            gap: 0.5rem;
-          }
-          
-          .vibe-attribute-label {
-            font-size: 0.75rem;
-            color: hsl(var(--muted-foreground));
-          }
-          
-          .vibe-attribute-value {
-            font-size: 0.875rem;
-            font-weight: 500;
-          }
-          
-          /* For demo color pills */
-          .vibe-color-pill {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 2rem;
-            padding: 0 0.75rem;
-            font-size: 0.75rem;
-            font-weight: 500;
-            border-radius: 9999px;
-          }
-          
-          /* Animated elements utility class */
-          .animated-element {
-            transition: all 0.3s ease;
-          }
-          
-          /* Typography specifics for different themes */
-          .soft-organic-theme h1, .soft-organic-theme h2, .soft-organic-theme h3 {
-            color: hsl(160, 84%, 20%);
-          }
-          
-          .dark-techno-theme h1, .dark-techno-theme h2, .dark-techno-theme h3 {
-            text-shadow: 0 0 8px rgba(var(--primary-rgb), 0.5);
-          }
-          
-          .electric-pop-theme h1, .electric-pop-theme h2, .electric-pop-theme h3 {
-            background: linear-gradient(45deg, hsl(var(--primary)), hsl(var(--accent)));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: color-cycle 10s infinite;
-          }
-          
-          /* Typewriter effect for headings */
-          .typewriter-effect {
-            display: inline-block;
-            overflow: hidden;
-            border-right: 2px solid;
-            white-space: nowrap;
-            margin: 0;
-            animation: typewriter 3.5s steps(40, end), blink 1s step-end infinite;
-          }
-        `}
-      </style>
     </div>
   );
 };

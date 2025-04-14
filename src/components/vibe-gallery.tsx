@@ -93,7 +93,7 @@ export function VibeGallery() {
         animate={isInView ? "visible" : "hidden"}
         variants={cardVariants}
         whileHover={{ y: -8, transition: { duration: 0.2 } }}
-        className="relative"
+        className="relative h-full"
       >
         <div 
           className="relative z-10 h-full"
@@ -163,10 +163,10 @@ export function VibeGallery() {
         <Carousel className="w-full">
           <CarouselContent>
             {aiVibes.map((vibe, index) => (
-              <CarouselItem key={vibe.id} className="md:basis-1/2 lg:basis-1/3 xl:basis-1/4 p-1">
+              <CarouselItem key={vibe.id} className="md:basis-1/2 lg:basis-1/3 xl:basis-1/4 p-1 h-full">
                 <CardWithShine index={index}>
                   <Card 
-                    className={`h-full transition-all group hover:shadow-lg border border-border/50 ${
+                    className={`h-full equal-height-card transition-all group hover:shadow-lg border border-border/50 ${
                       currentVibeId === vibe.id ? 'ring-2 ring-primary shadow-lg' : ''
                     }`}
                   >
@@ -188,7 +188,7 @@ export function VibeGallery() {
                       </CardTitle>
                       <CardDescription className="line-clamp-2">{vibe.description}</CardDescription>
                     </CardHeader>
-                    <CardContent>
+                    <CardContent className="equal-height-card-content">
                       <motion.div 
                         className="flex flex-wrap gap-2 mb-4"
                         initial={{ opacity: 0 }}
