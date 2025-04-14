@@ -4,7 +4,7 @@ import { useVibe } from '@/lib/vibe-engine';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { motion } from 'framer-motion';
-import { Palette, Type, Animation, Layout, Layers, Circle } from 'lucide-react';
+import { Palette, Type, Layers, Circle } from 'lucide-react';
 
 export function VibeInfo() {
   const { vibeState } = useVibe();
@@ -65,7 +65,7 @@ export function VibeInfo() {
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.2 }}
             >
-              <Layout className="h-5 w-5 text-primary mb-1" />
+              <Circle className="h-5 w-5 text-primary mb-1" />
               <h4 className="text-sm font-semibold">Layout</h4>
               <Badge variant="outline" className="capitalize">
                 {currentVibe.layout}
@@ -91,7 +91,13 @@ export function VibeInfo() {
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.4 }}
             >
-              <Animation className="h-5 w-5 text-primary mb-1" />
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="text-primary mb-1">
+                <path d="M5 16V9h14V2"></path>
+                <path d="M5 22V21"></path>
+                <path d="M19 22v-6"></path>
+                <path d="M5 9a3 3 0 0 0 3-3 3 3 0 0 0-3-3"></path>
+                <path d="M19 9a3 3 0 0 1-3-3 3 3 0 0 1 3-3"></path>
+              </svg>
               <h4 className="text-sm font-semibold">Animation</h4>
               <p className="text-xs text-center text-muted-foreground">
                 {currentVibe.animation.speed}x speed

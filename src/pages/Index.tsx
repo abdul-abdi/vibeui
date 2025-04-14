@@ -6,7 +6,7 @@ import { VibeInfo } from '@/components/vibe-info';
 import { VibeDemoElements } from '@/components/vibe-demo-elements';
 import { VibeGallery } from '@/components/vibe-gallery';
 import { Toaster } from '@/components/ui/toaster';
-import { motion } from 'framer-motion';
+import { motion, Variants } from 'framer-motion';
 import { ArrowDown } from 'lucide-react';
 
 const VibeContent = () => {
@@ -21,26 +21,37 @@ const VibeContent = () => {
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Dynamic layout variants based on the current vibe
-  const layoutVariants = {
+  const layoutVariants: Record<string, {
+    containerClass: string;
+    variants: Variants;
+  }> = {
     standard: { 
-      main: "grid gap-8 grid-cols-1 lg:grid-cols-2",
-      enter: { opacity: 0, y: 20 },
-      animate: { opacity: 1, y: 0, transition: { duration: 0.5 * (1/currentVibe.animation.speed) } },
+      containerClass: "grid gap-8 grid-cols-1 lg:grid-cols-2",
+      variants: {
+        enter: { opacity: 0, y: 20 },
+        animate: { opacity: 1, y: 0, transition: { duration: 0.5 * (1/currentVibe.animation.speed) } },
+      }
     },
     sidebar: {
-      main: "grid gap-8 grid-cols-1 lg:grid-cols-[280px_1fr]",
-      enter: { opacity: 0, x: -50 },
-      animate: { opacity: 1, x: 0, transition: { duration: 0.6 * (1/currentVibe.animation.speed) } },
+      containerClass: "grid gap-8 grid-cols-1 lg:grid-cols-[280px_1fr]",
+      variants: {
+        enter: { opacity: 0, x: -50 },
+        animate: { opacity: 1, x: 0, transition: { duration: 0.6 * (1/currentVibe.animation.speed) } },
+      }
     },
     asymmetric: {
-      main: "grid gap-8 grid-cols-1 lg:grid-cols-[2fr_1fr]",
-      enter: { opacity: 0, scale: 0.95 },
-      animate: { opacity: 1, scale: 1, transition: { duration: 0.5 * (1/currentVibe.animation.speed) } },
+      containerClass: "grid gap-8 grid-cols-1 lg:grid-cols-[2fr_1fr]",
+      variants: {
+        enter: { opacity: 0, scale: 0.95 },
+        animate: { opacity: 1, scale: 1, transition: { duration: 0.5 * (1/currentVibe.animation.speed) } },
+      }
     },
     centered: {
-      main: "flex flex-col items-center",
-      enter: { opacity: 0 },
-      animate: { opacity: 1, transition: { duration: 0.4 * (1/currentVibe.animation.speed) } },
+      containerClass: "flex flex-col items-center",
+      variants: {
+        enter: { opacity: 0 },
+        animate: { opacity: 1, transition: { duration: 0.4 * (1/currentVibe.animation.speed) } },
+      }
     },
   };
 
@@ -99,7 +110,7 @@ const VibeContent = () => {
         }}
       >
         <motion.div 
-          className={currentLayout.main}
+          className={currentLayout.containerClass}
           variants={{
             enter: { opacity: 0 },
             animate: { opacity: 1 }
@@ -107,7 +118,7 @@ const VibeContent = () => {
         >
           <motion.section 
             className={`space-y-6 ${currentVibe.layout === 'centered' ? 'max-w-2xl mx-auto text-center' : ''}`}
-            variants={currentLayout}
+            variants={currentLayout.variants}
           >
             <motion.h2 
               className="text-3xl font-bold tracking-tight"
@@ -164,7 +175,7 @@ const VibeContent = () => {
           
           <motion.section 
             className={`space-y-6 ${currentVibe.layout === 'centered' ? 'max-w-2xl mx-auto' : ''}`}
-            variants={currentLayout}
+            variants={currentLayout.variants}
           >
             <VibeDemoElements />
           </motion.section>
