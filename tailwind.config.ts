@@ -53,7 +53,7 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
-				// Soft organic theme colors
+				// Theme specific color palettes
 				emerald: {
 					50: '#f0fdf5',
 					100: '#dcfce7',
@@ -78,12 +78,37 @@ export default {
 					800: '#115e59',
 					900: '#134e4a',
 				},
+				cyan: {
+					50: '#ecfeff',
+					100: '#cffafe',
+					200: '#a5f3fc',
+					300: '#67e8f9',
+					400: '#22d3ee',
+					500: '#06b6d4',
+					600: '#0891b2',
+					700: '#0e7490',
+					800: '#155e75',
+					900: '#164e63',
+				},
+				violet: {
+					50: '#f5f3ff',
+					100: '#ede9fe',
+					200: '#ddd6fe',
+					300: '#c4b5fd',
+					400: '#a78bfa',
+					500: '#8b5cf6',
+					600: '#7c3aed',
+					700: '#6d28d9',
+					800: '#5b21b6',
+					900: '#4c1d95',
+				},
 			},
 			borderRadius: {
 				lg: 'var(--radius-lg)',
 				md: 'var(--radius-md)',
 				sm: 'var(--radius-sm)'
 			},
+			// Animation keyframes for all themes
 			keyframes: {
 				"accordion-down": {
 					from: { height: '0' },
@@ -198,6 +223,18 @@ export default {
 				"blur-out": {
 					'0%': { filter: 'blur(0)', opacity: '1' },
 					'100%': { filter: 'blur(10px)', opacity: '0' }
+				},
+				"scroll-x-short": {
+					'0%': { transform: 'translateX(0)' },
+					'100%': { transform: 'translateX(-100px)' }
+				},
+				"typewriter": {
+					'0%': { width: '0%' },
+					'100%': { width: '100%' }
+				},
+				"blink": {
+					'0%, 100%': { borderRightColor: 'transparent' },
+					'50%': { borderRightColor: 'currentColor' }
 				}
 			},
 			animation: {
@@ -224,7 +261,9 @@ export default {
 				"neon-pulse": "neon-pulse 2s ease-in-out infinite",
 				"border-glow": "border-glow 2s ease-in-out infinite",
 				"blur-in": "blur-in 0.5s ease-out forwards",
-				"blur-out": "blur-out 0.5s ease-out forwards"
+				"blur-out": "blur-out 0.5s ease-out forwards",
+				"typewriter": "typewriter 3s steps(40) forwards",
+				"blink": "blink 1s step-end infinite"
 			},
 			typography: {
 				DEFAULT: {

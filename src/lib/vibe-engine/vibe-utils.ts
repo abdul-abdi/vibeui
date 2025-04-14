@@ -72,16 +72,8 @@ export function applyVibe(vibe: VibeSettings): void {
     root.style.setProperty('--primary-rgb', hslToRgb(primaryHSL[0], primaryHSL[1], primaryHSL[2]));
   }
   
-  // Apply special styles for the "Soft Organic" vibe
-  if (vibe.name.toLowerCase().includes("organic")) {
-    document.body.classList.add('soft-organic-theme');
-    // Set specific colors for soft organic theme
-    if (!vibe.colors.primary.includes('160')) {
-      root.style.setProperty('--primary', '160 84% 39%');
-    }
-  } else {
-    document.body.classList.remove('soft-organic-theme');
-  }
+  // Apply special vibe-specific styles
+  applySpecialVibeStyles(vibe, root);
   
   // Process secondary and accent colors for RGB values
   const secondaryHSL = vibe.colors.secondary.replace(/hsl\(|\)/g, '').split(' ');
@@ -104,6 +96,99 @@ export function applyVibe(vibe: VibeSettings): void {
   setTimeout(() => {
     root.classList.remove('transitioning-vibe');
   }, 800); // match this to the CSS transition duration
+}
+
+// Apply special styles for specific named vibes
+function applySpecialVibeStyles(vibe: VibeSettings, root: HTMLElement): void {
+  // Reset all special theme classes first
+  document.body.classList.remove(
+    'soft-organic-theme',
+    'neo-brutalism-theme',
+    'dark-techno-theme',
+    'elegant-serif-theme',
+    'electric-pop-theme',
+    'vibrant-playful-theme',
+    'modern-minimal-theme'
+  );
+  
+  // Apply theme-specific classes and variables
+  const vibeName = vibe.name.toLowerCase();
+  
+  if (vibeName.includes("organic")) {
+    document.body.classList.add('soft-organic-theme');
+    // Set specific colors for soft organic theme
+    if (!vibe.colors.primary.includes('160')) {
+      root.style.setProperty('--primary', '160 84% 39%');
+    }
+    
+    // Add biomorphic shape variables
+    root.style.setProperty('--organic-blob-1', 'ellipse(30% 40% at 50% 60%)');
+    root.style.setProperty('--organic-blob-2', 'circle(20% at 65% 35%)');
+  } 
+  else if (vibeName.includes("brutal") || vibeName.includes("neo-brutal")) {
+    document.body.classList.add('neo-brutalism-theme');
+    root.style.setProperty('--brutal-offset-x', '6px');
+    root.style.setProperty('--brutal-offset-y', '6px');
+    root.style.setProperty('--brutal-color', '#000');
+  }
+  else if (vibeName.includes("techno") || vibeName.includes("dark") && vibeName.includes("tech")) {
+    document.body.classList.add('dark-techno-theme');
+    // Add neon glow variables
+    root.style.setProperty('--neon-glow', `0 0 10px rgba(${root.style.getPropertyValue('--primary-rgb')}, 0.7), 0 0 20px rgba(${root.style.getPropertyValue('--primary-rgb')}, 0.5)`);
+    root.style.setProperty('--neon-glow-strong', `0 0 15px rgba(${root.style.getPropertyValue('--primary-rgb')}, 0.8), 0 0 30px rgba(${root.style.getPropertyValue('--primary-rgb')}, 0.6), 0 0 45px rgba(${root.style.getPropertyValue('--primary-rgb')}, 0.4)`);
+  }
+  else if (vibeName.includes("electric") || vibeName.includes("pop") || vibeName.includes("neon")) {
+    document.body.classList.add('electric-pop-theme');
+    // Add electric glow variables
+    root.style.setProperty('--electric-glow', `0 0 10px rgba(${root.style.getPropertyValue('--primary-rgb')}, 0.7), 0 0 20px rgba(${root.style.getPropertyValue('--primary-rgb')}, 0.5)`);
+    root.style.setProperty('--electric-gradient', 'linear-gradient(45deg, var(--primary) 0%, var(--accent) 100%)');
+  }
+  else if (vibeName.includes("elegant") || vibeName.includes("serif")) {
+    document.body.classList.add('elegant-serif-theme');
+    // Serif theme variables
+    root.style.setProperty('--serif-decoration', '1px solid rgba(0,0,0,0.1)');
+    root.style.setProperty('--serif-spacing', '0.05em');
+  }
+  else if (vibeName.includes("playful") || vibeName.includes("vibrant")) {
+    document.body.classList.add('vibrant-playful-theme');
+    // Playful theme variables
+    root.style.setProperty('--playful-shadow', '0 8px 20px -5px rgba(0, 0, 0, 0.15)');
+  }
+  else if (vibeName.includes("minimal") || vibeName.includes("modern")) {
+    document.body.classList.add('modern-minimal-theme');
+    // Minimal theme variables
+    root.style.setProperty('--minimal-border', '1px solid rgba(0,0,0,0.05)');
+  }
+
+  // Apply themed animations
+  applyThemedAnimations(vibe, root);
+}
+
+// Apply theme-specific animation settings
+function applyThemedAnimations(vibe: VibeSettings, root: HTMLElement): void {
+  const vibeName = vibe.name.toLowerCase();
+  
+  if (vibeName.includes("organic")) {
+    root.style.setProperty('--themed-animation', 'float 6s ease-in-out infinite');
+  }
+  else if (vibeName.includes("brutal") || vibeName.includes("neo-brutal")) {
+    root.style.setProperty('--themed-animation', 'none'); // Brutalism often avoids animations
+  }
+  else if (vibeName.includes("techno") || (vibeName.includes("dark") && vibeName.includes("tech"))) {
+    root.style.setProperty('--themed-animation', 'pulse 2s ease-in-out infinite');
+  }
+  else if (vibeName.includes("electric") || vibeName.includes("pop") || vibeName.includes("neon")) {
+    root.style.setProperty('--themed-animation', 'neon-pulse 1.5s ease-in-out infinite');
+  }
+  else if (vibeName.includes("elegant") || vibeName.includes("serif")) {
+    root.style.setProperty('--themed-animation', 'fade-in 0.7s ease-out');
+  }
+  else if (vibeName.includes("playful") || vibeName.includes("vibrant")) {
+    root.style.setProperty('--themed-animation', 'bounce-subtle 3s infinite');
+  }
+  else {
+    root.style.setProperty('--themed-animation', 'fade-in 0.5s ease-out');
+  }
 }
 
 // Convert HSL values to RGB for use in rgba() functions
@@ -209,4 +294,32 @@ export function getContrastColor(hsl: string): string {
   
   const l = parseFloat(parts[2].replace('%', ''));
   return l > 50 ? '0 0% 0%' : '0 0% 100%';
+}
+
+// Generate a themed button style based on current vibe
+export function getThemedButtonStyle(vibe: VibeSettings, variant: string): string {
+  const vibeName = vibe.name.toLowerCase();
+  let style = '';
+  
+  if (vibeName.includes("organic") && variant === 'primary') {
+    style = `
+      background-color: hsl(var(--primary));
+      border-radius: 24px;
+      box-shadow: 0 4px 12px rgba(0, 128, 96, 0.2);
+    `;
+  }
+  
+  return style;
+}
+
+// Generate a color palette array from the current vibe
+export function generateColorPalette(vibe: VibeSettings): string[] {
+  const palette: string[] = [
+    vibe.colors.primary,
+    vibe.colors.secondary,
+    vibe.colors.accent,
+    vibe.colors.muted
+  ];
+  
+  return palette;
 }
