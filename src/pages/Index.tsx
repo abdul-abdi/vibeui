@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef } from 'react';
 import { VibeProvider, useVibe } from '@/lib/vibe-engine';
 import { VibeControls } from '@/components/vibe-controls';
@@ -14,39 +13,31 @@ const VibeContent = () => {
   const { currentVibe } = vibeState;
   const prevVibeRef = useRef(currentVibe);
   
-  // Track if this is the initial load
   const isInitialLoad = useRef(true);
 
-  // Generate a new vibe on first load or page refresh
   useEffect(() => {
     if (!vibeState.isLocked) {
       if (isInitialLoad.current) {
-        // Add a small delay for better initial animation
         setTimeout(() => {
           changeVibe();
           isInitialLoad.current = false;
         }, 300);
       }
     }
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
-  
-  // Track vibe changes for animations
+  }, []);
+
   useEffect(() => {
     prevVibeRef.current = currentVibe;
   }, [currentVibe]);
-  
-  // Helper function to safely get easing for Framer Motion
+
   const getEasing = () => {
     const easing = currentVibe.animation.easing;
-    // If easing is already an array, use it directly
     if (Array.isArray(easing)) {
       return easing;
     }
-    // Otherwise, use a default easing
-    return [0.4, 0, 0.2, 1]; // default ease-in-out
+    return [0.4, 0, 0.2, 1];
   };
 
-  // Motion values for dynamic background effects
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
   
@@ -63,7 +54,6 @@ const VibeContent = () => {
     transparent 40%
   )`;
 
-  // Dynamic layout variants based on the current vibe
   const layoutVariants: Record<string, {
     containerClass: string;
     variants: Variants;
@@ -158,7 +148,6 @@ const VibeContent = () => {
 
   const currentLayout = layoutVariants[currentVibe.layout] || layoutVariants.standard;
 
-  // Scroll animation for centered layout
   const handleScrollDown = () => {
     const gallerySection = document.getElementById('gallery-section');
     if (gallerySection) {
@@ -166,7 +155,6 @@ const VibeContent = () => {
     }
   };
 
-  // Enhanced animation variants for elements
   const fadeInVariants: Variants = {
     hidden: { opacity: 0, y: 20 },
     visible: (i = 0) => ({ 
@@ -226,7 +214,6 @@ const VibeContent = () => {
     }
   };
 
-  // Track scroll position for parallax effects
   const [scrollY, setScrollY] = React.useState(0);
   
   useEffect(() => {
@@ -238,7 +225,6 @@ const VibeContent = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Create parallax transform values
   const headerParallax = useTransform(
     useMotionValue(scrollY), 
     [0, 300], 
@@ -256,7 +242,6 @@ const VibeContent = () => {
       className="min-h-screen bg-background text-foreground transition-colors duration-500 relative overflow-hidden"
       onMouseMove={handleMouseMove}
     >
-      {/* Dynamic background elements */}
       <motion.div 
         className="fixed inset-0 pointer-events-none z-0" 
         style={{ background: backgroundGradient }}
@@ -468,51 +453,51 @@ const VibeContent = () => {
       
       <Toaster />
       
-      {/* Add a global style block for smooth transitions between vibes */}
-      <style jsx global>{`
-        :root {
-          transition: color 0.5s ease, background-color 0.5s ease;
-        }
-        
-        .transitioning-vibe * {
-          transition: background-color 0.6s ease, 
-                      border-color 0.6s ease, 
-                      color 0.6s ease,
-                      box-shadow 0.6s ease,
-                      transform 0.6s ease;
-        }
-        
-        .layout-standard,
-        .layout-asymmetric,
-        .layout-centered,
-        .layout-sidebar {
-          transition: all 0.5s ease;
-        }
-        
-        /* Enhanced scrollbar */
-        ::-webkit-scrollbar {
-          width: 8px;
-          height: 8px;
-        }
-        
-        ::-webkit-scrollbar-thumb {
-          background: hsl(var(--primary) / 0.3);
-          border-radius: 4px;
-        }
-        
-        ::-webkit-scrollbar-thumb:hover {
-          background: hsl(var(--primary) / 0.5);
-        }
-        
-        ::-webkit-scrollbar-track {
-          background: hsl(var(--muted) / 0.3);
-        }
-      `}</style>
+      <style>
+        {`
+          :root {
+            transition: color 0.5s ease, background-color 0.5s ease;
+          }
+          
+          .transitioning-vibe * {
+            transition: background-color 0.6s ease, 
+                        border-color 0.6s ease, 
+                        color 0.6s ease,
+                        box-shadow 0.6s ease,
+                        transform 0.6s ease;
+          }
+          
+          .layout-standard,
+          .layout-asymmetric,
+          .layout-centered,
+          .layout-sidebar {
+            transition: all 0.5s ease;
+          }
+          
+          /* Enhanced scrollbar */
+          ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+          }
+          
+          ::-webkit-scrollbar-thumb {
+            background: hsl(var(--primary) / 0.3);
+            border-radius: 4px;
+          }
+          
+          ::-webkit-scrollbar-thumb:hover {
+            background: hsl(var(--primary) / 0.5);
+          }
+          
+          ::-webkit-scrollbar-track {
+            background: hsl(var(--muted) / 0.3);
+          }
+        `}
+      </style>
     </div>
   );
 };
 
-// Wrap the main application with the VibeProvider
 const Index = () => {
   return (
     <VibeProvider>
