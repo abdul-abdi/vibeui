@@ -73,7 +73,7 @@ type VibeSettings = {
 
 // CORS headers
 const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Origin": "*, https://vibeui.vercel.app/",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, Origin, X-Requested-With, Accept",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
 };
