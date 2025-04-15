@@ -30,5 +30,10 @@
         }
       ]
     }
-  ]
+  ],
+  "functions": {
+    "supabase/functions/**/*": {
+      "runtime": "edge"
+    }
+  }
 } 

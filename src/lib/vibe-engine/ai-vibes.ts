@@ -108,7 +108,7 @@ export const generateNewVibe = async (theme?: string, mood?: string): Promise<Vi
     
     // Set a timeout to handle slow connections
     const timeoutPromise = new Promise<null>((_, reject) => {
-      setTimeout(() => reject(new Error("Vibe generation timed out")), 15000);
+      setTimeout(() => reject(new Error("Vibe generation timed out")), 30000);
     });
     
     // Actual request
