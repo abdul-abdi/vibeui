@@ -106,18 +106,24 @@ export const generateNewVibe = async (theme?: string, mood?: string): Promise<Vi
         "Creating a random vibe"
     });
     
+    // Log environment for debugging
+    console.info(`Environment: ${process.env.NODE_ENV}`);
+    console.info(`Supabase URL: ${process.env.NEXT_PUBLIC_SUPABASE_URL?.slice(0, 10)}...`);
+    
     // Set a timeout to handle slow connections
     const timeoutPromise = new Promise<null>((_, reject) => {
       setTimeout(() => reject(new Error("Vibe generation timed out")), 30000);
     });
     
     // Actual request
+    console.info("Invoking Supabase Edge Function: generate-vibe");
     const responsePromise = supabase.functions.invoke("generate-vibe", {
       body: { theme, mood },
     });
     
     // Race between timeout and response
     const response = await Promise.race([responsePromise, timeoutPromise]) as any;
+    console.info("Received response from edge function");
 
     if (response?.error) {
       console.error("Edge function error:", response.error);
@@ -125,13 +131,15 @@ export const generateNewVibe = async (theme?: string, mood?: string): Promise<Vi
     }
     
     if (!response?.data?.vibe) {
-      console.error("No vibe data returned:", response?.data);
+      console.error("No vibe data returned:", JSON.stringify(response?.data));
       throw new Error("No vibe data returned from the API");
     }
 
+    console.info("Successfully generated vibe:", response.data.vibe.name);
     return response.data.vibe as VibeSettings;
   } catch (error: any) {
     console.error("Error generating vibe:", error);
+    console.error("Error details:", JSON.stringify(error, null, 2));
     
     // Create a fallback vibe with deterministic behavior
     const randomVibe = getRandomVibePreset();
@@ -152,5 +160,31 @@ export const generateNewVibe = async (theme?: string, mood?: string): Promise<Vi
     });
     
     return localVibe;
+  }
+};
+
+// Test function to verify Supabase Edge Function connection
+export const testEdgeFunctionConnection = async (): Promise<boolean> => {
+  try {
+    console.info("Testing Supabase Edge Function connection...");
+    console.info(`Environment: ${process.env.NODE_ENV}`);
+    console.info(`Supabase URL: ${process.env.NEXT_PUBLIC_SUPABASE_URL?.slice(0, 10)}...`);
+    
+    const response = await supabase.functions.invoke("generate-vibe", {
+      body: { test: true },
+    });
+    
+    console.info("Edge function connection test response:", JSON.stringify(response));
+    
+    if (response.error) {
+      console.error("Edge function connection test failed:", response.error);
+      return false;
+    }
+    
+    console.info("Edge function connection test successful");
+    return true;
+  } catch (error) {
+    console.error("Edge function connection test error:", error);
+    return false;
   }
 };

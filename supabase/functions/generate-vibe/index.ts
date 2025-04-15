@@ -1,4 +1,3 @@
-
 // NOTE: This is a temporary implementation of the generate-vibe Edge Function
 // It generates random vibes without requiring external API calls
 
@@ -75,7 +74,8 @@ type VibeSettings = {
 // CORS headers
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, Origin, X-Requested-With, Accept",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
 };
 
 // Random helpers
@@ -252,48 +252,51 @@ const generateVibe = (theme?: string, mood?: string): VibeSettings => {
   };
 };
 
-// Handle requests
+// Main serve function for the edge function
 serve(async (req) => {
   // Handle CORS preflight requests
   if (req.method === "OPTIONS") {
-    return new Response(null, { headers: corsHeaders, status: 204 });
+    return new Response("ok", { headers: corsHeaders });
   }
-
+  
   try {
-    // Parse request body
-    let { theme, mood } = await req.json();
+    // Parse the request body
+    const { theme, mood } = await req.json();
     
-    // Generate vibe
+    // Log the request for debugging
+    console.log(`Generating vibe with theme: ${theme}, mood: ${mood}`);
+    
+    // Generate the vibe with the specified theme/mood
     const vibe = generateVibe(theme, mood);
-
-    // Return response
+    
+    // Return the generated vibe
     return new Response(
       JSON.stringify({
+        success: true,
         vibe,
-        message: "Generated vibe successfully",
       }),
       {
         headers: {
+          "Content-Type": "application/json",
           ...corsHeaders,
-          "Content-Type": "application/json"
         },
-        status: 200,
       }
     );
   } catch (error) {
-    // Handle errors
-    console.error("Error generating vibe:", error);
+    // Log and return any errors
+    console.error("Error in generate-vibe function:", error);
     
     return new Response(
       JSON.stringify({
-        error: "Failed to generate vibe"
+        success: false,
+        error: error.message || "Unknown error occurred",
       }),
       {
-        headers: {
-          ...corsHeaders,
-          "Content-Type": "application/json"
-        },
         status: 500,
+        headers: {
+          "Content-Type": "application/json",
+          ...corsHeaders,
+        },
       }
     );
   }
