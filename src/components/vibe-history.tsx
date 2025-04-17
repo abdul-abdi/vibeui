@@ -334,7 +334,7 @@ export function VibeHistory() {
             </motion.div>
           ) : (
             <ScrollArea className="flex-1 min-h-0 overflow-hidden border rounded-md">
-              <div className="p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-4 p-1 overflow-y-auto max-h-[60vh]">
                 <AnimatePresence>
                   {getSortedHistoryItems().map((item, index) => (
                     <motion.div
