@@ -12,14 +12,13 @@
 
 ## 🌟 Overview
 
-VibeUI is a dynamic design system and UI inspiration platform built with Next.js (using the Pages Router for the main UI and the App Router for API endpoints) and TypeScript. It helps designers and developers discover new interface styles and aesthetics by generating unique design "vibes".
+VibeUI is your dynamic platform for UI inspiration. It helps designers and developers discover new interface styles and aesthetics by generating unique design "vibes".
 
 With VibeUI, you can:
 - Explore different design aesthetics from minimal to playful
-- Generate design themes with a single click, using keywords, or via detailed AI prompts powered by Google's Gemini model.
+- Generate distinct design themes instantly with a single click, using simple keywords, or by providing detailed descriptions to the built-in AI.
 - See live previews of UI components with your chosen vibe
 - Experience smooth animations and transitions between themes
-- Leverage Supabase Edge Functions for AI generation and potentially other backend features.
 
 <div align="center">
   <img src="public/screenshot.png" alt="VibeUI Screenshot" width="800" />
