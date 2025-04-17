@@ -172,8 +172,7 @@ VibeUI includes a comprehensive showcase of components (primarily in `src/pages/
 ### Exploring Features
 
 1. Scroll through the main page (`/`) to see different component examples under the current vibe.
-2. Use the theme toggle (if available) to switch between light and dark modes (`next-themes`).
-3. Resize your browser to test responsive behavior built with Tailwind CSS.
+3. Resize your browser to test responsive behavior.
 
 ## 🛠️ Technologies Used
 
