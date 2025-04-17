@@ -71,7 +71,7 @@ export function applyVibe(vibe: VibeSettings): void {
   requestAnimationFrame(() => {
     setTimeout(() => {
       root.classList.remove('transitioning-vibe');
-    }, 600); // Reduced from 800ms for better performance
+    }, 350); // Match CSS transition duration + small buffer
   });
 }
 

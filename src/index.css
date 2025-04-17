@@ -158,20 +158,34 @@
 }
 
 /* Performance-optimized animation keyframes */
-@keyframes blink {
+/* @keyframes blink {
   50% { border-color: currentColor; }
+} */
+
+@keyframes blink-opacity {
+  50% { opacity: 0.3; } /* Adjust opacity as needed */
 }
 
-@keyframes neon-pulse {
+/* @keyframes neon-pulse {
   0%, 100% {
     box-shadow: 0 0 10px rgba(var(--primary-rgb), 0.5);
   }
   50% {
     box-shadow: 0 0 20px rgba(var(--primary-rgb), 0.8);
   }
+} */
+
+/* Refactored neon-pulse concept (requires pseudo-element) */
+@keyframes neon-pulse-opacity {
+  0%, 100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 0.8; /* Adjust opacity values as needed */
+  }
 }
 
-@keyframes animate-loading-progress {
+/* @keyframes animate-loading-progress {
   0% {
     width: 10%;
   }
@@ -180,6 +194,21 @@
   }
   100% {
     width: 90%;
+  }
+} */
+
+@keyframes scale-loading-progress {
+  0% {
+    transform: scaleX(0.1);
+    transform-origin: left center; /* Ensure scaling starts from the left */
+  }
+  50% {
+    transform: scaleX(0.6);
+    transform-origin: left center;
+  }
+  100% {
+    transform: scaleX(0.9);
+    transform-origin: left center;
   }
 }
 
@@ -212,11 +241,9 @@
 }
 
 /* Optimize transitions by only transitioning specific properties */
-.transitioning-vibe * {
-  transition: background-color 0.5s ease, 
-              border-color 0.5s ease, 
-              color 0.5s ease,
-              box-shadow 0.5s ease;
+.transitioning-vibe *, .transitioning-vibe *::before, .transitioning-vibe *::after {
+  /* Only transition performant properties */
+  transition: transform 0.3s ease, opacity 0.3s ease;
 }
 
 /* Enhanced scrollbar with reduced specificity */
@@ -334,7 +361,7 @@
   border: var(--brutalism-border);
   box-shadow: 3px 3px 0 #000000;
   border-radius: 0;
-  transition: transform 0.1s ease, box-shadow 0.1s ease;
+  transition: transform 0.1s ease;
 }
 
 .neo-brutalism-theme .brutal-button:hover {
@@ -359,7 +386,7 @@
   box-shadow: 0 0 10px rgba(var(--primary-rgb), 0.7), 0 0 20px rgba(var(--primary-rgb), 0.3);
   text-shadow: 0 0 5px rgba(var(--primary-rgb), 0.7);
   background: linear-gradient(45deg, hsl(var(--primary)), hsl(var(--accent)));
-  animation: neon-pulse 2s infinite;
+  animation: neon-pulse-opacity 2s infinite;
 }
 
 .electric-pop-theme h1, 
@@ -521,13 +548,6 @@
     line-height: 1.7;
     letter-spacing: 0.01em;
   }
-}
-
-/* Optimized transitions */
-* {
-  transition-property: color, background-color, border-color;
-  transition-timing-function: ease;
-  transition-duration: 150ms;
 }
 
 /* Disable transitions for performance */
