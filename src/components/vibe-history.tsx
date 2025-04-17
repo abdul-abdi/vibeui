@@ -112,26 +112,22 @@ export function VibeHistory() {
   useEffect(() => {
     if (!vibeState.currentVibe) return;
 
-    // Use functional update to avoid needing historyItems in dependency array
     setHistoryItems(prevHistoryItems => {
-      // Check if this vibe already exists in history to avoid duplicates
-      const existingIndex = prevHistoryItems.findIndex(item => item.id === vibeState.currentVibe.id);
+      // 1. Prepend the new/current vibe
+      const newHistoryWithPotentialDuplicates = [vibeState.currentVibe, ...prevHistoryItems];
+
+      // 2. Remove duplicates based on ID, keeping the first occurrence (which is the newest one we just added)
+      const uniqueHistory = newHistoryWithPotentialDuplicates.filter(
+        (item, index, self) => index === self.findIndex(t => t.id === item.id)
+      );
       
-      let updatedHistory = [...prevHistoryItems];
-      
-      if (existingIndex !== -1) {
-        // If this vibe is already in history, move it to the front
-        const existingItem = updatedHistory.splice(existingIndex, 1)[0];
-        updatedHistory = [existingItem, ...updatedHistory];
-      } else {
-        // Otherwise add it to the front
-        updatedHistory = [vibeState.currentVibe, ...updatedHistory];
-      }
-      
-      // Limit to MAX_HISTORY_ITEMS
-      updatedHistory = updatedHistory.slice(0, MAX_HISTORY_ITEMS);
-      
+      // 3. Limit to MAX_HISTORY_ITEMS
+      const updatedHistory = uniqueHistory.slice(0, MAX_HISTORY_ITEMS);
+
+      // 4. Save to localStorage
       localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(updatedHistory));
+      
+      // 5. Return the updated state
       return updatedHistory; 
     });
 

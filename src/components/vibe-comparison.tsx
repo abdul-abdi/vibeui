@@ -164,59 +164,81 @@ export function VibeComparison() {
   // Fetch vibes from localStorage on component mount
   useEffect(() => {
     try {
-      // Get current vibe first
+      // 1. Get current vibe
       const currentVibe = vibeState.currentVibe;
-      let vibes: VibeSettings[] = [currentVibe];
+      let combinedVibes: VibeSettings[] = [currentVibe]; // Start with the current vibe
 
-      // Try to get vibes from localStorage
+      // 2. Try to get history from localStorage
       const savedHistory = localStorage.getItem('vibeui-history');
       if (savedHistory) {
         try {
-          const historyItems = JSON.parse(savedHistory);
+          // 3. Parse history (should be VibeSettings[] now)
+          const historyItems = JSON.parse(savedHistory) as VibeSettings[];
 
-          // Get unique IDs that aren't the current vibe's ID
-          const uniqueVibeIds = Array.from(
-            new Set(historyItems.filter((item: VibeSettings) => item.id !== currentVibe.id).map((item: VibeSettings) => item.id))
-          ).slice(0, 5);
+          // 4. Combine current vibe with history, removing duplicates (keeping newest)
+          const allAvailableVibes = [currentVibe, ...historyItems];
+          combinedVibes = allAvailableVibes.filter(
+            (item, index, self) => index === self.findIndex(t => t.id === item.id)
+          );
 
-          // Try to get them from localStorage first
-          uniqueVibeIds.forEach(id => {
-            // Check if the vibe is already in our array
-            if (!vibes.find(v => v.id === id)) {
-              // Try to find this vibe
-              let vibe = getVibePresetById(id as string);
-              if (vibe) vibes.push(vibe);
-            }
-          });
         } catch (e) {
           console.error("Error parsing history:", e);
+          // If parsing fails, combinedVibes remains [currentVibe]
         }
       }
 
-      // Always load some preset vibes if we don't have enough
-      if (vibes.length < 3) {
-        // Get some preset vibes that aren't already in our array
+      // Ensure we don't exceed a reasonable number of recent items
+      combinedVibes = combinedVibes.slice(0, 6); // e.g., Current + 5 most recent unique
+
+      // 5. Add presets if needed to reach a minimum count (e.g., 3)
+      const neededPresets = Math.max(0, 3 - combinedVibes.length);
+      if (neededPresets > 0) {
         const presetOptions = vibePresets
-          .filter(preset => !vibes.find(v => v.id === preset.id))
-          .slice(0, 3 - vibes.length);
-
-        vibes = [...vibes, ...presetOptions];
+          .filter(preset => !combinedVibes.find(v => v.id === preset.id)) // Avoid duplicates
+          .slice(0, neededPresets);
+        combinedVibes = [...combinedVibes, ...presetOptions];
       }
 
-      setRecentlyUsedVibes(vibes);
+      // 6. Set the state used by dropdowns and selectors
+      setRecentlyUsedVibes(combinedVibes);
 
-      // Auto-select the first vibe for comparison when dialog opens
-      if (isOpen && vibes.length > 1) {
-        // First item is likely the current vibe
-        setLeftVibeId(vibes[0].id);
-        setRightVibeId(vibes[1].id);
+      // 7. Auto-select vibes for comparison
+      if (isOpen && combinedVibes.length > 1) {
+        setLeftVibeId(combinedVibes[0].id); // Usually currentVibe
+        setRightVibeId(combinedVibes[1].id); // Most recent history or preset
+      } else if (isOpen && combinedVibes.length === 1) {
+        setLeftVibeId(combinedVibes[0].id);
+        setRightVibeId(''); // No second vibe to compare
+      } else if (isOpen) {
+          setLeftVibeId(''); // No vibes available
+          setRightVibeId('');
       }
+
     } catch (error) {
-      console.error("Error loading vibes:", error);
-      // Fallback to default presets
-      setRecentlyUsedVibes(vibePresets.slice(0, 3));
+      console.error("Error loading vibes for comparison:", error);
+      // Fallback to just current vibe and maybe one preset
+      const fallbackVibes = [vibeState.currentVibe];
+      const presetFallback = vibePresets.find(p => p.id !== vibeState.currentVibe.id);
+      if (presetFallback) fallbackVibes.push(presetFallback);
+
+      setRecentlyUsedVibes(fallbackVibes);
+      if (isOpen && fallbackVibes.length > 1) {
+         setLeftVibeId(fallbackVibes[0].id);
+         setRightVibeId(fallbackVibes[1].id);
+      } else if (isOpen) {
+         setLeftVibeId(fallbackVibes[0]?.id || '');
+         setRightVibeId('');
+      }
     }
-  }, [isOpen, vibeState.currentVibe]);
+    // Ensure state is reset if dialog closes unexpectedly, maybe not needed here if onOpenChange handles it
+    // else {
+    //   setLeftVibeId('');
+    //   setRightVibeId('');
+    //   setLeftVibe(null);
+    //   setRightVibe(null);
+    // }
+
+  }, [isOpen, vibeState.currentVibe]); // Dependencies: Re-run when dialog opens or current vibe changes
 
   // Update vibes when IDs change
   useEffect(() => {
