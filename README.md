@@ -34,7 +34,6 @@ With VibeUI, you can:
 - **Real-time Preview** - See how components look with different vibes instantly
 - **Responsive Design** - Works on all devices from mobile to desktop
 - **Performance Optimized** - Adaptive performance based on device capabilities
-- **Dark/Light Mode** - Each vibe works with both dark and light color schemes via `next-themes`
 - **Animation Control** - Smooth transitions between different design states using `Framer Motion`
 - **Modern UI Components** - Showcase design across various interface elements built with `shadcn/ui` and `Radix UI`
 
