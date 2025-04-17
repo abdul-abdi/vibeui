@@ -103,7 +103,6 @@ bun run dev
 - `lint`: Lints the codebase using ESLint.
 - `analyze`: Analyzes the bundle size after build.
 - `lighthouse`: Runs Lighthouse audit on `http://localhost:3000`.
-- `build:prod`: (Seems redundant with `build`, potentially for static export? Check `next.config.js`)
 
 ## 📖 Documentation
 
@@ -166,7 +165,7 @@ VibeUI includes a comprehensive showcase of components (primarily in `src/pages/
 
 ### Generating New Vibes
 
-1. Interact with the UI controls (e.g., "Generate New Vibe" button) to create random or AI-generated design themes.
+1. Interact with the UI controls (e.g., "Generate New Vibe" button) to create random AI-generated design themes.
 2. Observe real-time updates across all showcased components.
 3. Experience smooth transitions powered by `Framer Motion`.
 
