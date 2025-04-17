@@ -88,23 +88,19 @@ export function EnhancedAiVibeGenerator() {
     e.preventDefault();
     
     if (advancedMode) {
-      // If advanced mode is on, create a more detailed prompt based on all settings
-      const colorDescription = `Use ${primaryColor || 'appropriate'} as primary color and ${accentColor || 'complementary'} as accent color with ${colorScheme} distribution and ${contrastLevel}% contrast in ${isDarkMode ? 'dark' : 'light'} mode.`;
-      
-      const typographyDescription = `Use ${fontPairing} font pairing with ${headingStyle} headings and ${textSize > 60 ? 'larger' : textSize < 40 ? 'smaller' : 'medium'} text.`;
-      
-      const animationDescription = `Animations should be ${animationSpeed > 60 ? 'fast' : animationSpeed < 40 ? 'slow' : 'medium'} with ${animationStyle} style ${useParallax ? 'including parallax effects' : ''}.`;
-      
-      const layoutDescription = `Layout should follow a ${layoutStyle} structure with ${cornerRounding > 60 ? 'rounded' : cornerRounding < 40 ? 'sharp' : 'moderate'} corners and ${elementDensity > 60 ? 'high' : elementDensity < 40 ? 'low' : 'medium'} element density.`;
-      
-      const advancedPrompt = `${theme || 'modern'} ${mood || 'balanced'} theme with these specifications: ${colorDescription} ${typographyDescription} ${animationDescription} ${layoutDescription}`;
-      
-      toast({
-        title: "Generating custom vibe...",
-        description: "Creating with advanced specifications",
-      });
-      
-      const success = await generateAiVibe(advancedPrompt, '');
+      // Construct the detailed prompt
+      const colorDescription = `Use ${primaryColor || 'appropriate'} primary color, ${accentColor || 'complementary'} accent color, ${colorScheme} distribution, ${contrastLevel}% contrast, ${isDarkMode ? 'dark' : 'light'} mode.`;
+      const typographyDescription = `Use ${fontPairing} fonts, ${headingStyle} headings, ${textSize > 60 ? 'large' : textSize < 40 ? 'small' : 'medium'} text size.`;
+      const animationDescription = `Animations: ${animationSpeed > 60 ? 'fast' : animationSpeed < 40 ? 'slow' : 'medium'} speed, ${animationStyle} style${useParallax ? ', use parallax' : ''}.`;
+      const layoutDescription = `Layout: ${layoutStyle}, ${cornerRounding > 60 ? 'rounded' : cornerRounding < 40 ? 'sharp' : 'moderate'} corners, ${elementDensity > 60 ? 'high' : elementDensity < 40 ? 'low' : 'medium'} density.`;
+
+      // Combine theme/mood with advanced specs
+      const finalAdvancedPrompt = `Generate a UI vibe based on the theme "${theme || 'modern'}" and mood "${mood || 'balanced'}" with these specifications: ${colorDescription} ${typographyDescription} ${animationDescription} ${layoutDescription}`;
+
+      console.log("Advanced Prompt being sent:", finalAdvancedPrompt);
+
+      // Call generateAiVibe with the single advanced prompt string
+      const success = await generateAiVibe(finalAdvancedPrompt);
       if (success) {
         setOpen(false);
         resetForm();
@@ -114,17 +110,13 @@ export function EnhancedAiVibeGenerator() {
       if (!theme && !mood) {
         toast({
           title: "Input needed",
-          description: "Please enter a theme or mood to generate a custom vibe",
+          description: "Please enter a theme or mood to generate a basic vibe",
           variant: "destructive"
         });
         return;
       }
       
-      toast({
-        title: "Generating custom vibe...",
-        description: `Creating a ${theme} ${mood ? '& ' + mood : ''} inspired design`,
-      });
-      
+      // Call generateAiVibe with separate theme and mood
       const success = await generateAiVibe(theme, mood);
       if (success) {
         setOpen(false);

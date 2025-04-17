@@ -325,60 +325,6 @@ export const vibePresets: VibeSettings[] = [
       lg: '0 25px 50px 0 rgb(0 0 0 / 0.1)'
     }
   },
-  
-  // Electric Pop
-  {
-    id: 'electric-pop',
-    name: 'Electric Pop',
-    description: 'High-energy interface with vibrant colors and bold shapes',
-    layout: 'centered',
-    colors: {
-      background: '0 0% 5%',
-      foreground: '0 0% 98%',
-      card: '0 0% 8%',
-      cardForeground: '0 0% 98%',
-      primary: '320 100% 60%',
-      primaryForeground: '0 0% 98%',
-      secondary: '180 100% 50%',
-      secondaryForeground: '0 0% 98%',
-      muted: '0 0% 15%',
-      mutedForeground: '0 0% 65%',
-      accent: '60 100% 50%',
-      accentForeground: '0 0% 98%',
-      destructive: '0 100% 65%',
-      destructiveForeground: '0 0% 98%',
-      border: '0 0% 20%',
-      input: '0 0% 20%',
-      ring: '320 100% 60%'
-    },
-    fonts: {
-      primary: "'Space Grotesk', sans-serif",
-      secondary: "'Space Grotesk', sans-serif",
-      accent: "'Space Grotesk', sans-serif",
-      mono: "'Space Mono', monospace"
-    },
-    radius: {
-      sm: '0.75rem',
-      md: '1.5rem',
-      lg: '3rem'
-    },
-    spacing: {
-      layoutSpacing: '2rem',
-      cardSpacing: '1.5rem',
-      elementSpacing: '1rem'
-    },
-    animation: {
-      speed: 1.5,
-      easing: [0.65, 0, 0.35, 1],  // Updated from 'cubic-bezier(0.65, 0, 0.35, 1)'
-      entrance: 'slide-in-up',
-      hover: 'wave'
-    },
-    shadows: {
-      sm: '0 0 10px 0 rgba(255, 0, 255, 0.2)',
-      md: '0 0 20px 0 rgba(255, 0, 255, 0.3)',
-      lg: '0 0 30px 0 rgba(255, 0, 255, 0.4)'
-    }
-  }
 ];
 
 // Function to get a random vibe preset

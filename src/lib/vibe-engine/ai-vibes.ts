@@ -96,23 +96,42 @@ export const fetchAiVibes = async (): Promise<VibeSettings[]> => {
 };
 
 // Generate a new vibe by calling the Next.js API route
-export const generateNewVibe = async (theme?: string, mood?: string): Promise<VibeSettings | null> => {
+// MODIFIED: Accept an optional 'prompt' for advanced mode
+export const generateNewVibe = async (
+  themeOrPrompt?: string, // Can be theme (basic) or full prompt (advanced)
+  mood?: string          // Mood (basic only)
+): Promise<VibeSettings | null> => {
+
+  const isAdvancedPrompt = !mood && themeOrPrompt && themeOrPrompt.length > 50; // Heuristic: if mood is empty and first arg is long, assume it's the advanced prompt
+
   // Show optimistic UI feedback immediately and store the toast controls
   const toastControls = toast({
     title: "Generating new vibe...",
-    description: theme || mood ? 
-      `Creating a custom ${theme || ''} ${theme && mood ? ' & ' : ''}${mood || ''} vibe` : 
-      "Creating a random vibe"
+    // MODIFIED: Adjust description based on mode
+    description: isAdvancedPrompt
+      ? "Creating vibe with advanced specifications..."
+      : themeOrPrompt || mood
+        ? `Creating a custom ${themeOrPrompt || ''} ${themeOrPrompt && mood ? ' & ' : ''}${mood || ''} vibe`
+        : "Creating a random vibe"
   });
-  
+
   try {
     console.info("Calling API route: /api/generate-vibe");
+
+    // MODIFIED: Construct the body based on mode
+    const requestBody = isAdvancedPrompt
+      ? { prompt: themeOrPrompt }
+      : { theme: themeOrPrompt, mood }; // Send theme/mood (can be undefined for random)
+
+    console.info("API Request Body:", requestBody);
+
     const response = await fetch('/api/generate-vibe', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ theme, mood }),
+      // MODIFIED: Use constructed body
+      body: JSON.stringify(requestBody),
     });
 
     const result = await response.json();
@@ -128,7 +147,7 @@ export const generateNewVibe = async (theme?: string, mood?: string): Promise<Vi
     }
 
     console.info("Successfully generated vibe via API:", result.vibe.name);
-    
+
     // Update toast on success using the update function
     toastControls.update({
       id: toastControls.id, // Required to identify the toast to update
@@ -141,15 +160,15 @@ export const generateNewVibe = async (theme?: string, mood?: string): Promise<Vi
 
   } catch (error: any) {
     console.error("Error generating vibe via API:", error);
-    
+
     // Update toast on failure using the update function
-    toastControls.update({ 
+    toastControls.update({
       id: toastControls.id, // Required to identify the toast to update
       title: "Vibe Generation Failed",
       description: error.message || "Could not generate vibe. Please try again.",
       variant: "destructive",
     });
-    
+
     return null; // Return null instead of a fallback vibe
   }
 };

@@ -1,11 +1,8 @@
-// NOTE: This is a temporary implementation of the generate-vibe Edge Function
-// It generates random vibes without requiring external API calls
-
 // Import necessary modules
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { v4 as uuid } from "https://esm.sh/uuid@9.0.0";
+import { v4 as uuid } from "https://esm.sh/uuid@9.0.0"; // Keep for potential fallback or if Gemini doesn't generate it
 
-// Define types for the edge function
+// --- Define Types (Keep existing types for reference/validation) ---
 type VibeLayout = 'standard' | 'asymmetric' | 'centered' | 'sidebar';
 
 type ColorTheme = {
@@ -49,7 +46,7 @@ type SpacingScale = {
 
 type AnimationSettings = {
   speed: number;
-  easing: number[];  // Updated to array format for Framer Motion
+  easing: number[];
   entrance: string;
   hover: string;
 };
@@ -71,240 +68,251 @@ type VibeSettings = {
   };
 };
 
-// CORS headers
+
+// CORS headers (keep as is)
 const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Origin": "*", // Adjust for production if needed
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, Origin, X-Requested-With, Accept",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
   "Access-Control-Allow-Credentials": "true"
 };
 
-// Random helpers
-const randomItem = <T>(items: T[]): T => {
-  return items[Math.floor(Math.random() * items.length)];
-};
+// --- NEW: Helper to get JSON instructions ---
+const getJsonOutputInstructions = (): string => {
+  // Reusable instructions for Gemini to output JSON
+  return `
+The output MUST be a valid JSON object matching the following TypeScript type structure:
 
-const randomRange = (min: number, max: number): number => {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-};
+type VibeLayout = 'standard' | 'asymmetric' | 'centered' | 'sidebar';
+type ColorTheme = { background: string; foreground: string; card: string; cardForeground: string; primary: string; primaryForeground: string; secondary: string; secondaryForeground: string; muted: string; mutedForeground: string; accent: string; accentForeground: string; destructive: string; destructiveForeground: string; border: string; input: string; ring: string; }; // All HSL strings 'H S% L%'
+type FontPairing = { primary: string; secondary: string; accent: string; mono: string; }; // All CSS font-family strings
+type RadiusScale = { sm: string; md: string; lg: string; }; // All CSS size values
+type SpacingScale = { layoutSpacing: string; cardSpacing: string; elementSpacing: string; }; // All CSS size values
+type AnimationSettings = { speed: number; easing: [number, number, number, number]; entrance: string; hover: string; };
+type ShadowSettings = { sm: string; md: string; lg: string; }; // All CSS box-shadow values
+type VibeSettings = { id: string; name: string; description: string; layout: VibeLayout; colors: ColorTheme; fonts: FontPairing; radius: RadiusScale; spacing: SpacingScale; animation: AnimationSettings; shadows: ShadowSettings; };
 
-// Function to generate a vibe based on theme and mood
-const generateVibe = (theme?: string, mood?: string): VibeSettings => {
-  // Generate theme-based name
-  const themeWords = [
-    "Neon", "Ocean", "Forest", "Desert", "Space", "Cyber", "Retro", "Futuristic",
-    "Vintage", "Modern", "Minimal", "Vibrant", "Pastel", "Dark", "Light", "Muted",
-    "Electric", "Organic", "Crystal", "Metallic", "Dreamy", "Sharp", "Soft", "Bold"
-  ];
-  
-  // Generate mood-based name
-  const moodWords = [
-    "Calm", "Energetic", "Playful", "Serious", "Elegant", "Quirky", "Professional",
-    "Creative", "Relaxed", "Dynamic", "Peaceful", "Exciting", "Cheerful", "Mysterious",
-    "Warm", "Cool", "Fresh", "Intense", "Subtle", "Powerful", "Gentle", "Bold"
-  ];
-  
-  // Use provided theme/mood or generate random ones
-  const themeWord = theme ? 
-    theme.charAt(0).toUpperCase() + theme.slice(1) : 
-    randomItem(themeWords);
-    
-  const moodWord = mood ? 
-    mood.charAt(0).toUpperCase() + mood.slice(1) : 
-    randomItem(moodWords);
-  
-  // Generate name and description
-  const name = `${themeWord} ${moodWord}`;
-  const description = `A ${moodWord.toLowerCase()} UI theme with ${themeWord.toLowerCase()} aesthetics.`;
-  
-  // Generate layout
-  const layout = randomItem<VibeLayout>(['standard', 'asymmetric', 'centered', 'sidebar']);
-  
-  // Generate colors
-  const hues = {
-    primary: randomRange(0, 360),
-    secondary: randomRange(0, 360),
-    accent: randomRange(0, 360)
-  };
-  
-  const isDark = Math.random() > 0.5;
-  
-  const colors: ColorTheme = {
-    background: isDark ? '240 10% 3.9%' : '0 0% 100%',
-    foreground: isDark ? '0 0% 98%' : '240 10% 3.9%',
-    card: isDark ? '240 10% 5.9%' : '0 0% 100%',
-    cardForeground: isDark ? '0 0% 98%' : '240 10% 3.9%',
-    primary: `${hues.primary} ${randomRange(70, 90)}% ${randomRange(40, 60)}%`,
-    primaryForeground: isDark ? '0 0% 98%' : '0 0% 100%',
-    secondary: `${hues.secondary} ${randomRange(20, 40)}% ${randomRange(80, 95)}%`,
-    secondaryForeground: isDark ? '0 0% 98%' : '240 5.9% 10%',
-    muted: isDark ? '240 3.7% 15.9%' : '240 4.8% 95.9%',
-    mutedForeground: isDark ? '240 5% 64.9%' : '240 3.8% 46.1%',
-    accent: `${hues.accent} ${randomRange(80, 100)}% ${randomRange(80, 95)}%`,
-    accentForeground: isDark ? '0 0% 98%' : '240 5.9% 10%',
-    destructive: isDark ? '0 62.8% 30.6%' : '0 84.2% 60.2%',
-    destructiveForeground: isDark ? '0 0% 98%' : '0 0% 98%',
-    border: isDark ? '240 3.7% 15.9%' : '240 5.9% 90%',
-    input: isDark ? '240 3.7% 15.9%' : '240 5.9% 90%',
-    ring: isDark ? `${hues.primary} 70% 50.4%` : `${hues.primary} 40% 50%`
-  };
-  
-  // Generate fonts
-  const fontOptions = [
-    "'Inter', sans-serif",
-    "'Space Grotesk', sans-serif",
-    "'Playfair Display', serif",
-    "'Quicksand', sans-serif",
-    "'DM Serif Display', serif"
-  ];
-  
-  const monoFonts = [
-    "'Space Mono', monospace",
-    "'Roboto Mono', monospace"
-  ];
-  
-  const fonts: FontPairing = {
-    primary: randomItem(fontOptions),
-    secondary: randomItem(fontOptions),
-    accent: randomItem(fontOptions),
-    mono: randomItem(monoFonts)
-  };
-  
-  // Generate radius
-  const radiusStyle = Math.random() > 0.7 ? 'sharp' : Math.random() > 0.5 ? 'rounded' : 'soft';
-  
-  const radius: RadiusScale = radiusStyle === 'sharp' ? {
-    sm: '0',
-    md: '0',
-    lg: '0'
-  } : radiusStyle === 'rounded' ? {
-    sm: '0.25rem',
-    md: '0.5rem',
-    lg: '1rem'
-  } : {
-    sm: '0.75rem',
-    md: '1.5rem',
-    lg: '2rem'
-  };
-  
-  // Generate spacing
-  const spacing: SpacingScale = {
-    layoutSpacing: `${randomRange(15, 30) / 10}rem`,
-    cardSpacing: `${randomRange(10, 25) / 10}rem`,
-    elementSpacing: `${randomRange(8, 15) / 10}rem`
-  };
-  
-  // Generate animations
-  const entranceAnimations = ['fade-in', 'slide-in-up', 'slide-in-right', 'bounce-subtle'];
-  const hoverAnimations = ['pulse-soft', 'float', 'wave', 'bounce-subtle'];
-  
-  // Updated easing options to use number arrays instead of cubic-bezier strings
-  const easings = [
-    [0.4, 0, 0.2, 1],    // was cubic-bezier(0.4, 0, 0.2, 1)
-    [0.65, 0, 0.35, 1],   // was cubic-bezier(0.65, 0, 0.35, 1)
-    [0.34, 1.56, 0.64, 1], // was cubic-bezier(0.34, 1.56, 0.64, 1)
-    [0.68, -0.6, 0.32, 1.6] // was cubic-bezier(0.68, -0.6, 0.32, 1.6)
-  ];
-  
-  const animation: AnimationSettings = {
-    speed: randomRange(8, 12) / 10,
-    easing: randomItem(easings),
-    entrance: randomItem(entranceAnimations),
-    hover: randomItem(hoverAnimations)
-  };
-  
-  // Generate shadows
-  let shadows;
-  if (Math.random() > 0.8) {
-    // Brutal shadows
-    shadows = {
-      sm: '2px 2px 0 0 rgb(0 0 0 / 1)',
-      md: '4px 4px 0 0 rgb(0 0 0 / 1)',
-      lg: '8px 8px 0 0 rgb(0 0 0 / 1)'
-    };
-  } else if (Math.random() > 0.5) {
-    // Soft shadows
-    shadows = {
-      sm: '0 2px 10px 0 rgb(0 0 0 / 0.05)',
-      md: '0 8px 30px 0 rgb(0 0 0 / 0.08)',
-      lg: '0 25px 50px 0 rgb(0 0 0 / 0.1)'
-    };
-  } else {
-    // Standard shadows
-    shadows = {
-      sm: '0 1px 2px 0 rgb(0 0 0 / 0.05)',
-      md: '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)',
-      lg: '0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)'
-    };
+Key Constraints:
+- Generate a unique UUID v4 for the 'id'.
+- Create a 'name' and 'description' that reflect the core theme/mood.
+- Ensure color pairs have good contrast. Determine light/dark mode from background L%.
+- Select appropriate fonts, spacing, radius, animations, and shadows based on the overall vibe described.
+- Provide ONLY the JSON object conforming to the VibeSettings type as the response. Do not include any introductory text, code block markers (\`\`\`json), explanations, or comments.
+`;
+}
+
+// Function to generate a vibe using the Gemini API
+// MODIFIED: Accepts body which might contain 'prompt' or 'theme'/'mood'
+async function generateVibeWithGemini(body: { prompt?: string, theme?: string, mood?: string }): Promise<VibeSettings> {
+  const apiKey = Deno.env.get("GOOGLE_AI_API_KEY"); // Corrected Secret Name
+  if (!apiKey) {
+    console.error("GOOGLE_AI_API_KEY environment variable not set.");
+    throw new Error("API key configuration error.");
   }
-  
-  // Generate and return the complete vibe
-  return {
-    id: uuid(),
-    name,
-    description,
-    layout,
-    colors,
-    fonts,
-    radius,
-    spacing,
-    animation,
-    shadows
+
+  // Use the latest flash model for speed and cost-effectiveness
+  const model = "gemini-1.5-flash-latest";
+  const apiEndpoint = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+
+  let generationPrompt: string;
+
+  // --- Construct the prompt for Gemini ---
+  // MODIFIED: Check for direct prompt first
+  if (body.prompt && typeof body.prompt === 'string' && body.prompt.trim() !== '') {
+    // Mode 1: Use the direct prompt from the API route (Advanced Mode)
+    console.info("Edge Function: Using direct prompt received from API route.");
+    generationPrompt = body.prompt + "\n\n" + getJsonOutputInstructions(); // Append JSON instructions
+
+  } else if (body.theme && typeof body.theme === 'string' && body.theme.trim() !== '' &&
+             body.mood && typeof body.mood === 'string' && body.mood.trim() !== '') {
+    // Mode 2: Construct prompt from theme and mood keywords (Basic/Random Mode)
+    console.info(`Edge Function: Constructing prompt from theme='${body.theme}', mood='${body.mood}'.`);
+    generationPrompt = `Generate a UI theme 'vibe' based on the theme "${body.theme}" and mood "${body.mood}".\n\n${getJsonOutputInstructions()}`;
+
+  } else {
+      // Should ideally not happen due to API route validation/random fallback, but handle defensively
+      console.error("Edge Function: Invalid input received - missing prompt or theme/mood.");
+      throw new Error("Invalid input: requires either 'prompt' or both 'theme' and 'mood'.");
+  }
+
+  // Prepare the request body for Gemini API
+  const requestBody = {
+    contents: [{
+      parts: [{
+        text: generationPrompt // Use the constructed prompt
+      }]
+    }],
+    // Ensure Gemini responds with JSON
+    generationConfig: {
+        "response_mime_type": "application/json",
+    }
+    // Optional: Add safety settings if needed
+    // safetySettings: [ ... ],
   };
-};
+
+  console.log(`Edge Function: Sending request to Gemini API (model: ${model})`);
+
+  try {
+    const response = await fetch(apiEndpoint, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(requestBody),
+    });
+
+    if (!response.ok) {
+      const errorBody = await response.text();
+      console.error(`Gemini API error: ${response.status} ${response.statusText}`, errorBody);
+      let detailedError = errorBody;
+      try {
+        detailedError = JSON.parse(errorBody)?.error?.message || errorBody;
+      } catch (_) { /* Ignore parsing error */ }
+      throw new Error(`Gemini API request failed: ${response.statusText}. Details: ${detailedError}`);
+    }
+
+    const geminiResponse = await response.json();
+    const generatedText = geminiResponse?.candidates?.[0]?.content?.parts?.[0]?.text;
+
+    if (!generatedText) {
+      console.error("Gemini response did not contain generated text:", JSON.stringify(geminiResponse, null, 2));
+      throw new Error("Failed to extract content from Gemini response.");
+    }
+
+    const cleanedText = generatedText.replace(/^```json\s*|```\s*$/g, '').trim();
+
+    try {
+      const vibeData = JSON.parse(cleanedText);
+      console.log("Successfully parsed vibe data from Gemini.");
+
+      // Basic Validation
+      if (!vibeData || typeof vibeData !== 'object') {
+        throw new Error("Parsed data is not a valid object.");
+      }
+      if (!vibeData.name || typeof vibeData.name !== 'string') {
+         console.warn("Gemini response missing/invalid 'name'.");
+         // MODIFIED: Better fallback name generation
+         vibeData.name = body.prompt ? "Advanced Vibe" : `${body.theme || 'Unknown'} ${body.mood || 'Vibe'}`;
+      }
+       if (!vibeData.description || typeof vibeData.description !== 'string') {
+         console.warn("Gemini response missing/invalid 'description'.");
+         vibeData.description = `Generated vibe.`; // Simple default
+      }
+      // Ensure an ID exists, generate locally if Gemini failed to include one or it's invalid
+      if (!vibeData.id || typeof vibeData.id !== 'string' || vibeData.id.length < 10) { // Basic check
+        console.warn("Gemini response missing or invalid ID, generating one locally.");
+        vibeData.id = uuid();
+      }
+
+      // Return the validated (and potentially fixed) data, asserting the type
+      return vibeData as VibeSettings;
+
+    } catch (parseError: any) {
+      console.error("Failed to parse JSON response from Gemini:", parseError);
+      console.error("Raw Gemini text:", cleanedText);
+      throw new Error(`Invalid JSON response received from Gemini: ${parseError.message}`);
+    }
+
+  } catch (error) {
+    console.error("Error calling or processing Gemini API response:", error);
+    // Add more specific error context if possible
+    if (error instanceof Error && error.message.includes("API key not valid")) {
+       throw new Error("Invalid Google AI API Key. Please check the GOOGLE_AI_API_KEY secret in Supabase.");
+    }
+    // Re-throw the original or a wrapped error
+    throw error instanceof Error ? error : new Error(String(error));
+  }
+}
 
 // Main serve function for the edge function
-serve(async (req) => {
-  // Log request details for debugging
-  console.log("Request URL:", req.url);
-  console.log("Request method:", req.method);
-  console.log("Request headers:", JSON.stringify(Object.fromEntries(req.headers)));
-  
+serve(async (req: Request) => {
   // Handle CORS preflight requests
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
   }
-  
+
   try {
-    // Parse the request body
-    const { theme, mood } = await req.json();
-    
-    // Log the request for debugging
-    console.log(`Generating vibe with theme: ${theme}, mood: ${mood}`);
-    
-    // Generate the vibe with the specified theme/mood
-    const vibe = generateVibe(theme, mood);
-    
+    // Basic checks (POST, Content-Type)
+    if (req.method !== "POST") {
+      console.warn(`Edge Function: Received non-POST request: ${req.method}`);
+      return new Response(JSON.stringify({ success: false, error: "Method Not Allowed" }), {
+        status: 405, headers: { "Content-Type": "application/json", ...corsHeaders },
+      });
+    }
+    if (!req.body) {
+      console.warn("Edge Function: Received POST request with no body.");
+      return new Response(JSON.stringify({ success: false, error: "Request body required" }), {
+        status: 400, headers: { "Content-Type": "application/json", ...corsHeaders },
+      });
+    }
+    if (!req.headers.get("content-type")?.includes("application/json")) {
+      console.warn(`Edge Function: Received POST with invalid content-type: ${req.headers.get("content-type")}`);
+      return new Response(JSON.stringify({ success: false, error: "Invalid Content-Type, expected application/json" }), {
+          status: 415, headers: { "Content-Type": "application/json", ...corsHeaders },
+      });
+    }
+
+    // Parse the request body (expecting {prompt} or {theme, mood})
+    let requestBody: { prompt?: string, theme?: string, mood?: string } = {};
+    try {
+        requestBody = await req.json();
+    } catch (e: any) {
+         console.error("Edge Function: Failed to parse request JSON body:", e);
+         return new Response(JSON.stringify({ success: false, error: "Invalid JSON body." }), {
+           status: 400, headers: { "Content-Type": "application/json", ...corsHeaders },
+         });
+    }
+
+    // Validate input (either prompt or theme/mood must be valid based on the logic in generateVibeWithGemini)
+     if (!(requestBody.prompt && typeof requestBody.prompt === 'string' && requestBody.prompt.trim() !== '') &&
+         !(requestBody.theme && typeof requestBody.theme === 'string' && requestBody.theme.trim() !== '' &&
+           requestBody.mood && typeof requestBody.mood === 'string' && requestBody.mood.trim() !== '')) {
+         // This validation ensures the API route sent *something* usable
+         console.warn("Edge Function: Invalid input from API route - requires 'prompt' or both 'theme' and 'mood'. Body:", requestBody);
+         return new Response(JSON.stringify({ success: false, error: "Invalid input received from API route." }), {
+             status: 400, headers: { "Content-Type": "application/json", ...corsHeaders },
+         });
+     }
+
+    console.log(`Edge Function: Processing request... Body keys: ${Object.keys(requestBody).join(', ')}`);
+
+    // Generate the vibe using the Gemini API with the received body
+    const vibe = await generateVibeWithGemini(requestBody);
+
     // Return the generated vibe
-    return new Response(
-      JSON.stringify({
-        success: true,
-        vibe,
-      }),
-      {
-        headers: {
-          "Content-Type": "application/json",
-          ...corsHeaders,
-        },
-      }
-    );
-  } catch (error) {
+    console.log(`Edge Function: Successfully generated vibe with ID: ${vibe.id}`);
+    return new Response(JSON.stringify({
+      success: true,
+      vibe,
+    }), {
+      status: 200,
+      headers: {
+        "Content-Type": "application/json",
+        ...corsHeaders,
+      },
+    });
+
+  } catch (error: any) {
     // Log and return any errors
-    console.error("Error in generate-vibe function:", error);
-    
-    return new Response(
-      JSON.stringify({
-        success: false,
-        error: error.message || "Unknown error occurred",
-      }),
-      {
-        status: 500,
-        headers: {
-          "Content-Type": "application/json",
-          ...corsHeaders,
-        },
-      }
-    );
+    console.error("Error in generate-vibe Edge Function:", error);
+    // Provide a user-friendly error message
+    const errorMessage = error instanceof Error ? error.message : "An unknown error occurred during vibe generation.";
+    // Determine status code based on error type
+    const statusCode = error.message?.includes("API key") ? 401 
+                     : (error.message?.includes("Invalid input") ? 400 : 500);
+
+    return new Response(JSON.stringify({
+      success: false,
+      error: errorMessage,
+    }), {
+      status: statusCode, // Internal Server Error or specific code
+      headers: {
+        "Content-Type": "application/json",
+        ...corsHeaders,
+      },
+    });
   }
 });
+
+console.log("Generate Vibe Edge Function (supporting prompt/keywords) started and ready.");
 

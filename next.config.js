@@ -39,7 +39,7 @@ const nextConfig = {
       default-src 'self';
       script-src 'self' 'unsafe-eval' 'unsafe-inline';
       style-src 'self' 'unsafe-inline';
-      connect-src 'self' https://jhvuteawbvlkssznovxq.supabase.co;
+      connect-src 'self' https://jhvuteawbvlkssznovxq.supabase.co https://*.supabase.co ws: wss:;
       img-src 'self' blob: data: via.placeholder.com images.unsplash.com;
       font-src 'self';
       object-src 'none';
