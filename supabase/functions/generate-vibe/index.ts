@@ -73,9 +73,10 @@ type VibeSettings = {
 
 // CORS headers
 const corsHeaders = {
-  "Access-Control-Allow-Origin": "*, https://vibeui.vercel.app/",
+  "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, Origin, X-Requested-With, Accept",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
+  "Access-Control-Allow-Credentials": "true"
 };
 
 // Random helpers
@@ -254,6 +255,11 @@ const generateVibe = (theme?: string, mood?: string): VibeSettings => {
 
 // Main serve function for the edge function
 serve(async (req) => {
+  // Log request details for debugging
+  console.log("Request URL:", req.url);
+  console.log("Request method:", req.method);
+  console.log("Request headers:", JSON.stringify(Object.fromEntries(req.headers)));
+  
   // Handle CORS preflight requests
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });

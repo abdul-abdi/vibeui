@@ -1,7 +1,7 @@
 # VibeUI
 
 <div align="center">
-  <img src="public/favicon.svg" alt="VibeUI Screenshot" width="150" />
+  <img src="public/favicon.svg" alt="VibeUI Logo" width="150" />
 </div>
   
   **The Ultimate UI Design Inspiration Platform**
@@ -12,13 +12,14 @@
 
 ## 🌟 Overview
 
-VibeUI is a dynamic design system and UI inspiration platform that helps designers and developers discover new interface styles and aesthetics. It generates unique design "vibes" that can be customized, explored, and applied to your own projects.
+VibeUI is a dynamic design system and UI inspiration platform built with Next.js (Pages Router) and TypeScript. It helps designers and developers discover new interface styles and aesthetics by generating unique design "vibes" that can be customized, explored, and applied to your own projects.
 
 With VibeUI, you can:
 - Explore different design aesthetics from minimal to playful
-- Generate design themes with a single click
+- Generate design themes with a single click or using AI prompts
 - See live previews of UI components with your chosen vibe
 - Experience smooth animations and transitions between themes
+- Leverage Supabase for potential backend features (check `integrations/supabase`)
 
 <div align="center">
   <img src="public/screenshot.png" alt="VibeUI Screenshot" width="800" />
@@ -26,20 +27,20 @@ With VibeUI, you can:
 
 ## ✨ Key Features
 
-- **Dynamic Vibe Generation** - Create and explore unlimited design styles
-- **Real-time Preview** - See how components look with different vibes
+- **Dynamic Vibe Generation** - Create and explore unlimited design styles, including AI-powered generation
+- **Real-time Preview** - See how components look with different vibes instantly
 - **Responsive Design** - Works on all devices from mobile to desktop
 - **Performance Optimized** - Adaptive performance based on device capabilities
-- **Dark/Light Mode** - Each vibe works with both dark and light color schemes
-- **Animation Control** - Smooth transitions between different design states
-- **Modern UI Components** - Showcase design across various interface elements
+- **Dark/Light Mode** - Each vibe works with both dark and light color schemes via `next-themes`
+- **Animation Control** - Smooth transitions between different design states using `Framer Motion`
+- **Modern UI Components** - Showcase design across various interface elements built with `shadcn/ui` and `Radix UI`
 
 ## 🚀 Getting Started
 
 ### Prerequisites
 
-- Node.js (v16 or higher)
-- npm or yarn
+- Node.js (v18 or higher recommended, based on Next.js 15)
+- npm, yarn, or bun
 - Git
 
 ### Installation
@@ -51,12 +52,14 @@ git clone https://github.com/yourusername/vibeui.git
 cd vibeui
 ```
 
-2. Install dependencies:
+2. Install dependencies (choose your preferred package manager):
 
 ```bash
 npm install
 # or
 yarn install
+# or
+bun install
 ```
 
 3. Start the development server:
@@ -65,9 +68,21 @@ yarn install
 npm run dev
 # or
 yarn dev
+# or
+bun run dev
 ```
 
 4. Open your browser and visit `http://localhost:3000`
+
+### Available Scripts
+
+- `dev`: Starts the development server.
+- `build`: Creates a production build.
+- `start`: Starts the production server.
+- `lint`: Lints the codebase using ESLint.
+- `analyze`: Analyzes the bundle size after build.
+- `lighthouse`: Runs Lighthouse audit on `http://localhost:3000`.
+- `build:prod`: (Seems redundant with `build`, potentially for static export? Check `next.config.js`)
 
 ## 📖 Documentation
 
@@ -75,54 +90,87 @@ yarn dev
 
 ```
 vibeui/
-├── public/          # Static assets including SVG logo
-├── src/             # Source code
-│   ├── components/  # UI components
-│   ├── lib/         # Utilities and helper functions including vibe engine
-│   ├── pages/       # Application pages
-│   ├── hooks/       # Custom React hooks
-│   └── styles/      # Global styles
+├── public/                # Static assets (favicon, images)
+├── src/                   # Source code
+│   ├── app/               # Next.js App Router (primarily API routes)
+│   │   └── api/           # API routes (e.g., AI vibe generation)
+│   ├── components/        # Reusable UI components (built with shadcn/ui)
+│   ├── hooks/             # Custom React hooks
+│   ├── integrations/      # Third-party integrations (e.g., Supabase)
+│   ├── lib/               # Core logic, utilities, and Vibe Engine
+│   │   ├── vibe-engine/   # Vibe generation logic and context
+│   │   ├── performance.ts # Performance utilities
+│   │   └── utils.ts       # General utility functions
+│   ├── pages/             # Next.js Pages Router (main application pages)
+│   │   ├── index.tsx      # Main application page
+│   │   ├── _app.tsx       # Custom App component
+│   │   ├── _document.tsx  # Custom Document component
+│   │   └── ...            # Other pages (e.g., 404)
+│   ├── styles/            # Global styles (deprecated if using Tailwind exclusively)
+│   └── index.css          # Global CSS (likely Tailwind base/imports)
+├── .env.local             # Local environment variables (Gitignored)
+├── .env.example           # Example environment variables
+├── .eslintrc.json         # ESLint configuration
+├── .gitignore             # Files and directories ignored by Git
+├── components.json        # shadcn/ui configuration
+├── next.config.js         # Next.js configuration
+├── package.json           # Project dependencies and scripts
+├── postcss.config.js      # PostCSS configuration (for Tailwind)
+├── tailwind.config.ts     # Tailwind CSS configuration
+├── tsconfig.json          # TypeScript configuration
+├── vercel.json            # Vercel deployment configuration
+├── README.md              # This file
+└── DEPLOYMENT.md          # Detailed deployment instructions (likely for Vercel)
 ```
 
-### Vibe Engine
+### Vibe Engine (`src/lib/vibe-engine/`)
 
-The core of VibeUI is the vibe engine, which generates and applies design themes. The engine consists of:
+The core of VibeUI is the vibe engine, which generates and applies design themes. Key files include:
 
-- `vibe-engine.tsx` - Context provider for vibe state
-- `vibe-controls.tsx` - UI controls for manipulating vibes
-- `vibe-demo-elements.tsx` - Showcase components for each vibes
+- `vibe-context.tsx`: React Context provider for managing the current vibe state.
+- `vibe-utils.ts`: Utility functions for generating, manipulating, and applying vibe styles.
+- `vibe-presets.ts`: Predefined vibe configurations.
+- `ai-vibes.ts`: Logic related to AI-powered vibe generation (if implemented).
+- `types.ts`: TypeScript types related to the vibe engine.
+
+*Note: The specific UI controls and demo elements are likely implemented within `src/components/` or `src/pages/index.tsx`.*
 
 ### Component Showcase
 
-VibeUI includes a comprehensive showcase of components that demonstrate each design vibe:
-
-- Basic elements (buttons, cards, typography)
-- Navigation and headers
-- Interactive animations
-- Layout examples
+VibeUI includes a comprehensive showcase of components (primarily in `src/pages/index.tsx` and potentially `src/components/`) that demonstrate each design vibe, built using `shadcn/ui`.
 
 ## 🔧 Usage Guide
 
 ### Generating New Vibes
 
-1. Click the "Generate New Vibe" button to create a random design theme
-2. See real-time updates on all components
-3. Experience smooth transitions between different vibes
+1. Interact with the UI controls (e.g., "Generate New Vibe" button) to create random or AI-generated design themes.
+2. Observe real-time updates across all showcased components.
+3. Experience smooth transitions powered by `Framer Motion`.
 
 ### Exploring Features
 
-1. Scroll through the interface to see different component examples
-2. Toggle between light and dark mode to see adaptability
-3. Resize your browser to test responsive behavior
+1. Scroll through the main page (`/`) to see different component examples under the current vibe.
+2. Use the theme toggle (if available) to switch between light and dark modes (`next-themes`).
+3. Resize your browser to test responsive behavior built with Tailwind CSS.
 
 ## 🛠️ Technologies Used
 
-- **React** - UI framework
-- **TypeScript** - Type safety
-- **Next.js** - React framework
-- **Tailwind CSS** - Utility-first CSS
-- **Framer Motion** - Animations
-- **shadcn/ui** - Component foundations
+- **Framework:** [Next.js](https://nextjs.org/) (v15+, using Pages Router primarily)
+- **Language:** [TypeScript](https://www.typescriptlang.org/)
+- **Styling:** [Tailwind CSS](https://tailwindcss.com/)
+- **UI Components:** [shadcn/ui](https://ui.shadcn.com/) (built on [Radix UI](https://www.radix-ui.com/))
+- **Animations:** [Framer Motion](https://www.framer.com/motion/)
+- **State Management:** React Context, potentially [@tanstack/react-query](https://tanstack.com/query/latest) for server state
+- **Forms:** [React Hook Form](https://react-hook-form.com/), [Zod](https://zod.dev/) (for validation)
+- **Icons:** [Lucide React](https://lucide.dev/)
+- **Theming:** [next-themes](https://github.com/pacocoursey/next-themes)
+- **Backend/DB (Optional):** [Supabase](https://supabase.com/) (integration available)
+- **Utilities:** clsx, tailwind-merge, date-fns, recharts, sonner, vaul, cmdk, etc.
+- **Linting/Formatting:** ESLint
+
+## ☁️ Deployment
+
+This project is configured for deployment on [Vercel](https://vercel.com/). See `vercel.json` and `DEPLOYMENT.md` for more details.
 
 ## 🤝 Contributing
 
@@ -136,14 +184,15 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the MIT License - see the LICENSE file for details (assuming one exists, otherwise specify).
 
 ## 🙏 Acknowledgements
 
-- [shadcn/ui](https://ui.shadcn.com/) for the component library foundations
-- [Framer Motion](https://www.framer.com/motion/) for the animation library
-- [Tailwind CSS](https://tailwindcss.com/) for the utility CSS framework
-- [Next.js](https://nextjs.org/) for the React framework
+- [shadcn/ui](https://ui.shadcn.com/) team and contributors
+- [Radix UI](https://www.radix-ui.com/) team for the unstyled primitives
+- [Framer Motion](https://www.framer.com/motion/) team for the animation library
+- [Tailwind CSS](https://tailwindcss.com/) team
+- [Next.js](https://nextjs.org/) team / Vercel
 
 ---
 

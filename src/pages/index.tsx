@@ -77,23 +77,14 @@ const VibeContent = () => {
   
   // Check device capabilities on mount
   useEffect(() => {
-    // Detect low-end devices
     const checkLowPerformanceMode = () => {
-      // Check if device is low-end based on RAM and CPU cores
-      const isLowEndDevice = 
-        // Check for low memory (if available in the browser)
-        ('deviceMemory' in navigator && (navigator as any).deviceMemory < 4) ||
-        // Check for low CPU cores (if available in the browser)
-        ('hardwareConcurrency' in navigator && navigator.hardwareConcurrency < 4) ||
-        // Check for mobile device
+      // Only check for mobile device user agents
+      const isMobileDevice = 
         /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
         
-      // Store the setting
-      if (isLowEndDevice) {
-        localStorage.setItem('lowPerformanceMode', 'true');
-      }
+      // Removed hardware checks (deviceMemory, hardwareConcurrency)
       
-      return isLowEndDevice || localStorage.getItem('lowPerformanceMode') === 'true';
+      return isMobileDevice; 
     };
     
     const isLowPerformance = checkLowPerformanceMode();
@@ -126,18 +117,12 @@ const VibeContent = () => {
     localStorage.setItem('theme', theme);
   }, [theme]);
   
-  // Create a loading screen that shows the animated logo
+  // Set loading to false immediately after initial checks or potentially after first paint?
+  // For now, let's assume components load reasonably fast without the artificial delay.
+  // We might need a more sophisticated loading state later based on actual component readiness.
   useEffect(() => {
-    // Adaptive loading time - faster on low-end devices
-    const loadingTime = isLowPerformanceMode ? 800 : 1500;
-    
-    // Simulate loading time
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, loadingTime);
-    
-    return () => clearTimeout(timer);
-  }, [isLowPerformanceMode]);
+    setIsLoading(false); 
+  }, []); // Run once on mount
   
   // Load a vibe on initial render if not locked
   useEffect(() => {
@@ -272,7 +257,7 @@ const VibeContent = () => {
           <svg width="64" height="64" viewBox="0 0 32 32" className="animate-rotate-hue">
             <g id="gradient-circle">
               <circle cx="16" cy="16" r="15" fill="url(#navGradient)" strokeWidth="2"/>
-              <path d="M10 16.5L14 20.5L22 12.5" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M10 16.5L14 20.5L22 12.5" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
             </g>
             <defs>
               <linearGradient id="navGradient" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
@@ -293,16 +278,20 @@ const VibeContent = () => {
     <LazyMotion features={domAnimation}>
       <div 
         className={`min-h-screen bg-background transition-colors duration-500 relative overflow-x-hidden ${containerClass}`}
-        onMouseMove={handleMouseMove}
+        // Only attach mouse move listener if not in low performance mode
+        onMouseMove={isLowPerformanceMode ? undefined : handleMouseMove}
       >
         {/* Background effects - performance optimized */}
-        <m.div 
-          className="fixed inset-0 pointer-events-none z-0" 
-          style={{ 
-            background: backgroundGradient,
-            willChange: "background"
-          }}
-        />
+        {/* Conditionally render the demanding mouse-move gradient */}
+        {!isLowPerformanceMode && (
+          <m.div 
+            className="fixed inset-0 pointer-events-none z-0" 
+            style={{ 
+              background: backgroundGradient,
+              willChange: "background"
+            }}
+          />
+        )}
         
         <m.div
           className="fixed inset-0 pointer-events-none z-0 opacity-30"
@@ -394,14 +383,14 @@ const VibeContent = () => {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.2, duration: 0.5, ease: "easeOut" }}
-                className="z-10"
+                className="z-10 flex items-center"
               >
                 <div className={`flex items-center ${isSoftOrganic ? 'px-3 py-2 rounded-xl bg-white/5 dark:bg-white/10' : ''}`}>
                   <div className="flex items-center">
                     <svg width="32" height="32" viewBox="0 0 32 32" className="animate-rotate-hue mr-2">
                       <g id="gradient-circle">
                         <circle cx="16" cy="16" r="15" fill="url(#navGradient)" strokeWidth="2"/>
-                        <path d="M10 16.5L14 20.5L22 12.5" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M10 16.5L14 20.5L22 12.5" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
                       </g>
                       <defs>
                         <linearGradient id="navGradient" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
@@ -421,7 +410,7 @@ const VibeContent = () => {
               </m.div>
               
               {/* Desktop controls */}
-              <div className="vibe-control-panel hidden sm:flex z-10 items-center gap-3 bg-background/50 backdrop-blur-sm py-2 px-3 rounded-lg border border-border/20">
+              <div className="vibe-control-panel hidden sm:flex self-center z-10 gap-3 bg-background/50 backdrop-blur-sm py-2 px-3 rounded-lg border border-border/20">
                 <VibeControls />
               </div>
               
@@ -452,7 +441,7 @@ const VibeContent = () => {
                   The ultimate UI design inspiration platform for modern designers
                 </div>
                 <div className="vibe-control-panel w-full z-10 flex flex-col gap-3">
-                  <VibeControls />
+                  <VibeControls orientation="vertical" />
                 </div>
               </m.div>
             )}
@@ -483,7 +472,7 @@ const VibeContent = () => {
                   Explore UI <span className="text-primary relative inline-block">
                     Design Inspiration
                     <m.span 
-                      className="absolute -bottom-1 left-0 right-0 h-1 md:h-1.5 bg-primary/20 dark:bg-primary/30 rounded-full" 
+                      className="absolute -bottom-1 left-0 right-0 h-1 md:h-1.5 bg-primary/20 dark:bg-accent rounded-full" 
                       initial={{ scaleX: 0, transformOrigin: "left" }}
                       animate={{ scaleX: 1 }}
                       transition={{ delay: 0.8, duration: getAnimationDuration(0.8), ease: "easeOut" }}
@@ -886,24 +875,12 @@ const VibeContent = () => {
           </div>
           
           {/* Design inspiration section */}
-          <div className="mt-16">
+          <div className="mt-12">
             <DesignInspiration />
           </div>
           
-          {/* Gallery section */}
-          <m.div 
-            id="gallery-section"
-            className="mt-16"
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.6, ease: animationEasing() }}
-          >
-            <VibeGallery />
-          </m.div>
-          
           {/* Testimonials section */}
-          <div className="mt-8">
+          <div className="mt-16">
             <Testimonials />
           </div>
           

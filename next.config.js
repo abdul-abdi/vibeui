@@ -33,6 +33,35 @@ const nextConfig = {
   },
   compress: true,
   poweredByHeader: false,
+  productionBrowserSourceMaps: true,
+  async headers() {
+    const cspHeader = `
+      default-src 'self';
+      script-src 'self' 'unsafe-eval' 'unsafe-inline';
+      style-src 'self' 'unsafe-inline';
+      connect-src 'self' https://jhvuteawbvlkssznovxq.supabase.co;
+      img-src 'self' blob: data: via.placeholder.com images.unsplash.com;
+      font-src 'self';
+      object-src 'none';
+      base-uri 'self';
+      form-action 'self';
+      frame-ancestors 'none';
+      block-all-mixed-content;
+      upgrade-insecure-requests;
+    `.replace(/\s{2,}/g, ' ').trim();
+
+    return [
+      {
+        source: '/(.*)',
+        headers: [
+          {
+            key: 'Content-Security-Policy',
+            value: cspHeader,
+          },
+        ],
+      },
+    ];
+  },
 };
 
 // Enable bundle analyzer in analyze mode

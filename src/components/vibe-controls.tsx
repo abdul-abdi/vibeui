@@ -25,7 +25,12 @@ const EASING = Object.freeze({
   accelerate: [0.4, 0, 1, 1]
 });
 
-export function VibeControls() {
+// Add orientation prop type
+type VibeControlsProps = {
+  orientation?: 'horizontal' | 'vertical';
+};
+
+export function VibeControls({ orientation = 'horizontal' }: VibeControlsProps) {
   const { vibeState, changeVibe, toggleLock, previousVibe, nextVibe, isGenerating, historyIndex } = useVibe();
   
   // Calculate derived state only when history changes
@@ -336,11 +341,11 @@ export function VibeControls() {
       </m.div>
       
       {/* Hide these on very small screens */}
-      <m.div variants={itemVariants} className="hidden sm:block">
+      <m.div variants={itemVariants} className="block">
         <VibeComparison />
       </m.div>
       
-      <m.div variants={itemVariants} className="hidden sm:block">
+      <m.div variants={itemVariants} className="block">
         <VibeCodeExport />
       </m.div>
     </div>
@@ -349,38 +354,59 @@ export function VibeControls() {
   return (
     <m.div 
       className={cn(
-        "flex items-center gap-2 p-2 sm:gap-3 sm:p-3 bg-card/80 backdrop-blur-sm rounded-md shadow-md border border-border/30",
-        isDarkVibe && "ring-1 ring-primary/30" // Add subtle ring for dark vibes to improve visibility
+        "flex",
+        orientation === 'vertical' 
+          ? "flex-col items-stretch p-2" 
+          : "items-center gap-2 p-2 sm:gap-3 sm:p-3",
+        "bg-card/80 backdrop-blur-sm rounded-md shadow-md border border-border/30",
+        isDarkVibe && "ring-1 ring-primary/30"
       )}
       initial="hidden"
       animate="visible"
       variants={containerVariants}
       aria-label="Vibe controls"
       role="toolbar"
+      aria-orientation={orientation}
     >
       <TooltipProvider delayDuration={isLowPerformanceMode ? 1000 : 300}>
-        {/* Navigation Controls Group */}
-        {controlButtons}
+        {/* Navigation Controls Group (Apply padding when vertical) */}
+        <div className={cn(orientation === 'vertical' && 'py-2')}> 
+          {controlButtons}
+        </div>
         
-        {/* Visual separator between control groups */}
-        <Separator orientation="vertical" className={cn(
-          "h-6 sm:h-8 mx-1",
-          isDarkVibe ? "opacity-50" : "opacity-30" // Increase opacity for dark vibes for better visibility
-        )} />
+        {/* Visual separator between control groups (No vertical margin) */}
+        <Separator 
+          orientation={orientation === 'vertical' ? 'horizontal' : 'vertical'}
+          className={cn(
+            orientation === 'vertical' 
+              ? 'w-full' // Horizontal separator style - No margin
+              : 'h-6 sm:h-8 mx-1', // Vertical separator style
+            isDarkVibe ? "opacity-50" : "opacity-30"
+          )} 
+        />
 
-        {/* Additional controls - simplified on mobile */}
-        {additionalControls}
+        {/* Additional controls (Apply padding when vertical) */}
+        <div className={cn(orientation === 'vertical' && 'py-2')}> 
+          {additionalControls}
+        </div>
 
-        {/* Visual separator before AI generator - hide on small screens */}
-        <Separator orientation="vertical" className={cn(
-          "h-6 sm:h-8 mx-1 hidden sm:block",
-          isDarkVibe ? "opacity-50" : "opacity-30" // Increase opacity for dark vibes for better visibility
-        )} />
+        {/* Visual separator before AI generator (No vertical margin) */}
+        <Separator 
+          orientation={orientation === 'vertical' ? 'horizontal' : 'vertical'}
+          className={cn(
+            orientation === 'vertical' 
+              ? 'w-full' // Horizontal separator style - No margin
+              : 'h-6 sm:h-8 mx-1 block', // Vertical separator style
+            isDarkVibe ? "opacity-50" : "opacity-30" 
+          )} 
+        />
         
-        {/* AI Generator - hide on small screens */}
-        <m.div variants={itemVariants} className="hidden sm:block">
-          <EnhancedAiVibeGenerator />
-        </m.div>
+        {/* AI Generator (Apply padding when vertical) */}
+        <div className={cn(orientation === 'vertical' && 'py-2')}> 
+          <m.div variants={itemVariants} className="block">
+            <EnhancedAiVibeGenerator />
+          </m.div>
+        </div>
       </TooltipProvider>
     </m.div>
   );

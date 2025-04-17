@@ -1,4 +1,3 @@
-
 import { VibeSettings } from './types';
 
 // Collection of carefully designed vibe presets
@@ -339,15 +338,15 @@ export const vibePresets: VibeSettings[] = [
       card: '0 0% 8%',
       cardForeground: '0 0% 98%',
       primary: '320 100% 60%',
-      primaryForeground: '0 0% 0%',
+      primaryForeground: '0 0% 98%',
       secondary: '180 100% 50%',
-      secondaryForeground: '0 0% 0%',
+      secondaryForeground: '0 0% 98%',
       muted: '0 0% 15%',
       mutedForeground: '0 0% 65%',
       accent: '60 100% 50%',
-      accentForeground: '0 0% 0%',
+      accentForeground: '0 0% 98%',
       destructive: '0 100% 65%',
-      destructiveForeground: '0 0% 0%',
+      destructiveForeground: '0 0% 98%',
       border: '0 0% 20%',
       input: '0 0% 20%',
       ring: '320 100% 60%'

@@ -111,27 +111,31 @@ export function VibeHistory() {
   // Save current vibe to history when it changes
   useEffect(() => {
     if (!vibeState.currentVibe) return;
-    
-    // Check if this vibe already exists in history to avoid duplicates
-    const existingIndex = historyItems.findIndex(item => item.id === vibeState.currentVibe.id);
-    
-    let updatedHistory = [...historyItems];
-    
-    if (existingIndex !== -1) {
-      // If this vibe is already in history, move it to the front
-      const existingItem = updatedHistory.splice(existingIndex, 1)[0];
-      updatedHistory = [existingItem, ...updatedHistory];
-    } else {
-      // Otherwise add it to the front
-      updatedHistory = [vibeState.currentVibe, ...updatedHistory];
-    }
-    
-    // Limit to MAX_HISTORY_ITEMS
-    updatedHistory = updatedHistory.slice(0, MAX_HISTORY_ITEMS);
-    
-    setHistoryItems(updatedHistory);
-    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(updatedHistory));
-  }, [vibeState.currentVibe, historyItems]);
+
+    // Use functional update to avoid needing historyItems in dependency array
+    setHistoryItems(prevHistoryItems => {
+      // Check if this vibe already exists in history to avoid duplicates
+      const existingIndex = prevHistoryItems.findIndex(item => item.id === vibeState.currentVibe.id);
+      
+      let updatedHistory = [...prevHistoryItems];
+      
+      if (existingIndex !== -1) {
+        // If this vibe is already in history, move it to the front
+        const existingItem = updatedHistory.splice(existingIndex, 1)[0];
+        updatedHistory = [existingItem, ...updatedHistory];
+      } else {
+        // Otherwise add it to the front
+        updatedHistory = [vibeState.currentVibe, ...updatedHistory];
+      }
+      
+      // Limit to MAX_HISTORY_ITEMS
+      updatedHistory = updatedHistory.slice(0, MAX_HISTORY_ITEMS);
+      
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(updatedHistory));
+      return updatedHistory; 
+    });
+
+  }, [vibeState.currentVibe]); // Only depend on the source vibe change
 
   const handleVibeSelect = (vibe: VibeSettings) => {
     setSelectedVibe(vibe);

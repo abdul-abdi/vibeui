@@ -130,10 +130,10 @@ export function FeatureShowcase() {
               <Shuffle className="h-4 w-4" />
               Generate New Vibe
             </Button>
-            <Button variant="outline" size="lg" className="gap-2">
+            {/* Button variant="outline" size="lg" className="gap-2">
               <Code className="h-4 w-4" />
               View Example
-            </Button>
+            </Button> */}
           </div>
         </m.div>
       </div>

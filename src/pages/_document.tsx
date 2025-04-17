@@ -4,13 +4,17 @@ export default function Document() {
   return (
     <Html lang="en">
       <Head>
-        {/* Preload critical assets */}
-        <link
+        {/* Preconnect to Supabase for faster connection establishment */}
+        <link rel="preconnect" href="https://jhvuteawbvlkssznovxq.supabase.co" />
+        <link rel="preconnect" href="https://supabase.co" crossOrigin="anonymous" />
+        
+        {/* REMOVED: Preload critical assets - Favicon preload is usually not needed */}
+        {/* <link
           rel="preload"
           href="/favicon.svg"
           as="image"
           type="image/svg+xml"
-        />
+        /> */}
         
         {/* PWA meta tags */}
         <meta name="application-name" content="VibeUI" />
