@@ -345,7 +345,7 @@ export function VibeControls({ orientation = 'horizontal' }: VibeControlsProps) 
         <VibeComparison />
       </m.div>
       
-      <m.div variants={itemVariants} className="block">
+      <m.div variants={itemVariants} className="hidden sm:block">
         <VibeCodeExport />
       </m.div>
     </div>
