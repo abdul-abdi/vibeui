@@ -1,6 +1,6 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useMemo } from 'react';
 import { 
   Palette, 
@@ -139,49 +139,111 @@ export function DesignExplorer({ result }: DesignExplorerProps) {
 
 // Preview Tab
 function PreviewTab({ preview }: { preview: { html: string; css: string; description: string; sections: string[] } }) {
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  
   const iframeContent = useMemo(() => {
     return `<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"><style>*{margin:0;padding:0;box-sizing:border-box;}body{font-family:'Inter',system-ui,sans-serif;}${preview.css}</style></head><body>${preview.html}</body></html>`;
   }, [preview.html, preview.css]);
 
   return (
-    <motion.div 
-      className="space-y-4"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={springSmooth}
-    >
-      <div className="rounded-2xl overflow-hidden border-2 border-border bg-card shadow-lg">
-        {/* Browser Chrome */}
-        <div className="flex items-center gap-3 px-5 py-3.5 bg-muted/50 border-b border-border">
-          <div className="flex gap-2">
-            <motion.div 
-              className="w-3 h-3 rounded-full" 
-              style={{ background: 'var(--accent-warm)' }}
-              whileHover={{ scale: 1.3 }}
-            />
-            <motion.div 
-              className="w-3 h-3 rounded-full bg-yellow-400"
-              whileHover={{ scale: 1.3 }}
-            />
-            <motion.div 
-              className="w-3 h-3 rounded-full" 
-              style={{ background: 'var(--accent-cool)' }}
-              whileHover={{ scale: 1.3 }}
-            />
-          </div>
-          <div className="flex-1 mx-4">
-            <div className="bg-background rounded-lg px-4 py-1.5 text-xs text-muted-foreground text-center max-w-xs mx-auto border border-border">
-              preview.vibeui.design
+    <>
+      <motion.div 
+        className="space-y-4"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={springSmooth}
+      >
+        <div className="rounded-2xl overflow-hidden border-2 border-border bg-card shadow-lg">
+          {/* Browser Chrome */}
+          <div className="flex items-center gap-3 px-5 py-3.5 bg-muted/50 border-b border-border">
+            <div className="flex gap-2">
+              <motion.div 
+                className="w-3 h-3 rounded-full" 
+                style={{ background: 'var(--accent-warm)' }}
+                whileHover={{ scale: 1.3 }}
+              />
+              <motion.div 
+                className="w-3 h-3 rounded-full bg-yellow-400"
+                whileHover={{ scale: 1.3 }}
+              />
+              <motion.div 
+                className="w-3 h-3 rounded-full" 
+                style={{ background: 'var(--accent-cool)' }}
+                whileHover={{ scale: 1.3 }}
+              />
             </div>
+            <div className="flex-1 mx-4">
+              <div className="bg-background rounded-lg px-4 py-1.5 text-xs text-muted-foreground text-center max-w-xs mx-auto border border-border">
+                preview.vibeui.design
+              </div>
+            </div>
+            {/* Fullscreen toggle */}
+            <motion.button
+              onClick={() => setIsFullscreen(true)}
+              className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
+              title="Fullscreen preview"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+              </svg>
+            </motion.button>
+          </div>
+          
+          {/* Preview Frame - Larger */}
+          <div className="bg-white" style={{ height: '650px' }}>
+            <iframe srcDoc={iframeContent} className="w-full h-full border-0" title="Design Preview" sandbox="allow-scripts" />
           </div>
         </div>
-        
-        {/* Preview Frame */}
-        <div className="bg-white" style={{ height: '500px' }}>
-          <iframe srcDoc={iframeContent} className="w-full h-full border-0" title="Design Preview" sandbox="allow-scripts" />
-        </div>
-      </div>
-    </motion.div>
+      </motion.div>
+
+      {/* Fullscreen Modal */}
+      <AnimatePresence>
+        {isFullscreen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 bg-black/90 backdrop-blur-sm flex items-center justify-center p-4"
+            onClick={() => setIsFullscreen(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              transition={springSmooth}
+              className="w-full h-full max-w-7xl max-h-[90vh] rounded-2xl overflow-hidden bg-white shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Fullscreen Browser Chrome */}
+              <div className="flex items-center gap-3 px-5 py-3 bg-zinc-100 border-b border-zinc-200">
+                <div className="flex gap-2">
+                  <div className="w-3 h-3 rounded-full bg-red-500" />
+                  <div className="w-3 h-3 rounded-full bg-yellow-500" />
+                  <div className="w-3 h-3 rounded-full bg-green-500" />
+                </div>
+                <div className="flex-1 mx-4">
+                  <div className="bg-white rounded-lg px-4 py-1.5 text-xs text-zinc-500 text-center max-w-md mx-auto border border-zinc-200">
+                    preview.vibeui.design
+                  </div>
+                </div>
+                <button
+                  onClick={() => setIsFullscreen(false)}
+                  className="p-2 rounded-lg text-zinc-500 hover:text-zinc-900 hover:bg-zinc-200 transition-colors"
+                  title="Close fullscreen"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+              <iframe srcDoc={iframeContent} className="w-full h-[calc(100%-48px)] border-0" title="Design Preview Fullscreen" sandbox="allow-scripts" />
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   );
 }
 
